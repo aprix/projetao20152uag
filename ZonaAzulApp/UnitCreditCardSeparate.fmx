@@ -1,0 +1,34 @@
+inherited FormCreditCardSeparate: TFormCreditCardSeparate
+  Caption = 'FormCadastreCreditCard1'
+  DesignerMasterStyle = 3
+  inherited Layout1: TLayout
+    inherited MasterToolBar: TToolBar
+      inherited Label3: TLabel
+        Text = 'Cart'#227'o de Cr'#233'dito'
+      end
+    end
+    inherited Layout2: TLayout
+      inherited editName: TEdit
+        Text = ''
+        ParentShowHint = False
+      end
+    end
+    inherited Layout4: TLayout
+      inherited Layout6: TLayout
+        inherited editCSC: TEdit
+          Text = ''
+        end
+      end
+    end
+    inherited buttonSave: TSpeedButton
+      Text = 'Confirmar'
+      OnClick = buttonSaveClick
+    end
+    inherited Layout7: TLayout
+      inherited editNumber: TEdit
+        MaxLength = 16
+        Text = ''
+      end
+    end
+  end
+end

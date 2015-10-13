@@ -1,0 +1,268 @@
+object FormCadastreCreditCard: TFormCadastreCreditCard
+  Left = 0
+  Top = 0
+  Caption = 'Form2'
+  ClientHeight = 480
+  ClientWidth = 315
+  StyleBook = DataModuleGeral.CustomStyleBook
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 3
+  object Layout1: TLayout
+    Align = Client
+    Size.Width = 315.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object MasterToolBar: TToolBar
+      Align = MostTop
+      Size.Width = 315.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Rectangle1: TRectangle
+        Align = Client
+        Fill.Color = claSlategray
+        Size.Width = 315.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+      end
+      object Label3: TLabel
+        Align = Client
+        StyledSettings = [Family, Size]
+        Margins.Left = 10.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 10.000000000000000000
+        Margins.Bottom = 10.000000000000000000
+        Size.Width = 295.000000000000000000
+        Size.Height = 28.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Style = [fsBold]
+        TextSettings.FontColor = claWhite
+        TextSettings.HorzAlign = Center
+        Text = 'Cadastro de Cart'#227'o'
+      end
+    end
+    object Layout3: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 58.000000000000000000
+      Size.Width = 305.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object Label2: TLabel
+        Align = Top
+        StyledSettings = [Family, FontColor]
+        Size.Width = 305.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        Text = 'Bandeira do Cart'#227'o:'
+      end
+      object cboFlag: TComboBox
+        Align = Bottom
+        Items.Strings = (
+          'MasterCard'
+          'Visa')
+        ItemIndex = 0
+        Position.Y = 20.000000000000000000
+        Size.Width = 305.000000000000000000
+        Size.Height = 28.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+      end
+    end
+    object Layout2: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 116.000000000000000000
+      Size.Width = 305.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object Label1: TLabel
+        Align = Top
+        StyledSettings = [Family, FontColor]
+        Size.Width = 305.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        Text = 'Nome Impresso no Cart'#227'o'
+      end
+      object editName: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Bottom
+        StyleLookup = 'Edit1Style1'
+        TabOrder = 1
+        KeyboardType = Alphabet
+        Text = 'NOME SOBRENOME'
+        TextSettings.Font.Size = 18.000000000000000000
+        Position.Y = 18.000000000000000000
+        Size.Width = 305.000000000000000000
+        Size.Height = 32.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Family, Style, FontColor]
+        OnChange = editNameChange
+      end
+    end
+    object Layout4: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 236.000000000000000000
+      Size.Width = 305.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      object Layout5: TLayout
+        Align = MostLeft
+        Size.Width = 153.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object Label4: TLabel
+          Align = Top
+          StyledSettings = [Family, FontColor]
+          Size.Width = 153.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          Text = 'Validade:'
+        end
+        object cboMonth: TComboBox
+          Items.Strings = (
+            '01'
+            '02'
+            '03'
+            '04'
+            '05'
+            '06'
+            '07'
+            '08'
+            '09'
+            '10'
+            '11'
+            '12')
+          ItemIndex = 0
+          Position.Y = 19.000000000000000000
+          Size.Width = 49.000000000000000000
+          Size.Height = 28.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+        end
+        object cboYear: TComboBox
+          Items.Strings = (
+            '2015'
+            '2016'
+            '2017'
+            '2018'
+            '2019'
+            '2020')
+          ItemIndex = 0
+          Position.X = 56.000000000000000000
+          Position.Y = 20.000000000000000000
+          Size.Width = 81.000000000000000000
+          Size.Height = 28.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+        end
+      end
+      object Layout6: TLayout
+        Align = Left
+        Position.X = 153.000000000000000000
+        Size.Width = 153.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object Label5: TLabel
+          Align = Top
+          StyledSettings = [Family, FontColor]
+          Size.Width = 153.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          Text = 'C'#243'd. Seguran'#231'a:'
+        end
+        object editCSC: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 0
+          KeyboardType = NumberPad
+          MaxLength = 3
+          Text = '123'
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.HorzAlign = Center
+          Position.Y = 20.000000000000000000
+          Size.Width = 105.000000000000000000
+          Size.Height = 28.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+          OnChange = editCSCChange
+        end
+      end
+    end
+    object buttonSave: TSpeedButton
+      Align = Top
+      StyledSettings = [Family, Style, FontColor]
+      Margins.Left = 20.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 20.000000000000000000
+      Position.X = 20.000000000000000000
+      Position.Y = 294.000000000000000000
+      Size.Width = 275.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Salvar'
+      TextSettings.Font.Size = 28.000000000000000000
+    end
+    object Layout7: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 176.000000000000000000
+      Size.Width = 305.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      object Label6: TLabel
+        Align = Top
+        StyledSettings = [Family, FontColor]
+        Size.Width = 305.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        Text = 'N'#250'mero do Cart'#227'o:'
+      end
+      object editNumber: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        Align = Bottom
+        TabOrder = 1
+        KeyboardType = NumberPad
+        MaxLength = 19
+        Text = 'XXXX-XXXX-XXXX-XXXX'
+        TextSettings.Font.Size = 18.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 305.000000000000000000
+        Size.Height = 30.000000000000000000
+        Size.PlatformDefault = False
+        StyledSettings = [Family, Style, FontColor]
+      end
+    end
+  end
+end

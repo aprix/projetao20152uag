@@ -1,0 +1,214 @@
+object FrameBuyCredits: TFrameBuyCredits
+  Align = Client
+  Size.Width = 333.000000000000000000
+  Size.Height = 479.000000000000000000
+  Size.PlatformDefault = False
+  object Layout1: TLayout
+    Align = Client
+    Size.Width = 333.000000000000000000
+    Size.Height = 479.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object Layout2: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 58.000000000000000000
+      Size.Width = 323.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      object Label1: TLabel
+        Align = Top
+        StyledSettings = [Family, FontColor]
+        Size.Width = 323.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        Text = 'Selecione o Cart'#227'o de Cr'#233'dito:'
+      end
+      object Layout7: TLayout
+        Align = Bottom
+        Margins.Left = 2.000000000000000000
+        Margins.Top = 2.000000000000000000
+        Margins.Right = 2.000000000000000000
+        Position.X = 2.000000000000000000
+        Position.Y = 20.000000000000000000
+        Size.Width = 319.000000000000000000
+        Size.Height = 28.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object comboBoxCreditCard: TComboBox
+          Align = Client
+          Items.Strings = (
+            'MasterCard XXXX-XXXX-XXXX-XXXX')
+          ItemIndex = 0
+          Size.Width = 269.000000000000000000
+          Size.Height = 28.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+        end
+        object buttonCadastreCreditCard: TSpeedButton
+          Align = MostRight
+          Margins.Left = 5.000000000000000000
+          Position.X = 274.000000000000000000
+          Size.Width = 45.000000000000000000
+          Size.Height = 28.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Add'
+          OnClick = buttonCadastreCreditCardClick
+        end
+      end
+    end
+    object Layout3: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 116.000000000000000000
+      Size.Width = 323.000000000000000000
+      Size.Height = 67.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Label2: TLabel
+        Align = Top
+        StyledSettings = [Family, FontColor]
+        Size.Width = 323.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        Text = 'Quantos Cr'#233'ditos deseja adquirir?'
+      end
+      object Layout6: TLayout
+        Align = Center
+        Size.Width = 204.000000000000000000
+        Size.Height = 45.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object Label6: TLabel
+          Align = Client
+          StyledSettings = [Family]
+          Size.Width = 114.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          TextSettings.HorzAlign = Center
+          Text = 'R$ 10,00'
+        end
+        object buttonAddCredits: TSpeedButton
+          Align = MostRight
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 159.000000000000000000
+          Size.Width = 45.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Text = '+'
+          TextSettings.Font.Size = 28.000000000000000000
+        end
+        object buttonRemoveCredits: TSpeedButton
+          Align = MostLeft
+          StyledSettings = [Family, Style, FontColor]
+          Size.Width = 45.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Text = '-'
+          TextSettings.Font.Size = 28.000000000000000000
+        end
+      end
+    end
+    object Layout5: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 323.000000000000000000
+      Size.Height = 38.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object Label8: TLabel
+        Align = Left
+        StyledSettings = [Family]
+        Size.Width = 131.000000000000000000
+        Size.Height = 38.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 20.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        TextSettings.FontColor = claGreen
+        TextSettings.HorzAlign = Trailing
+        Text = 'Saldo:'
+      end
+      object lblCreditsAvailable: TLabel
+        Align = Client
+        StyledSettings = [Family]
+        Margins.Left = 10.000000000000000000
+        Size.Width = 182.000000000000000000
+        Size.Height = 38.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 20.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        TextSettings.FontColor = claGreen
+        TextSettings.HorzAlign = Center
+        Text = 'R$ 120,00'
+      end
+    end
+    object Layout4: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 193.000000000000000000
+      Size.Width = 323.000000000000000000
+      Size.Height = 38.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object Label4: TLabel
+        Align = Left
+        StyledSettings = [Family]
+        Size.Width = 130.000000000000000000
+        Size.Height = 38.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 20.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        TextSettings.FontColor = claBlue
+        TextSettings.HorzAlign = Trailing
+        Text = 'Saldo Final:'
+      end
+      object Label5: TLabel
+        Align = Client
+        StyledSettings = [Family]
+        Margins.Left = 10.000000000000000000
+        Size.Width = 183.000000000000000000
+        Size.Height = 38.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 20.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        TextSettings.FontColor = claBlue
+        TextSettings.HorzAlign = Center
+        Text = 'R$ 130,00'
+      end
+    end
+    object buttonBuy: TSpeedButton
+      Align = Top
+      StyledSettings = [Family, Style, FontColor]
+      Margins.Left = 20.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 20.000000000000000000
+      Position.X = 20.000000000000000000
+      Position.Y = 241.000000000000000000
+      Size.Width = 293.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Comprar'
+      TextSettings.Font.Size = 28.000000000000000000
+    end
+  end
+end

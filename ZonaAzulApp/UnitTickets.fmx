@@ -1,0 +1,115 @@
+object FrameTickets: TFrameTickets
+  Align = Client
+  Size.Width = 333.000000000000000000
+  Size.Height = 464.000000000000000000
+  Size.PlatformDefault = False
+  object Layout1: TLayout
+    Align = Client
+    Size.Width = 333.000000000000000000
+    Size.Height = 464.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object ListViewTickets: TListView
+      ItemAppearanceClassName = 'TImageListItemBottomDetailRightButtonAppearance'
+      ItemEditAppearanceClassName = 'TImageListItemBottomDetailRightButtonShowCheckAppearance'
+      HeaderAppearanceClassName = 'TListHeaderObjects'
+      FooterAppearanceClassName = 'TListHeaderObjects'
+      Transparent = True
+      Images = DataModuleGeral.IconsTicketsList
+      Align = Client
+      Size.Width = 333.000000000000000000
+      Size.Height = 464.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      ItemAppearanceObjects.ItemObjects.Detail.Font.Size = 16.000000000000000000
+      ItemAppearanceObjects.ItemObjects.Detail.TextColor = claBlack
+      ItemAppearanceObjects.ItemObjects.TextButton.Visible = False
+      ItemAppearanceObjects.ItemEditObjects.TextButton.Visible = False
+      ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
+      CanSwipeDelete = False
+      OnFilter = ListViewTicketsFilter
+      ShowSelection = False
+      SearchVisible = True
+      PullToRefresh = True
+      object buttonNew: TSpeedButton
+        Anchors = [akRight, akBottom]
+        Position.X = 263.000000000000000000
+        Position.Y = 406.000000000000000000
+        Size.Width = 50.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        StyleLookup = 'SpeedButton1Style1'
+        Text = 'Novo'
+        OnClick = buttonNewClick
+      end
+      object lblMessage: TLabel
+        Align = Center
+        StyledSettings = [Family, FontColor]
+        Size.Width = 154.000000000000000000
+        Size.Height = 154.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Size = 14.000000000000000000
+        TextSettings.Font.Style = [fsBold]
+        TextSettings.HorzAlign = Center
+        Text = 
+          'Nenhum t'#237'quete adquirido. Clique no bot'#227'o Novo para comprar um t' +
+          #237'quete.'
+      end
+    end
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 68
+    Top = 85
+    object LinkFillControlToField1: TLinkFillControlToField
+      Category = 'Quick Bindings'
+      Control = ListViewTickets
+      Track = True
+      FillDataSource = BindSourceDB1
+      FillDisplayFieldName = 'Plate'
+      AutoFill = True
+      FillExpressions = <
+        item
+          SourceMemberName = 'DeadlineTime'
+          ControlMemberName = 'Detail'
+        end
+        item
+          SourceMemberName = 'IconIndex'
+          ControlMemberName = 'ImageIndex'
+        end>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = DataModuleGeral.DataSetTickets
+    ScopeMappings = <>
+    Left = 136
+    Top = 88
+  end
+  object PrototypeBindSource1: TPrototypeBindSource
+    AutoActivate = True
+    AutoPost = False
+    FieldDefs = <
+      item
+        Name = 'ContactName1'
+        Generator = 'ContactNames'
+        ReadOnly = False
+      end
+      item
+        Name = 'DateTimeField1'
+        Generator = 'DateTime'
+        ReadOnly = False
+      end
+      item
+        Name = 'ContactBitmap1'
+        FieldType = ftBitmap
+        Generator = 'ContactBitmaps'
+        ReadOnly = False
+      end>
+    ScopeMappings = <>
+    Left = 96
+    Top = 176
+  end
+end

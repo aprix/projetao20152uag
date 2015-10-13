@@ -1,0 +1,153 @@
+object FormMain: TFormMain
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 480
+  ClientWidth = 315
+  StyleBook = DataModuleGeral.CustomStyleBook
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object ToolBar1: TToolBar
+    Size.Width = 315.000000000000000000
+    Size.Height = 40.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object SpeedButton3: TSpeedButton
+      Align = Left
+      Size.Width = 49.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      Text = ':'
+    end
+    object LabelTitle: TLabel
+      Align = Client
+      StyledSettings = [Family, FontColor]
+      Size.Width = 266.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.Font.Style = [fsBold]
+      TextSettings.HorzAlign = Center
+      Text = 'T'#237'tulo'
+    end
+  end
+  object LayoutFrame: TLayout
+    Align = Client
+    Size.Width = 315.000000000000000000
+    Size.Height = 440.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+  end
+  object MultiView1: TMultiView
+    MasterButton = SpeedButton3
+    Mode = Drawer
+    Size.Width = 250.000000000000000000
+    Size.Height = 440.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 2
+    object Layout1: TLayout
+      Align = Client
+      Size.Width = 249.000000000000000000
+      Size.Height = 440.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object VertScrollBox1: TVertScrollBox
+        Align = Client
+        Size.Width = 249.000000000000000000
+        Size.Height = 440.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Viewport.Width = 249.000000000000000000
+        Viewport.Height = 440.000000000000000000
+        object ButtonBuyCredits: TSpeedButton
+          Align = Top
+          Position.Y = 43.000000000000000000
+          Size.Width = 249.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Comprar Cr'#233'ditos'
+          OnClick = ButtonBuyCreditsClick
+        end
+        object ButtonConsultPayment: TSpeedButton
+          Align = Top
+          Position.Y = 175.000000000000000000
+          Size.Width = 249.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Consultar Pagamento'
+          OnClick = ButtonConsultPaymentClick
+        end
+        object ButtonCreditCards: TSpeedButton
+          Align = Top
+          Position.Y = 131.000000000000000000
+          Size.Width = 249.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Cart'#245'es de Cr'#233'dito'
+        end
+        object ButtonTickets: TSpeedButton
+          Align = Top
+          Position.Y = 87.000000000000000000
+          Size.Width = 249.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'T'#237'quetes'
+          OnClick = ButtonTicketsClick
+        end
+        object Layout2: TLayout
+          Align = MostTop
+          Size.Width = 249.000000000000000000
+          Size.Height = 43.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          object PanelDataUser: TPanel
+            Align = Client
+            Size.Width = 249.000000000000000000
+            Size.Height = 43.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            OnClick = PanelDataUserClick
+            object Label1: TLabel
+              Align = MostTop
+              StyledSettings = [Family, FontColor]
+              Margins.Left = 5.000000000000000000
+              Margins.Top = 5.000000000000000000
+              Margins.Right = 5.000000000000000000
+              Position.X = 5.000000000000000000
+              Position.Y = 5.000000000000000000
+              Size.Width = 239.000000000000000000
+              Size.Height = 17.000000000000000000
+              Size.PlatformDefault = False
+              TextSettings.Font.Size = 14.000000000000000000
+              Text = 'Apelido do Usu'#225'rio'
+            end
+            object Label2: TLabel
+              Align = Top
+              StyledSettings = [Family, FontColor]
+              Margins.Left = 5.000000000000000000
+              Margins.Right = 5.000000000000000000
+              Position.X = 5.000000000000000000
+              Position.Y = 22.000000000000000000
+              Size.Width = 239.000000000000000000
+              Size.Height = 18.000000000000000000
+              Size.PlatformDefault = False
+              Text = 'Email do usu'#225'rio'
+            end
+            object Line1: TLine
+              Align = Bottom
+              LineType = Bottom
+              Position.Y = 33.000000000000000000
+              Size.Width = 249.000000000000000000
+              Size.Height = 10.000000000000000000
+              Size.PlatformDefault = False
+            end
+          end
+        end
+      end
+    end
+  end
+end

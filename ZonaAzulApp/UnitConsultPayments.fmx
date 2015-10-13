@@ -1,0 +1,166 @@
+object FrameConsultPayments: TFrameConsultPayments
+  Align = Client
+  Size.Width = 337.000000000000000000
+  Size.Height = 485.000000000000000000
+  Size.PlatformDefault = False
+  object Layout1: TLayout
+    Align = Client
+    Size.Width = 337.000000000000000000
+    Size.Height = 485.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object Layout2: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 327.000000000000000000
+      Size.Height = 67.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 4
+      object Label1: TLabel
+        Align = Top
+        StyledSettings = [Family, Size, FontColor]
+        Size.Width = 327.000000000000000000
+        Size.Height = 20.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Style = [fsBold]
+        Text = 'Placa do Ve'#237'culo:'
+      end
+      object Layout8: TLayout
+        Align = Center
+        Size.Width = 152.000000000000000000
+        Size.Height = 45.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object editPlateLetters: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = MostLeft
+          TabOrder = 0
+          KeyboardType = Alphabet
+          MaxLength = 3
+          Text = 'PES'
+          TextSettings.Font.Size = 24.000000000000000000
+          TextSettings.HorzAlign = Center
+          Size.Width = 58.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+        end
+        object Label2: TLabel
+          Align = Left
+          StyledSettings = [Family, Size, FontColor]
+          Position.X = 58.000000000000000000
+          Size.Width = 18.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Style = [fsBold]
+          TextSettings.HorzAlign = Center
+          Text = '-'
+        end
+        object editPlateNumbers: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Client
+          TabOrder = 1
+          KeyboardType = NumberPad
+          MaxLength = 4
+          Text = '6816'
+          TextSettings.Font.Size = 24.000000000000000000
+          TextSettings.HorzAlign = Center
+          Size.Width = 76.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+        end
+      end
+    end
+    object Layout3: TLayout
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 145.000000000000000000
+      Size.Width = 327.000000000000000000
+      Size.Height = 84.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 3
+      object Rectangle2: TRectangle
+        Align = Client
+        Fill.Color = claWhite
+        Size.Width = 327.000000000000000000
+        Size.Height = 84.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = xFF9B9999
+        object Label4: TLabel
+          Align = Top
+          StyledSettings = [Family]
+          Margins.Left = 10.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Position.X = 10.000000000000000000
+          Position.Y = 2.000000000000000000
+          Size.Width = 307.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          TextSettings.FontColor = claGreen
+          TextSettings.HorzAlign = Center
+          Text = 'Estacionamento Autorizado'
+        end
+        object Layout4: TLayout
+          Align = Client
+          Margins.Left = 10.000000000000000000
+          Margins.Top = 2.000000000000000000
+          Margins.Right = 10.000000000000000000
+          Margins.Bottom = 3.000000000000000000
+          Size.Width = 307.000000000000000000
+          Size.Height = 53.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object Label6: TLabel
+            Align = MostTop
+            StyledSettings = [Family]
+            Size.Width = 307.000000000000000000
+            Size.Height = 22.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 20.000000000000000000
+            TextSettings.Font.Style = [fsBold]
+            TextSettings.FontColor = claGreen
+            TextSettings.HorzAlign = Center
+            Text = '21/09/2014'
+          end
+          object Label5: TLabel
+            Align = Client
+            StyledSettings = [Family]
+            Size.Width = 307.000000000000000000
+            Size.Height = 31.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 20.000000000000000000
+            TextSettings.Font.Style = [fsBold]
+            TextSettings.FontColor = claGreen
+            TextSettings.HorzAlign = Center
+            Text = 'de 13:00 a 14:50'
+          end
+        end
+      end
+    end
+    object buttonActiveTickets: TSpeedButton
+      Align = Top
+      StyledSettings = [Family, Style, FontColor]
+      Margins.Left = 20.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 20.000000000000000000
+      Position.X = 20.000000000000000000
+      Position.Y = 87.000000000000000000
+      Size.Width = 297.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Consultar'
+      TextSettings.Font.Size = 28.000000000000000000
+    end
+  end
+end
