@@ -93,7 +93,7 @@ if($placaVeiculo == ''){
 
 	}else{
 	
-		$xml -> addTag('Sucesso!', $mensagemFeedback;
+		$xml -> addTag('sucesso', $mensagemFeedback;
 
 	}
 }
