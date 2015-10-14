@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS payment(
 	id_user INT NOT NULL,
 	id_credit_card INT NOT NULL,
 	val NUMERIC NOT NULL,
-	date_payment DATE NOT NULL,
+	date_payment TIMESTAMP NOT NULL,
 	status INT(1) NOT NULL,
 
 	PRIMARY KEY (id_user, id_credit_card),
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS vacancy_location(
 	id INT AUTO_INCREMENT NOT NULL,
 	id_user INT NOT NULL,
 	id_vehicle INT NOT NULL,
-	date_location DATE NOT NULL,
+	date_location TIMESTAMP NOT NULL,
 	time_location INT NOT NULL,
 	total_payment NUMERIC NOT NULL,
 	
