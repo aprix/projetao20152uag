@@ -2,6 +2,7 @@
 
 require_once('Xml.Class.php');
 require_once('config.php');
+require_once('database_operations.php');
 
 $xml = new Xml();
 
@@ -38,7 +39,7 @@ if($operacaoDoSistema == 1){ //operação 1 é corresponde ao pagamento de clien
 
 	}else{
 
-		$resposta = mysql_query("SELECT  "); //buscar pela placa do veiculo se o mesmo já está estacionado IMPLEMENTAR CONSULTA
+		$resposta = mysql_query( select1($placaVeiculo) ); //buscar pela placa do veiculo se o mesmo já está estacionado IMPLEMENTAR CONSULTA
 
 		if(mysql_num_rows($resposta) > 0 ){
 
@@ -47,7 +48,7 @@ if($operacaoDoSistema == 1){ //operação 1 é corresponde ao pagamento de clien
 
 		}else{
 
-			mysql_query("INSERT"); //Insere os dados da compra nas tabelas correspondentes IMPLEMENTAR INSERÇÃO
+			mysql_query( insert1($placaVeiculo, hora) ); //Insere os dados da compra nas tabelas correspondentes IMPLEMENTAR INSERÇÃO
 
 
 		}
@@ -71,7 +72,7 @@ if($placaVeiculo == ''){
 
 }else{
 
-	$resposta = mysql_query("SELECT  "); //buscar pela placa do veiculo se o mesmo já está estacionado IMPLEMENTAR CONSULT
+	$resposta = mysql_query( select1($placaVeiculo) ); //buscar pela placa do veiculo se o mesmo já está estacionado IMPLEMENTAR CONSULT
 
 	if (mysql_num_rows($resposta) == 0) {
 
