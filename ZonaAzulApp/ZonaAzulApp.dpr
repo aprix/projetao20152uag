@@ -15,7 +15,8 @@ uses
   UnitConsultPayments in 'UnitConsultPayments.pas' {FrameConsultPayments},
   UnitSplash in 'UnitSplash.pas' {FormSplash},
   SysUtils,
-  UnitCreditCardSeparate in 'UnitCreditCardSeparate.pas' {FormCreditCardSeparate};
+  UnitCreditCardSeparate in 'UnitCreditCardSeparate.pas' {FormCreditCardSeparate},
+  UnitDataModuleLocal in 'UnitDataModuleLocal.pas' {DataModuleLocal: TDataModule};
 
 {$R *.res}
 
@@ -25,6 +26,7 @@ begin
   Application.ProcessMessages;
   Sleep(1000);
   Application.Initialize;
+  Application.CreateForm(TDataModuleLocal, DataModuleLocal);
   Application.CreateForm(TDataModuleGeral, DataModuleGeral);
   Application.CreateForm(TFormMain, FormMain);
   FormSplash.Hide;

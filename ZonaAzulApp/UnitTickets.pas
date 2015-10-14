@@ -9,17 +9,16 @@ uses
   FMX.ListView.Appearances, FMX.ListView.Adapters.Base, FMX.ListView,
   System.Rtti, System.Bindings.Outputs, Fmx.Bind.Editors, Data.Bind.EngExt,
   Fmx.Bind.DBEngExt, Data.Bind.Components, Data.Bind.DBScope, Data.Bind.GenData,
-  Fmx.Bind.GenData, Data.Bind.ObjectScope;
+  Fmx.Bind.GenData, Data.Bind.ObjectScope, Data.DB, Datasnap.DBClient;
 
 type
   TFrameTickets = class(TFrame)
     Layout1: TLayout;
     ListViewTickets: TListView;
     buttonNew: TSpeedButton;
-    BindingsList1: TBindingsList;
-    BindSourceDB1: TBindSourceDB;
     lblMessage: TLabel;
-    PrototypeBindSource1: TPrototypeBindSource;
+    BindSourceDB1: TBindSourceDB;
+    BindingsList1: TBindingsList;
     LinkFillControlToField1: TLinkFillControlToField;
     procedure ListViewTicketsFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
@@ -38,7 +37,7 @@ implementation
 
 {$R *.fmx}
 
-uses UnitDataModuleGeral, UnitParking, UnitRoutines;
+uses UnitDataModuleGeral, UnitParking, UnitRoutines, UnitDataModuleLocal;
 
 procedure TFrameTickets.buttonNewClick(Sender: TObject);
 begin
@@ -51,7 +50,7 @@ begin
   inherited;
 
   //Exibe o label de mensagem se não existir nenhum tíquete adquirido.
-  lblMessage.Visible := (DataModuleGeral.DataSetTickets.IsEmpty);
+  lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty);
   lblMessage.Text    := 'Nenhum tíquete comprado'+#13+#13+'Clique no botão Novo para comprar um novo tíquete';
 
 end;

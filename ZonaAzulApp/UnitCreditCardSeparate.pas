@@ -31,7 +31,7 @@ procedure TFormCreditCardSeparate.buttonSaveClick(Sender: TObject);
 begin
   inherited;
 
-  //Valida os valores de todos os campos.
+  //Valida os valores dos campos.
   ValidateValuesComponents;
 
   //Retorna como resultado mrOK.

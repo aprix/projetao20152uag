@@ -56,7 +56,7 @@ end;
 
 procedure TFormCadastreCreditCard.editNameChange(Sender: TObject);
 begin
-  UnitRoutines.SetTextUpperCaseEditChange(Sender);
+  SetTextUpperCaseEditChange(Sender);
 end;
 
 end.

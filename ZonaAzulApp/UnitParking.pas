@@ -100,14 +100,14 @@ end;
 
 procedure TFormParking.editPlateLettersChange(Sender: TObject);
 begin
-  UnitRoutines.SetTextUpperCaseEditChange(Sender);
+  SetTextUpperCaseEditChange(Sender);
 end;
 
 procedure TFormParking.editPlateLettersKeyDown(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
   //Permite apenas a digitação de letras no campo editPlateLatters.
-  UnitRoutines.AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
+  AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
 end;
 
 procedure TFormParking.editPlateNumbersChange(Sender: TObject);

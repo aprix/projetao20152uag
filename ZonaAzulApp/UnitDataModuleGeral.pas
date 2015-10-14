@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Classes, FMX.Types, FMX.Controls, Data.DB,
   Datasnap.DBClient, DateUtils, System.UITypes, FMX.Forms, System.ImageList,
-  FMX.ImgList, Data.FMTBcd, Data.SqlExpr, System.iOUtils, Data.DbxSqlite;
+  FMX.ImgList, Data.FMTBcd, Data.SqlExpr, System.iOUtils, Data.DbxSqlite,
+  Datasnap.Provider;
 
 type
   IPaymentListener = interface
@@ -14,23 +15,9 @@ type
 
   TDataModuleGeral = class(TDataModule)
     CustomStyleBook: TStyleBook;
-    DataSetTickets: TClientDataSet;
-    DataSetTicketsPlate: TStringField;
-    DataSetTicketsTime: TIntegerField;
-    DataSetTicketsStartTime: TDateTimeField;
-    DataSetTicketsDeadlineTime: TDateTimeField;
-    DataSetTicketsIconIndex: TIntegerField;
-    IconsTicketsList: TImageList;
-    SQLConnectionLocal: TSQLConnection;
-    DataSetPlates: TSQLTable;
-    QueryPlates: TSQLQuery;
-    procedure DataModuleCreate(Sender: TObject);
-    procedure DataSetTicketsCalcFields(DataSet: TDataSet);
-    procedure SQLConnectionLocalAfterConnect(Sender: TObject);
-    procedure SQLConnectionLocalBeforeConnect(Sender: TObject);
   private
     { Private declarations }
-    procedure postPayment(Plate: String;
+    procedure PostPayment(Plate: String;
                           Time: Integer;
                           FlagCreditCard: String;
                           NameCreditCard: String;
@@ -40,6 +27,8 @@ type
                           CSCCredCard: Integer);
   public
     { Public declarations }
+
+    function ConsultPayment(Plate: String; var DayTime: TDateTime; var Time: Integer): Boolean;
 
     procedure sendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
 
@@ -58,10 +47,6 @@ type
     function GetDiscountPrice: Double;
 
     function GetLastPlate: String;
-
-    procedure SetLastPlate(Plate: String);
-
-    procedure ExecSQL(Query: TSQLQuery; Command: String);
   end;
 
 var
@@ -71,71 +56,9 @@ implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
-uses UnitCreditCardSeparate, UnitBuyCredits, UnitTickets;
+uses UnitCreditCardSeparate, UnitBuyCredits, UnitTickets, UnitDataModuleLocal;
 
 {$R *.dfm}
-
-procedure TDataModuleGeral.DataModuleCreate(Sender: TObject);
-begin
-  //Abre a conexão da base local e suas respectivas tabelas.
-  SQLConnectionLocal.Open;
-  DataSetPlates.Open;
-
-  //TESTE
-  DataSetTickets.CreateDataSet;
-  DataSetTickets.IndexDefs.Add('OrderBy', 'DeadlineTime', [ixDescending]);
-  DataSetTickets.IndexName := 'OrderBy';
-
-  DataSetTickets.Append;
-  DataSetTicketsPlate.AsString := 'PES16860';
-  DataSetTicketsTime.AsInteger := 60;
-  DataSetTicketsStartTime.AsDateTime := IncMinute(Now,-120);
-  DataSetTickets.Post;
-
-  DataSetTickets.Append;
-  DataSetTicketsPlate.AsString := 'PES16860';
-  DataSetTicketsTime.AsInteger := 60;
-  DataSetTicketsStartTime.AsDateTime := IncMinute(Now,-30);
-  DataSetTickets.Post;
-end;
-
-procedure TDataModuleGeral.DataSetTicketsCalcFields(DataSet: TDataSet);
-var
-ResourceStream : TResourceStream;
-DeadlineTime: TDateTime;
-IconName: String;
-begin
-  //Verifica se o estado do objeto DataSetTickets é dsInternalCalc.
-  if (DataSetTickets.State = dsInternalCalc) then
-  begin
-    //Calcula o tempo limite do tíquete corrente.
-    DeadlineTime := IncMinute(DataSetTicketsStartTime.AsDateTime, DataSetTicketsTime.AsInteger);
-
-    //Atualiza os valores dos atributos internos calculados.
-    DataSetTicketsDeadlineTime.AsDateTime := DeadlineTime;
-
-    //Verifica se o tíquete passou do limite.
-    if (Now > DeadlineTime) then
-    begin
-      //O ícone a ser atribuído ao tíquete será o de tíquete vencido.
-      DataSetTicketsIconIndex.AsInteger := 0;
-    end
-    else
-    begin
-      //O ícone a ser atribuído ao tíquete será o de tíquete válido(ativo).
-      DataSetTicketsIconIndex.AsInteger := 1;
-    end;
-  end;
-end;
-
-procedure TDataModuleGeral.ExecSQL(Query: TSQLQuery; Command: String);
-begin
-  //Executa o comando SQL usando o objeto Query passado como argumento.
-  Query.Close;
-  Query.SQL.Clear;
-  Query.SQL.Add(Command);
-  Query.ExecSQL();
-end;
 
 function TDataModuleGeral.GetDiscountPrice: Double;
 begin
@@ -145,7 +68,15 @@ end;
 function TDataModuleGeral.GetLastPlate: String;
 begin
   //Carrega da base local a última placa usada.
-  Result := DataSetPlates.FieldByName('Plate').AsString;
+  Result := DataModuleLocal.DataSetTicketsPlate.AsString;
+end;
+
+function TDataModuleGeral.ConsultPayment(Plate: String; var DayTime: TDateTime; var Time: Integer): Boolean;
+begin
+  //Consulta no servidor o pagamento do estacionamento referente à placa passada como argumento.
+  DayTime := now;
+  Time    := 30;
+  Result := True;
 end;
 
 function TDataModuleGeral.GetCreditsUser: Double;
@@ -185,9 +116,6 @@ end;
 
 procedure TDataModuleGeral.sendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
 begin
-  //Armazena a placa na base local.
-  SetLastPlate(Plate);
-
   //Verifica se não existe usuário logado. Ou seja, pagamento avulso.
   if not(IsUserLogged) then
   begin
@@ -213,14 +141,8 @@ begin
                                      ,StrToInt(FormCreditCardSeparate.editCSC.Text)
                                      );
 
-                          //Para o teste, salva o pagamento no ClientDataSet de tíquetes.
-                          DataSetTickets.Append;
-                          DataSetTicketsPlate.AsString := Plate;
-                          DataSetTicketsTime.AsInteger := Time;
-                          DataSetTicketsStartTime.AsDateTime:= Now;
-                          DataSetTickets.Post;
-                          DataSetTickets.Close;
-                          DataSetTickets.Open;
+                          //Insere o novo tíquete na base local.
+                          DataModuleLocal.InsertTicketLocal(Plate, Now, Time);
 
                           //Chama o procedimento do ouvinte de pagamento.
                           PaymentListener.OnAfterPayment;
@@ -230,34 +152,6 @@ begin
                         //FormCreditCardSeparate.DisposeOf();
                      end);
   end;
-end;
-
-procedure TDataModuleGeral.SetLastPlate(Plate: String);
-var
-CommandSQL : String;
-begin
-  //Armazena a placa na base de dados.
-  if (DataSetPlates.IsEmpty) then
-    ExecSQL(QueryPlates, Format('INSERT INTO Plates(Plate) VALUES(%s);', [QuotedStr(Plate)]))
-  else
-    ExecSQL(QueryPlates, Format('UPDATE Plates SET Plate = %s;', [QuotedStr(Plate)]));
-
-  DataSetPlates.Refresh;
-end;
-
-procedure TDataModuleGeral.SQLConnectionLocalAfterConnect(Sender: TObject);
-begin
-  //Cria as tabelas da base de dados local.
-  SQLConnectionLocal.ExecuteDirect('CREATE TABLE IF NOT EXISTS Plates('
-                                  +'Plate TEXT NOT NULL'
-                                  +');');
-end;
-
-procedure TDataModuleGeral.SQLConnectionLocalBeforeConnect(Sender: TObject);
-begin
-  {$IF DEFINED(IOS) or DEFINED(ANDROID)}
-  SQLConnectionLocal.Params.Values['Database'] :=   TPath.GetDocumentsPath + PathDelim + 'tasks.s3db';
-  {$ENDIF}
 end;
 
 function TDataModuleGeral.GetUnitTime: Integer;
