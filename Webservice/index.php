@@ -1,112 +1,106 @@
 <?php
-	require_once("Rest.inc.php");
-		
-	class API extends REST {
-	
-		public $data = "";
-		
-		const DB_SERVER = "localhost";
-		const DB_USER = "root";
-		const DB_PASSWORD = "";
-		const DB = "base";
-		
-		private $db = NULL;
-	
-		public function __construct(){
-			parent::__construct();				// Init parent contructor
-			$this->dbConnect();					// Initiate Database connection
+
+require_once('Xml.Class.php');
+require_once('config.php');
+
+$xml = new Xml();
+
+$erro = 0;
+$sucesso = 0;
+
+
+//variaveis
+
+$operacaoDoSistema = $_GET('IdOperation')
+$placaVeiculo = $_GET['Plate'];
+$hora = $_GET['Time'];
+$nomeImpresso = $_GET['NameCreditCard'];
+$bandeiraCartao = $_GET['FlagCreditCard'];
+$numeroCartao = $_GET['NumberCreditCard'];
+$mesValidade = $_GET['MonthCreditCard'];
+$anoValidade = $_GET['YearCreditCard'];
+$cscCartao	= $_GET['CSCCredCard'];
+
+$xml -> openTag("response");
+
+if($operacaoDoSistema == 1){ //operação 1 é corresponde ao pagamento de cliente não registrado
+
+	if($placaVeiculo == ''){
+
+		$erro = 1;
+		$mensagemDeErro = 'Insira o numero da placa';
+
+
+	}else if($nomeImpresso == '' || $bandeiraCartao == '' || $numeroCartao == '' || $mesValidade == '' || $anoValidade = '' || $cscCartao = ''){
+
+		$erro = 2;
+		$mensagemDeErro = 'Dados do cartão insuficientes';
+
+	}else{
+
+		$resposta = mysql_query("SELECT  "); //buscar pela placa do veiculo se o mesmo já está estacionado IMPLEMENTAR CONSULTA
+
+		if(mysql_num_rows($resposta) > 0 ){
+
+			$erro = 3;
+			$mensagemDeErro = 'Veículo já está estacionado';
+
+		}else{
+
+			mysql_query("INSERT"); //Insere os dados da compra nas tabelas correspondentes IMPLEMENTAR INSERÇÃO
+
+
 		}
-		
-		/*
-		 *  Database connection 
-		*/
-		private function dbConnect(){	
-			$this->db = mysqli_connect(self::DB_SERVER,self::DB_USER,self::DB_PASSWORD, self::DB) or die(mysqli_error($this->db));
-			
-			if($this->db)
-				mysqli_select_db($this->db,self::DB) or die(mysqli_error($this->db));
-				
-			mysqli_query($this->db, "SET CHARACTER set  'utf8'");
-		}
-		
-		/*
-		 * Public method for access api.
-		 * This method dynmically call the method based on the query string
-		 *
-		 */
-		public function processApi(){
-			$func = strtolower(trim(str_replace("/","",$_REQUEST['rquest'])));
-			
-			if((int)method_exists($this,$func) > 0){
-				$this->$func();
-			}			
-			else
-				$this->response('',404);				// If the method not exist with in this class, response would be "Page not found".*/
-		}
-						
-		
-		private function insertAlgumRegistro(){
-			if ($this->get_request_method() != 'POST'){
-				$this->response('', 406);
-			}
-			
-			//Recebe um Json como argumento para o parâmetro 'json'.
-			$json = $this->_request['json'];			
-			
-			//Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
-			$vetor = json_decode($json, TRUE);
-			
-			//Valor do par cuja chave é 'id', pertencente ao Json passado como argumento para a requisição POST. 
-			$id = $vetor['id'];
-			
-			//Array para ser convertido em um Json e ser retornado como resposta da requisição.
-			$response_array = array();
-			
-			//String contendo algum comando de SELECT, UPDATE, DELETE, INSERT.
-			$sql =   "SELECT EM ALGUMA TABELA";
-			
-			//Nesse caso, como se trata de uma consulta, os registros retornados na consulta serão percorridos através da variável $query.
-			if ($query = mysqli_query($this->db, $sql)){
-				
-				//Averigua se a consulta retornou pelo menos um registro.
-				if (mysqli_num_rows($query) > 0){
-					
-					//A função mysqli_fetch_array retorna um array, ele retorna o próximo registro selecionado no cursor da query.
-					//Obs.: a função seleciona o próximo registro da consulta, sendo então usado para percorrer todos os registros da consulta.
-					//Ex.: while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){ faça alguma coisa para cada registro}
-					$PegaProximoRegistroNaConsulta = mysqli_fetch_array($query, MYSQLI_ASSOC);
-					
-					//Pega os valores do primeira registro da consulta.
-					$response_array['id'] = $PegaProximoRegistroNaConsulta['Algum Atributo'];
-					$response_array['outroValor'] = $PegaProximoRegistroNaConsulta['Outro Atributo'];					
-				}
-				else{
-					//Para mensagens de erro (500 == 'Erro interno').
-					$this->response("Algum erro", 500);
-				}
-			}
-			else{	
-				//Para mensagens de erro.
-				$this->response("Error: "+mysqli_error($this->db), 500);			
-			}	
-				
-			//Retorna como resposta(200 == OK) uma estrutura de dados no formato Json. Ex.: {"id":1,"outroValor": "string"}
-			$this->response($this->arrayToJson($response_array), 200);			
-		}	
-				
-		/*
-		 *	Encode array into JSON
-		 * Decode JSON into array
-		*/
-		private function arrayToJson($data){
-			if(is_array($data)){
-				return json_encode($data);
-			}
-		}
+
 	}
+
+	if($erro > 0){
+
+		$xml -> addTag('erro', $erro);
+		$xml -> addTag('mensagem', $mensagemDeErro);
 	
-	// Initiiate Library
+	}
+}
+
+if ($operacaoDoSistema == 2) { //operação de consulta pela placa do veiculo
+
+if($placaVeiculo == ''){
+
+		$erro = 1;
+		$mensagemDeErro = 'Insira o numero da placa';
+
+}else{
+
+	$resposta = mysql_query("SELECT  "); //buscar pela placa do veiculo se o mesmo já está estacionado IMPLEMENTAR CONSULT
+
+	if (mysql_num_rows($resposta) == 0) {
+
+		$erro = 4;
+		$mensagemDeErro = 'Veiculo sem vaga reservada';
+
+	}else if(mysql_num_rows($resposta) == 1){
+
+		$sucesso = 1;
+		$mensagemFeedback = 'Veiculo com vaga reservada' 
+	}
+
+	}
+
+	if ($erro > 0){
+
+		$xml -> addTag('erro', $erro);
+		$xml -> addTag('mensagem', $mensagemDeErro);
+
+	}else{
 	
-	$api = new API;
-	$api->processApi();
+		$xml -> addTag('Sucesso!', $mensagemFeedback;
+
+	}
+}
+
+$xml -> closeTag("response");
+
+$echo $xml;
+
+
 ?>
