@@ -91,9 +91,9 @@ CREATE TABLE IF NOT EXISTS prices(
 	id INT AUTO_INCREMENT NOT NULL,
 	min_time INT NOT NULL,
 	un_price NUMERIC NOT NULL,
-	un_time VARCHAR (1) NOT NULL,
+	un_time INT NOT NULL,
 	discount_sellers NUMERIC NOT NULL,
-	max_price INT NOT NULL,
+	max_price NUMERIC NOT NULL,
 	
 	PRIMARY KEY (id)
 );
