@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS vacancy_location(
 	time_location INT NOT NULL,
 	total_payment NUMERIC NOT NULL,
 	
-	PRIMARY KEY (id_user, id_vehicle),
+	PRIMARY KEY (id_user, id_vehicle, date_location),
 	FOREIGN KEY (id_user) REFERENCES user(id),
 	FOREIGN KEY (id_vehicle) REFERENCES vehicle(id),
 	UNIQUE  KEY (id)
@@ -91,9 +91,9 @@ CREATE TABLE IF NOT EXISTS prices(
 	id INT AUTO_INCREMENT NOT NULL,
 	min_time INT NOT NULL,
 	un_price NUMERIC NOT NULL,
-	un_time VARCHAR (1) NOT NULL,
+	un_time INT NOT NULL,
 	discount_sellers NUMERIC NOT NULL,
-	max_price INT NOT NULL,
+	max_price NUMERIC NOT NULL,
 	
 	PRIMARY KEY (id)
 );
@@ -119,3 +119,8 @@ CREATE TABLE IF NOT EXISTS supervisor(
 	FOREIGN KEY(id_user) REFERENCES user(id),
 	UNIQUE  KEY(id)	
 );
+
+-- inserindo usuario default
+
+INSERT INTO user(id, cpf, saldo, senha, email)
+VALUES (1, 000000000000, 0.0, 123456, 'notemail');
