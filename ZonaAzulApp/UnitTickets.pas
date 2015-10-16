@@ -17,9 +17,9 @@ type
     ListViewTickets: TListView;
     buttonNew: TSpeedButton;
     lblMessage: TLabel;
-    BindSourceDB1: TBindSourceDB;
     BindingsList1: TBindingsList;
     LinkFillControlToField1: TLinkFillControlToField;
+    BindSourceDB1: TBindSourceDB;
     procedure ListViewTicketsFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
     procedure buttonNewClick(Sender: TObject);
@@ -50,7 +50,7 @@ begin
   inherited;
 
   //Exibe o label de mensagem se não existir nenhum tíquete adquirido.
-  lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty);
+  //lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty);
   lblMessage.Text    := 'Nenhum tíquete comprado'+#13+#13+'Clique no botão Novo para comprar um novo tíquete';
 
 end;
