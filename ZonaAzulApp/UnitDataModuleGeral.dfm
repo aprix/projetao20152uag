@@ -3880,7 +3880,10 @@ object DataModuleGeral: TDataModuleGeral
     Top = 14
   end
   object ClientWebService: TRESTClient
-    BaseURL = 'http://192.168.254.2'
+    Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
+    AcceptCharset = 'UTF-8, *;q=0.8'
+    BaseURL = 'http://diogoespinhara.com.br'
+    ContentType = 'application/x-www-form-urlencoded'
     Params = <>
     HandleRedirects = True
     Left = 62
@@ -3893,7 +3896,7 @@ object DataModuleGeral: TDataModuleGeral
         name = 'json'
         Options = [poAutoCreated]
       end>
-    Resource = 'webservice/get_vacancy_location_date'
+    Resource = 'webservice/get_vacancy_location'
     Response = ResponseGetPayment
     SynchronizedEvents = False
     Left = 62
@@ -3918,6 +3921,7 @@ object DataModuleGeral: TDataModuleGeral
     Top = 152
   end
   object ResponsePostPayment: TRESTResponse
+    ContentType = 'application/json'
     Left = 192
     Top = 216
   end

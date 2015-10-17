@@ -52,6 +52,7 @@ type
     procedure UpdateValuesComponents;
     procedure ValidateValuesComponents;
     procedure OnAfterPayment;
+    procedure OnError(Msg: String);
     var
     Time: Integer;
   public
@@ -155,6 +156,12 @@ begin
 
   //O formulário é fechado.
   Close;
+end;
+
+procedure TFormParking.OnError(Msg: String);
+begin
+  //Exibe a mensagem do erro para o usuário.
+  ShowMessage(Msg);
 end;
 
 procedure TFormParking.TimerUpdateValuesTimer(Sender: TObject);
