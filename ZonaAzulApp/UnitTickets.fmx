@@ -57,12 +57,6 @@ object FrameTickets: TFrameTickets
       end
     end
   end
-  object BindSourceDB1: TBindSourceDB
-    DataSet = DataModuleLocal.DataSetTickets
-    ScopeMappings = <>
-    Left = 136
-    Top = 88
-  end
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
@@ -87,5 +81,11 @@ object FrameTickets: TFrameTickets
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = DataModuleLocal.DataSetTickets
+    ScopeMappings = <>
+    Left = 152
+    Top = 216
   end
 end

@@ -14,7 +14,7 @@ Coordinates=186,10,46,51
 Coordinates=242,10,69,33
 
 []
-Coordinates=214,1,87,33
+Coordinates=287,81,69,141
 Visible=False
 
 [ListViewTickets]
@@ -29,13 +29,24 @@ Visible=True
 Coordinates=325,110,175,33
 Visible=False
 
-[BindSourceDB1]
-Coordinates=325,110,159,177
-
 [BindingsList1]
 Coordinates=214,125,82,33
 
 [DataModuleLocal.]
 Visible=False
 Coordinates=195,1,176,33
+
+[DataModuleLocal.DataSetTickets]
+Coordinates=280,80,176,33
+Visible=False
+
+[DataModuleLocal.SQLTableTickets]
+Coordinates=204,1,186,51
+
+[DataModuleLocal.DataSetTickets2]
+Coordinates=522,53,182,33
+Visible=False
+
+[BindSourceDB1]
+Coordinates=270,90,159,159
 

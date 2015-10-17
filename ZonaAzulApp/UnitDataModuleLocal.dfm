@@ -3,25 +3,6 @@ object DataModuleLocal: TDataModuleLocal
   OnCreate = DataModuleCreate
   Height = 403
   Width = 542
-  object SQLConnectionLocal: TSQLConnection
-    DriverName = 'Sqlite'
-    LoginPrompt = False
-    Params.Strings = (
-      'DriverUnit=Data.DbxSqlite'
-      
-        'DriverPackageLoader=TDBXSqliteDriverLoader,DBXSqliteDriver170.bp' +
-        'l'
-      
-        'MetaDataPackageLoader=TDBXSqliteMetaDataCommandFactory,DbxSqlite' +
-        'Driver170.bpl'
-      'FailIfMissing=False'
-      'Database=ZonaAzul.db')
-    AfterConnect = SQLConnectionLocalAfterConnect
-    BeforeConnect = SQLConnectionLocalBeforeConnect
-    Connected = True
-    Left = 56
-    Top = 24
-  end
   object IconsTicketsList: TImageList
     Source = <
       item
@@ -267,54 +248,35 @@ object DataModuleLocal: TDataModuleLocal
             SourceRect.Bottom = 48.000000000000000000
           end>
       end>
-    Left = 160
-    Top = 96
+    Left = 112
+    Top = 64
   end
-  object SQLTableTickets: TSQLTable
-    MaxBlobSize = -1
-    SQLConnection = SQLConnectionLocal
-    TableName = 'Tickets'
-    Left = 56
-    Top = 96
+  object FDConnectionLocal: TFDConnection
+    Params.Strings = (
+      
+        'Database=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAz' +
+        'ulApp\ZonaAzul.s3db'
+      'LockingMode=Normal'
+      'DriverID=sQLite')
+    LoginPrompt = False
+    AfterConnect = FDConnectionLocalAfterConnect
+    BeforeConnect = FDConnectionLocalBeforeConnect
+    Left = 328
+    Top = 104
   end
-  object DataSetTickets: TClientDataSet
-    Aggregates = <>
-    Filter = 'Plate <> '#39#39
-    Filtered = True
-    FieldDefs = <>
-    IndexDefs = <>
-    Params = <>
-    ProviderName = 'DataSetProviderTickets'
-    StoreDefs = True
-    OnCalcFields = DataSetTicketsCalcFields
-    Left = 56
-    Top = 216
-    object DataSetTicketsPlate: TWideStringField
-      FieldName = 'Plate'
-      Size = 10
-    end
-    object DataSetTicketsStartTimeStr: TWideStringField
-      FieldName = 'StartTimeStr'
-    end
-    object DataSetTicketsStartTime: TDateTimeField
-      FieldKind = fkInternalCalc
-      FieldName = 'StartTime'
-    end
-    object DataSetTicketsTime: TLargeintField
-      FieldName = 'Time'
-    end
-    object DataSetTicketsDeadlineTime: TDateTimeField
-      FieldKind = fkInternalCalc
-      FieldName = 'DeadlineTime'
-    end
-    object DataSetTicketsIconIndex: TIntegerField
-      FieldKind = fkInternalCalc
-      FieldName = 'IconIndex'
-    end
-  end
-  object DataSetProviderTickets: TDataSetProvider
-    DataSet = SQLTableTickets
-    Left = 56
-    Top = 152
+  object DataSetTickets: TFDQuery
+    Connection = FDConnectionLocal
+    SQL.Strings = (
+      'select'
+      'Plate'
+      ',StartTime'
+      ',Time'
+      ',Datetime(StartTime, '#39'+'#39' || Time || '#39' minutes'#39') as DeadlineTime'
+      
+        ',Case When Datetime(StartTime, '#39'+'#39' || Time || '#39' minutes'#39') > Date' +
+        'time('#39'now'#39') Then 1 Else 0 End as IconIndex'
+      'From Tickets')
+    Left = 336
+    Top = 168
   end
 end

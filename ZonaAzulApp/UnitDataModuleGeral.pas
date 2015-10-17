@@ -68,7 +68,7 @@ end;
 function TDataModuleGeral.GetLastPlate: String;
 begin
   //Carrega da base local a última placa usada.
-  Result := DataModuleLocal.DataSetTicketsPlate.AsString;
+  Result := DataModuleLocal.DataSetTickets.FieldByName('Plate').AsString;
 end;
 
 function TDataModuleGeral.ConsultPayment(Plate: String; var DayTime: TDateTime; var Time: Integer): Boolean;

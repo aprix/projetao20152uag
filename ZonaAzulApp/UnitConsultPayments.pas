@@ -79,14 +79,14 @@ end;
 procedure TFrameConsultPayments.ClearComponents;
 begin
   //Limpa os campos da consulta.
-  LayoutResultConsult.Visible := False;
+  {LayoutResultConsult.Visible := False;
   editPlateLetters.Text := '';
-  editPlateNumbers.Text := '';
+  editPlateNumbers.Text := '';}
 end;
 
 constructor TFrameConsultPayments.Create(AWOner: TComponent);
 begin
-  inherited;
+  inherited Create(AWOner);
 
   //Limpa os campos referente à consulta.
   ClearComponents;

@@ -5,25 +5,21 @@ interface
 uses
   System.SysUtils, System.Classes, Data.DbxSqlite, Data.FMTBcd, Data.DB,
   Datasnap.DBClient, Datasnap.Provider, Data.SqlExpr, DateUtils,
-  System.ImageList, FMX.ImgList;
+  System.ImageList, FMX.ImgList, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.SQLite,
+  FireDAC.Phys.SQLiteDef, FireDAC.Stan.ExprFuncs, FireDAC.FMXUI.Wait,
+  FireDAC.Comp.Client, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.DApt, FireDAC.Comp.DataSet, System.IOUtils;
 
 type
   TDataModuleLocal = class(TDataModule)
-    SQLConnectionLocal: TSQLConnection;
     IconsTicketsList: TImageList;
-    SQLTableTickets: TSQLTable;
-    DataSetTickets: TClientDataSet;
-    DataSetTicketsPlate: TWideStringField;
-    DataSetTicketsStartTimeStr: TWideStringField;
-    DataSetTicketsStartTime: TDateTimeField;
-    DataSetTicketsTime: TLargeintField;
-    DataSetTicketsDeadlineTime: TDateTimeField;
-    DataSetTicketsIconIndex: TIntegerField;
-    DataSetProviderTickets: TDataSetProvider;
+    FDConnectionLocal: TFDConnection;
+    DataSetTickets: TFDQuery;
     procedure DataModuleCreate(Sender: TObject);
-    procedure SQLConnectionLocalAfterConnect(Sender: TObject);
-    procedure SQLConnectionLocalBeforeConnect(Sender: TObject);
-    procedure DataSetTicketsCalcFields(DataSet: TDataSet);
+    procedure FDConnectionLocalBeforeConnect(Sender: TObject);
+    procedure FDConnectionLocalAfterConnect(Sender: TObject);
   private
     { Private declarations }
   public
@@ -44,66 +40,29 @@ implementation
 procedure TDataModuleLocal.DataModuleCreate(Sender: TObject);
 begin
   //Abre a conexão da base local e suas respectivas tabelas.
-  SQLConnectionLocal.Open;
+  FDConnectionLocal.Connected := True;
 
   //Atribui a ordenação aos tíquetes da base local.
   DataSetTickets.IndexDefs.Add('OrderByTickets', 'DeadlineTime', [ixDescending]);
   DataSetTickets.IndexName := 'OrderByTickets';
-  DataSetTickets.Open;
+  DataSetTickets.Open();
 
 end;
 
-procedure TDataModuleLocal.DataSetTicketsCalcFields(DataSet: TDataSet);
-var
-ResourceStream : TResourceStream;
-DeadlineTime: TDateTime;
-IconName: String;
-begin
-  //Verifica se o estado determina o cálculo dos atributos internos calculados.
-  //E verifica se o registro do tíquete não é o padrão.
-  if (DataSetTickets.State = dsInternalCalc)
-  and (DataSetTicketsPlate.AsString <> EmptyStr) then
-  begin
-    //Atualiza os valores dos atributos calculados internamente de DataSetTickets
-    //através do objeto SQLDataSetTickets vinculado.
-    DataSetTicketsStartTime.AsDateTime := StrToDateTime(DataSetTicketsStartTimeStr.AsString);;
-
-    //Calcula o tempo limite do tíquete corrente.
-    DeadlineTime := IncMinute(DataSetTicketsStartTime.AsDateTime, DataSetTicketsTime.AsInteger);
-
-    //Atualiza os valores dos atributos internos calculados.
-    DataSetTicketsDeadlineTime.AsDateTime := DeadlineTime;
-
-    //Verifica se o tíquete passou do limite.
-    if (Now > DeadlineTime) then
-    begin
-      //O ícone a ser atribuído ao tíquete será o de tíquete vencido.
-      DataSetTicketsIconIndex.AsInteger := 0;
-    end
-    else
-    begin
-      //O ícone a ser atribuído ao tíquete será o de tíquete válido(ativo).
-      DataSetTicketsIconIndex.AsInteger := 1;
-    end;
-  end;
-end;
-
-procedure TDataModuleLocal.SQLConnectionLocalAfterConnect(Sender: TObject);
+procedure TDataModuleLocal.FDConnectionLocalAfterConnect(Sender: TObject);
 begin
   //Cria as tabelas da base de dados local.
-  SQLConnectionLocal.ExecuteDirect('CREATE TABLE IF NOT EXISTS Tickets('
-                                  +'Plate CHAR(10) NOT NULL'
-                                  +',StartTimeStr CHAR(20) NOT NULL'
+  FDConnectionLocal.ExecSQL('CREATE TABLE IF NOT EXISTS Tickets('
+                                  +'Plate VARCHAR(10) NOT NULL'
+                                  +',StartTime DATETIME NOT NULL'
                                   +',Time INTEGER NOT NULL'
                                   +');');
-  //Necessário inserir o primeiro registro para identificação dos tipos dos atributos(Fields).
-  SQLConnectionLocal.ExecuteDirect('INSERT INTO Tickets Select '''', '''', 0 Where Not Exists(Select * From Tickets)');
 end;
 
-procedure TDataModuleLocal.SQLConnectionLocalBeforeConnect(Sender: TObject);
+procedure TDataModuleLocal.FDConnectionLocalBeforeConnect(Sender: TObject);
 begin
   {$IF DEFINED(IOS) or DEFINED(ANDROID)}
-  SQLConnectionLocal.Params.Values['Database'] :=   TPath.GetDocumentsPath + PathDelim + 'tasks.s3db';
+  FDConnectionLocal.Params.Values['Database'] :=   TPath.GetDocumentsPath + PathDelim + 'ZonaAzul.s3db';
   {$ENDIF}
 end;
 
@@ -113,13 +72,13 @@ var
 CommandSQL: String;
 begin
   //Constroi o comando de INSERT para o novo tíquete.
-  CommandSQL := Format('INSERT INTO Tickets(Plate, StartTimeStr, Time) VALUES(%s,%s, %d);'
+  CommandSQL := Format('INSERT INTO Tickets(Plate, StartTime, Time) VALUES(%s,%s, %d);'
                       ,[ QuotedStr(Plate)
-                        ,QuotedStr(DateTimeToStr(StartTime))
+                        ,QuotedStr(FormatDateTime('yyyy-MM-dd HH:mm:ss', StartTime))
                         ,Time]);
 
   //Executa o comando SQL de Insert do tíquete na base local.
-  SQLConnectionLocal.ExecuteDirect(CommandSQL);
+  FDConnectionLocal.ExecSQL(CommandSQL);
 
   //Atualiza a consulta de DataSetTickets.
   DataSetTickets.Close;
