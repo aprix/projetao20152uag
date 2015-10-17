@@ -68,7 +68,8 @@ class API extends REST {
         $nomeImpresso = $vetor['NameCreditCard'];
         $bandeiraCartao = $vetor['FlagCreditCard'];
         $numeroCartao = $vetor['NumberCreditCard'];
-        $validade = $vetor['Validate'];
+		$mesValidadeCartao = $vetor['MonthCreditCard'];
+		$anoValidadeCartao = $vetor['YearCreditCard'];
         $cscCartao = $vetor['CSCCredCard'];
 		
 		// sql que verifica se para esta placa já existe algum veiculo estacionado utilizando a data atual como referência.
@@ -89,7 +90,7 @@ class API extends REST {
                 
 				// faz as validações de pagamento...
 				// TODO verificar este método....
-                $pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $validade, $cscCartao);
+                $pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
 
 				// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
 				$sql_select_vehicle = select_vehicle($placaVeiculo, 1);
@@ -120,10 +121,20 @@ class API extends REST {
 					$response['Error'] = mysqli_error($this->db);					
 					$this->response(json_encode($response), 200);
 				}
-				// caso ocorra tudo certo será retornada a aplicação uma mensagem de sucesso...
-				$response['Sucess'] = "Dados inseridos com sucesso";					
-				$this->response(json_encode($response), 200);
-                
+
+				// feito novamente a consulta para pegar a data salva
+				$query = mysqli_query($this->db, $sql);
+				if(mysqli_num_rows($query) > 0){
+					$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+					// caso ocorra tudo certo será retornada a aplicação uma mensagem de sucesso...
+					$response['Sucess'] = $row['initialDate'];					
+					$this->response(json_encode($response), 200);
+		        } else {
+					//Para mensagens de erro.
+            		$response['Error'] = mysqli_error($this->db);
+					$this->response(json_encode($response), 200);
+				}
             }
         } else {
             //Para mensagens de erro.
