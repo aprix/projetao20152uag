@@ -90,7 +90,7 @@ object FrameConsultPayments: TFrameConsultPayments
       Size.Height = 96.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
-      object Rectangle2: TRectangle
+      object RectangleResult: TRectangle
         Align = Client
         Fill.Color = claWhite
         Size.Width = 321.000000000000000000
@@ -126,28 +126,18 @@ object FrameConsultPayments: TFrameConsultPayments
           Size.Height = 62.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          object LabelDay: TLabel
-            Align = MostTop
-            StyledSettings = [Family]
-            Size.Width = 301.000000000000000000
-            Size.Height = 22.000000000000000000
-            Size.PlatformDefault = False
-            TextSettings.Font.Size = 20.000000000000000000
-            TextSettings.Font.Style = [fsBold]
-            TextSettings.FontColor = claGreen
-            TextSettings.HorzAlign = Center
-            Text = '21/09/2014'
-          end
           object LabelTimeInterval: TLabel
             Align = Client
+            AutoSize = True
             StyledSettings = [Family]
             Size.Width = 301.000000000000000000
-            Size.Height = 40.000000000000000000
+            Size.Height = 62.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Size = 20.000000000000000000
             TextSettings.Font.Style = [fsBold]
             TextSettings.FontColor = claGreen
             TextSettings.HorzAlign = Center
+            TextSettings.WordWrap = False
             Text = 'de 13:00 a 14:50'
           end
         end

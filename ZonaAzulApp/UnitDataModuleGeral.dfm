@@ -3879,4 +3879,46 @@ object DataModuleGeral: TDataModuleGeral
     Left = 47
     Top = 14
   end
+  object ClientWebService: TRESTClient
+    BaseURL = 'http://192.168.254.2'
+    Params = <>
+    HandleRedirects = True
+    Left = 62
+    Top = 88
+  end
+  object RequestGetPayment: TRESTRequest
+    Client = ClientWebService
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/get_vacancy_location_date'
+    Response = ResponseGetPayment
+    SynchronizedEvents = False
+    Left = 62
+    Top = 152
+  end
+  object ResponseGetPayment: TRESTResponse
+    Left = 62
+    Top = 216
+  end
+  object RequestPostPayment: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_vacancy_location'
+    Response = ResponsePostPayment
+    SynchronizedEvents = False
+    Left = 192
+    Top = 152
+  end
+  object ResponsePostPayment: TRESTResponse
+    Left = 192
+    Top = 216
+  end
 end
