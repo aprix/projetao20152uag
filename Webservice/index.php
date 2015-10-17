@@ -1,106 +1,194 @@
 <?php
 
-require_once('Xml.Class.php');
-require_once('config.php');
-
-$xml = new Xml();
-
-$erro = 0;
-$sucesso = 0;
+require_once("Rest.inc.php");
+require_once("database_operations.php");
 
 
-//variaveis
 
-$operacaoDoSistema = $_GET('IdOperation')
-$placaVeiculo = $_GET['Plate'];
-$hora = $_GET['Time'];
-$nomeImpresso = $_GET['NameCreditCard'];
-$bandeiraCartao = $_GET['FlagCreditCard'];
-$numeroCartao = $_GET['NumberCreditCard'];
-$mesValidade = $_GET['MonthCreditCard'];
-$anoValidade = $_GET['YearCreditCard'];
-$cscCartao	= $_GET['CSCCredCard'];
+class API extends REST {
 
-$xml -> openTag("response");
+    public $data = "";
 
-if($operacaoDoSistema == 1){ //operação 1 é corresponde ao pagamento de cliente não registrado
+    const DB_SERVER = "localhost:3306";
+    const DB_USER = "azul";
+    const DB_PASSWORD = "123456";
+    const DB = "zona_azul";
 
-	if($placaVeiculo == ''){
+    private $db = NULL;
 
-		$erro = 1;
-		$mensagemDeErro = 'Insira o numero da placa';
+    public function __construct() {
+        parent::__construct();    // Init parent contructor
+        $this->dbConnect();     // Initiate Database connection
+    }
+
+    /*
+     *  Database connection 
+     */
+
+    private function dbConnect() {
+        $this->db = mysqli_connect(self::DB_SERVER, self::DB_USER, self::DB_PASSWORD, self::DB) or die(mysqli_error($this->db));
+
+        if ($this->db)
+            mysqli_select_db($this->db, self::DB) or die(mysqli_error($this->db));
+
+        mysqli_query($this->db, "SET CHARACTER set  'utf8'");
+    }
+    /*
+     * Public method for access api.
+     * This method dynmically call the method based on the query string
+     *
+     */
+
+    public function processApi() {
+
+        $func = strtolower(trim(str_replace("/", "", $_REQUEST['rquest'])));
+
+        if ((int) method_exists($this, $func) > 0) {
+            $this->$func();
+        } else {
+            $this->response('Method not Found', 404);    // If the method not exist with in this class, response would be "Page not found".*/
+	}
+
+    }
+
+	private function post_vacancy_location() {
+        if ($this->get_request_method() != 'POST') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vetor = json_decode($json, TRUE);
+
+        //variaveis
+        $placaVeiculo = $vetor['Plate'];
+        $hora = $vetor['Time'];
+        $nomeImpresso = $vetor['NameCreditCard'];
+        $bandeiraCartao = $vetor['FlagCreditCard'];
+        $numeroCartao = $vetor['NumberCreditCard'];
+        $validade = $vetor['Validate'];
+        $cscCartao = $vetor['CSCCredCard'];
+		
+		// sql que verifica se para esta placa já existe algum veiculo estacionado utilizando a data atual como referência.
+        $sql = select_vacancy_location($placaVeiculo);
+		
+		$response = array();
+
+        if ($query = mysqli_query($this->db, $sql)) {
+
+			// se a quantidade de linhas retornadas da query for > 0 indica que o veiculo desta placa já está estacionado
+            if (mysqli_num_rows($query) > 0) {
+
+				//lançada mensagem para a aplicação...
+                $response['Error'] = "Veiculo ja estacionado";
+				$this->response(json_encode($response), 200);
+
+            } else {
+                
+				// faz as validações de pagamento...
+				// TODO verificar este método....
+                $pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $validade, $cscCartao);
+
+				// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
+				$sql_select_vehicle = select_vehicle($placaVeiculo, 1);
+				$select_vehicle = mysqli_query($this->db, $sql_select_vehicle);
+				
+				// se não existe registro( == 0) então...
+				if(mysqli_num_rows($select_vehicle) == 0){
+					
+					// é inserido um novo registro...
+					$sql_insert_vehicle = insert_vehicle($placaVeiculo);
+		            $insert_vehicle = mysqli_query($this->db, $sql_insert_vehicle );
+
+					// em caso de erro será enviado para a aplicação...
+					if(! $insert_vehicle){
+						$response['Error'] = mysqli_error($this->db);
+						$this->response(json_encode($response), 200);
+					}
+
+				}
+				
+				// como já foi verificado na consulta $query que não existe locação de vaga
+				// neste momento para o veiculo é realizada a locação de vaga...
+				$sql_insert_vacancy_location = insert_vacancy_location($placaVeiculo, $hora);
+                $insert_vacancy_location = mysqli_query($this->db,  $sql_insert_vacancy_location);
+
+				// em caso de erro será enviado para a aplicação...
+				if(! $insert_vacancy_location){
+					$response['Error'] = mysqli_error($this->db);					
+					$this->response(json_encode($response), 200);
+				}
+				// caso ocorra tudo certo será retornada a aplicação uma mensagem de sucesso...
+				$response['Sucess'] = "Dados inseridos com sucesso";					
+				$this->response(json_encode($response), 200);
+                
+            }
+        } else {
+            //Para mensagens de erro.
+            $response['Error'] = mysqli_error($this->db);
+			$this->response(json_encode($response), 200);
+        }
+    }
 
 
-	}else if($nomeImpresso == '' || $bandeiraCartao == '' || $numeroCartao == '' || $mesValidade == '' || $anoValidade = '' || $cscCartao = ''){
+	private function get_vacancy_location_date(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
 
-		$erro = 2;
-		$mensagemDeErro = 'Dados do cartão insuficientes';
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
 
-	}else{
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		// pega a variavel Plate(placa do carro)
+		$plate = $vector['Plate'];
+		
+		// este sql é uma consulta que retorna a data de inicio da locação
+		// e a data de fim da locação...
+		$sql = select_vacancy_location_date($plate);
 
-		$resposta = mysql_query("SELECT  "); //buscar pela placa do veiculo se o mesmo já está estacionado IMPLEMENTAR CONSULTA
+		$response = array();
 
-		if(mysql_num_rows($resposta) > 0 ){
-
-			$erro = 3;
-			$mensagemDeErro = 'Veículo já está estacionado';
-
-		}else{
-
-			mysql_query("INSERT"); //Insere os dados da compra nas tabelas correspondentes IMPLEMENTAR INSERÇÃO
-
-
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				$response_row = array();
+				$i = 0;
+				// este laço varre as linhas da consulta e vai as armazenando em $response...
+				while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+					$response_row['InitialDate'] = $row['initialDate'];
+					$response_row[ 'FinalDate' ] = $row[ 'finalDate' ];
+					$response[$i] = $response_row;
+					$i++;
+				}
+			}
 		}
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);
 
 	}
 
-	if($erro > 0){
+    /*
+     * 	Encode array into JSON
+     * Decode JSON into array
+     */
 
-		$xml -> addTag('erro', $erro);
-		$xml -> addTag('mensagem', $mensagemDeErro);
-	
-	}
+    private function arrayToJson($data) {
+        if (is_array($data)) {
+            return json_encode($data);
+        }
+    }
+
 }
 
-if ($operacaoDoSistema == 2) { //operação de consulta pela placa do veiculo
+// Initiiate Library
 
-if($placaVeiculo == ''){
-
-		$erro = 1;
-		$mensagemDeErro = 'Insira o numero da placa';
-
-}else{
-
-	$resposta = mysql_query("SELECT  "); //buscar pela placa do veiculo se o mesmo já está estacionado IMPLEMENTAR CONSULT
-
-	if (mysql_num_rows($resposta) == 0) {
-
-		$erro = 4;
-		$mensagemDeErro = 'Veiculo sem vaga reservada';
-
-	}else if(mysql_num_rows($resposta) == 1){
-
-		$sucesso = 1;
-		$mensagemFeedback = 'Veiculo com vaga reservada' 
-	}
-
-	}
-
-	if ($erro > 0){
-
-		$xml -> addTag('erro', $erro);
-		$xml -> addTag('mensagem', $mensagemDeErro);
-
-	}else{
-	
-		$xml -> addTag('sucesso', $mensagemFeedback;
-
-	}
-}
-
-$xml -> closeTag("response");
-
-$echo $xml;
-
-
+$api = new API;
+$api->processApi();
 ?>
