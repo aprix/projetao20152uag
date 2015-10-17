@@ -143,6 +143,53 @@ class API extends REST {
         }
     }
 
+	private function get_vacancy_location(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		// pega a variavel Plate(placa do carro)
+		$plate = $vector['Plate'];
+		
+		// este sql é uma consulta que retorna a data de inicio da locação
+		// e a data de fim da locação...
+		$sql = select_vacancy_location($plate);
+
+		$response = array();
+
+		if ($query = mysqli_query($this->db, $sql)) {
+
+			// se a quantidade de linhas retornadas da query for igual a zero...
+            if (mysqli_num_rows($query) == 0) {
+
+				// então o veiculo não está estacionado...
+				$response['Error'] = "Veiculo nao estacionado";
+			} else {
+				// pega o proximo registro, que neste caso DEVE ser o unico
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				// salva no formato solicitado por Diogo na issue do dia 16/10/2015.
+				$response['DateBegin'] = $row['initialDate'];
+				$response['DeadlineTime'] = $row[ 'finalDate' ];
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);
+	}
+
+
 
 	private function get_vacancy_location_date(){
 		if ($this->get_request_method() != 'GET') {
