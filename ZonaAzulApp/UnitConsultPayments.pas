@@ -18,11 +18,11 @@ type
     editPlateNumbers: TEdit;
     LayoutResultConsult: TLayout;
     LabelResult: TLabel;
-    buttonActiveTickets: TSpeedButton;
+    buttonConsultTicket: TSpeedButton;
     RectangleResult: TRectangle;
     Layout4: TLayout;
     LabelTimeInterval: TLabel;
-    procedure buttonActiveTicketsClick(Sender: TObject);
+    procedure buttonConsultTicketClick(Sender: TObject);
     procedure editPlateNumbersChange(Sender: TObject);
     procedure editPlateLettersChange(Sender: TObject);
     procedure editPlateLettersKeyDown(Sender: TObject; var Key: Word;
@@ -50,7 +50,7 @@ uses UnitDataModuleGeral, UnitRoutines;
 
 { TFrameConsultPayments }
 
-procedure TFrameConsultPayments.buttonActiveTicketsClick(Sender: TObject);
+procedure TFrameConsultPayments.buttonConsultTicketClick(Sender: TObject);
 var
 DayTime, DeadlineTime: TDateTime;
 Plate: String;
@@ -117,7 +117,7 @@ end;
 procedure TFrameConsultPayments.SetPaymentAuthorized(DayTime, DeadlineTime: TDateTime);
 begin
   //Exibe os campos de resultados.
-  LayoutResultConsult.Visible := True;
+  RectangleResult.Visible := True;
 
   //Atribui os dados do pagamento aos campos de resultados.
   LabelResult.Text := 'Estacionamento Autorizado';
@@ -132,7 +132,7 @@ end;
 procedure TFrameConsultPayments.SetPaymentUnauthorized;
 begin
   //Exibe os campos de resultados.
-  LayoutResultConsult.Visible := True;
+  RectangleResult.Visible := True;
 
   //Atribui ao label de resultado o texto de não autorização.
   LabelResult.Text := 'Estacionamento'+#13+'Não Autorizado';

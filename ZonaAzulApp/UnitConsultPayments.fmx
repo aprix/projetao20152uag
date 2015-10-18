@@ -41,7 +41,6 @@ object FrameConsultPayments: TFrameConsultPayments
           TabOrder = 0
           KeyboardType = Alphabet
           MaxLength = 3
-          Text = 'PES'
           TextSettings.Font.Size = 24.000000000000000000
           TextSettings.HorzAlign = Center
           Size.Width = 58.000000000000000000
@@ -68,7 +67,6 @@ object FrameConsultPayments: TFrameConsultPayments
           TabOrder = 1
           KeyboardType = NumberPad
           MaxLength = 4
-          Text = '6816'
           TextSettings.Font.Size = 24.000000000000000000
           TextSettings.HorzAlign = Center
           Size.Width = 76.000000000000000000
@@ -143,7 +141,7 @@ object FrameConsultPayments: TFrameConsultPayments
         end
       end
     end
-    object buttonActiveTickets: TSpeedButton
+    object buttonConsultTicket: TSpeedButton
       Align = Top
       StyledSettings = [Family, Style, FontColor]
       Margins.Left = 20.000000000000000000
@@ -156,7 +154,7 @@ object FrameConsultPayments: TFrameConsultPayments
       Size.PlatformDefault = False
       Text = 'Consultar'
       TextSettings.Font.Size = 28.000000000000000000
-      OnClick = buttonActiveTicketsClick
+      OnClick = buttonConsultTicketClick
     end
   end
 end

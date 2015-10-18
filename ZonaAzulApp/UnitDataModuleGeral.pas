@@ -12,6 +12,7 @@ uses
 type
   IPaymentListener = interface
      procedure OnAfterPayment;
+     procedure OnError(Msg: String);
   end;
 
   TDataModuleGeral = class(TDataModule)
@@ -62,7 +63,8 @@ implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
-uses UnitCreditCardSeparate, UnitBuyCredits, UnitTickets, UnitDataModuleLocal;
+uses UnitCreditCardSeparate, UnitBuyCredits, UnitTickets, UnitDataModuleLocal,
+  UnitRoutines;
 
 {$R *.dfm}
 
@@ -80,6 +82,7 @@ end;
 function TDataModuleGeral.ConsultPayment(Plate: String; var DayTime, DeadlineTime: TDateTime): Boolean;
 var
 Json: TJSONObject;
+Error: String;
 begin
   //Consulta no servidor o pagamento do estacionamento referente à placa passada como argumento.
   RequestGetPayment.Params.ParameterByName('json').Value := '{"Plate":"'+Plate+'"}';
@@ -89,11 +92,11 @@ begin
   Json := (TJSONObject.ParseJSONValue(RequestGetPayment.Response.Content) as TJSONObject);
 
   //Se o json não tiver um par de chave "error", significa que a consulta foi realizada com sucesso.
-  if (Json.Values['error'] = nil) then
+  if (Json.Values['Error'] = nil) then
   begin
     //Pega a data de início e a data de limite do pagamento retornado pelo webservice.
-    DayTime      := StrToDateTime(Json.GetValue('InitialDate').Value);
-    DeadlineTime := StrToDateTime(Json.GetValue('FinalDate').Value);
+    DayTime      := StrToDateTimeFromWebService(Json.GetValue('DateBegin').Value);
+    DeadlineTime := StrToDateTimeFromWebService(Json.GetValue('DeadlineTime').Value);
 
     //Retorna como resultado o valor true.
     Result := True;
@@ -101,7 +104,8 @@ begin
   else
   begin
     //Verifica se a mensagem retornada é "sem pagamento".
-    if (Json.GetValue('error').Value.Contains('pagamento')) then
+    Error := Json.GetValue('Error').Value;
+    if (Error.Contains('Veiculo nao estacionado')) then
     begin
       //Retorna como resultado falso.
       Result := False;
@@ -109,7 +113,7 @@ begin
     else
     begin
       //Neste caso, levanta uma exceção com a mensagem do erro.
-      raise Exception.Create(Json.GetValue('error').Value);
+      raise Exception.Create(Error);
     end;
   end;
 end;
@@ -171,7 +175,7 @@ begin
   if (JsonResponse.Values['Sucess'] <> nil) then
   begin
     //Retorna a data do tíquete atribuída pelo servidor.
-    Result := StrToDateTime(JsonResponse.GetValue('Sucess').Value);
+    Result := StrToDateTimeFromWebService(JsonResponse.GetValue('Sucess').Value);
   end
   else
   begin
@@ -198,23 +202,31 @@ begin
                         //Verifica se o usuário confirmou a operação.
                         if (ModalResult = mrOk) then
                         begin
-                          //Envia ao servidor a requisição HTTP Post do pagamento.
-                          StartTime:= postPayment(
-                                          Plate
-                                         ,Time
-                                         ,FormCreditCardSeparate.cboFlag.Selected.Text
-                                         ,FormCreditCardSeparate.editName.Text
-                                         ,FormCreditCardSeparate.editNumber.Text.Replace('-','')
-                                         ,StrToInt(FormCreditCardSeparate.cboMonth.Selected.Text)
-                                         ,StrToInt(FormCreditCardSeparate.cboYear.Selected.Text)
-                                         ,StrToInt(FormCreditCardSeparate.editCSC.Text)
-                                      );
+                          try
+                            //Envia ao servidor a requisição HTTP Post do pagamento.
+                            StartTime:= postPayment(
+                                            Plate
+                                           ,Time
+                                           ,FormCreditCardSeparate.cboFlag.Selected.Text
+                                           ,FormCreditCardSeparate.editName.Text
+                                           ,FormCreditCardSeparate.editNumber.Text.Replace('-','')
+                                           ,StrToInt(FormCreditCardSeparate.cboMonth.Selected.Text)
+                                           ,StrToInt(FormCreditCardSeparate.cboYear.Selected.Text)
+                                           ,StrToInt(FormCreditCardSeparate.editCSC.Text)
+                                        );
 
-                          //Insere o novo tíquete na base local.
-                          DataModuleLocal.InsertTicketLocal(Plate, StartTime, Time);
+                            //Insere o novo tíquete na base local.
+                            DataModuleLocal.InsertTicketLocal(Plate, StartTime, Time);
 
-                          //Chama o procedimento do ouvinte de pagamento.
-                          PaymentListener.OnAfterPayment;
+                            //Chama o procedimento do ouvinte de pagamento.
+                            PaymentListener.OnAfterPayment;
+                          except
+                            on Error: Exception do
+                            begin
+                              //Chama o procedimento OnError do objeto ouvinte de pagamentos.
+                              PaymentListener.OnError(Error.Message);
+                            end;
+                          end;
                         end;
 
                         //Dispensa(elimina) o formulário.
