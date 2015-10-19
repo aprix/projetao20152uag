@@ -87,10 +87,54 @@ class API extends REST {
 				$this->response(json_encode($response), 200);
 
             } else {
-                
-				// faz as validações de pagamento...
-				// TODO verificar este método....
-                $pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
+
+            	// faz as validações de pagamento...
+
+            	if(strlen($numeroCartao) != 16){
+
+					$response['Error'] = "Número do cartão deve ter 16 dígitos";
+					$this->response(json_encode($response), 200);
+
+
+				}else if(substr($numeroCartao, 0, 1) != 4 && substr($numeroCartao, 0, 1) != 5 && substr($numeroCartao, 0, 1) != 3)  {
+
+					$response['Error'] = "Cartão com numeração inválida";
+					$this->response(json_encode($response), 200);
+
+				}else{
+
+
+					for($i = strlen($numeroCartao) - 1; $i >= 0; $i--){
+
+     					$lenght = $i+1;
+
+						if(($i % 2) == 0){	
+
+							$impares = substr($numeroCartao, $i, 1)*2;
+							if ($impares > 9) {
+								$impares = $impares - 9;
+			}
+							$soma= $soma + $impares;
+   							
+		}
+	
+						if (($i%2)!= 0) {
+		
+				$soma = $soma+ substr($numeroCartao, $i, 1);
+
+		}
+	}
+
+
+if ($soma%10 != 0){
+
+		$response['Error'] = "Cartão com numeração inválida";
+		$this->response(json_encode($response), 200);
+
+}else{
+
+	// TODO verificar este método....
+ 				$pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
 
 				// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
 				$sql_select_vehicle = select_vehicle($placaVeiculo, 1);
@@ -135,6 +179,13 @@ class API extends REST {
             		$response['Error'] = mysqli_error($this->db);
 					$this->response(json_encode($response), 200);
 				}
+
+	}
+ 
+}
+                								
+               
+
             }
         } else {
             //Para mensagens de erro.
@@ -142,6 +193,53 @@ class API extends REST {
 			$this->response(json_encode($response), 200);
         }
     }
+
+	private function get_vacancy_location(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		// pega a variavel Plate(placa do carro)
+		$plate = $vector['Plate'];
+		
+		// este sql é uma consulta que retorna a data de inicio da locação
+		// e a data de fim da locação...
+		$sql = select_vacancy_location($plate);
+
+		$response = array();
+
+		if ($query = mysqli_query($this->db, $sql)) {
+
+			// se a quantidade de linhas retornadas da query for igual a zero...
+            if (mysqli_num_rows($query) == 0) {
+
+				// então o veiculo não está estacionado...
+				$response['Error'] = "Veiculo nao estacionado";
+			} else {
+				// pega o proximo registro, que neste caso DEVE ser o unico
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				// salva no formato solicitado por Diogo na issue do dia 16/10/2015.
+				$response['DateBegin'] = $row['initialDate'];
+				$response['DeadlineTime'] = $row[ 'finalDate' ];
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);
+	}
+
 
 
 	private function get_vacancy_location_date(){
