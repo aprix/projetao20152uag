@@ -87,10 +87,54 @@ class API extends REST {
 				$this->response(json_encode($response), 200);
 
             } else {
-                
-				// faz as validações de pagamento...
-				// TODO verificar este método....
-                $pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
+
+            	// faz as validações de pagamento...
+
+            	if(strlen($numeroCartao) != 16){
+
+					$response['Error'] = "Número do cartão deve ter 16 dígitos";
+					$this->response(json_encode($response), 200);
+
+
+				}else if(substr($numeroCartao, 0, 1) != 4 && substr($numeroCartao, 0, 1) != 5 && substr($numeroCartao, 0, 1) != 3)  {
+
+					$response['Error'] = "Cartão com numeração inválida";
+					$this->response(json_encode($response), 200);
+
+				}else{
+
+
+					for($i = strlen($numeroCartao) - 1; $i >= 0; $i--){
+
+     					$lenght = $i+1;
+
+						if(($i % 2) == 0){	
+
+							$impares = substr($numeroCartao, $i, 1)*2;
+							if ($impares > 9) {
+								$impares = $impares - 9;
+			}
+							$soma= $soma + $impares;
+   							
+		}
+	
+						if (($i%2)!= 0) {
+		
+				$soma = $soma+ substr($numeroCartao, $i, 1);
+
+		}
+	}
+
+
+if ($soma%10 != 0){
+
+		$response['Error'] = "Cartão com numeração inválida";
+		$this->response(json_encode($response), 200);
+
+}else{
+
+	// TODO verificar este método....
+ 				$pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
 
 				// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
 				$sql_select_vehicle = select_vehicle($placaVeiculo, 1);
@@ -135,6 +179,13 @@ class API extends REST {
             		$response['Error'] = mysqli_error($this->db);
 					$this->response(json_encode($response), 200);
 				}
+
+	}
+ 
+}
+                								
+               
+
             }
         } else {
             //Para mensagens de erro.
