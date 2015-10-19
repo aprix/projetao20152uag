@@ -128,12 +128,15 @@ begin
 end;
 
 function StrToDateTimeFromWebService(DateTime : String): TDatetime;
+var
+StrDateTime: String;
 begin
-  Result := StrToDateTime(Format('%s/%s/%s %s'
+  StrDateTime := Format('%s/%s/%s %s'
                                 , [ Copy(DateTime, 9, 2)
                                   , Copy(DateTime, 6, 2)
                                   , Copy(DateTime, 1, 4)
-                                  , Copy(DateTime, 12, 8)]));
+                                  , Copy(DateTime, 12, 8)]);
+  Result := StrToDateTime(StrDateTime);
 end;
 
 

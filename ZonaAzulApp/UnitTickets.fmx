@@ -29,7 +29,6 @@ object FrameTickets: TFrameTickets
       CanSwipeDelete = False
       OnFilter = ListViewTicketsFilter
       ShowSelection = False
-      SearchVisible = True
       PullToRefresh = True
       object buttonNew: TSpeedButton
         Anchors = [akRight, akBottom]

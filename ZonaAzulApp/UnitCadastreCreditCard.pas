@@ -33,8 +33,13 @@ type
     editNumber: TEdit;
     procedure editNameChange(Sender: TObject);
     procedure editCSCChange(Sender: TObject);
+    procedure buttonSaveClick(Sender: TObject);
+    procedure editNameKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+      Shift: TShiftState);
+    procedure editNumberChange(Sender: TObject);
   private
     { Private declarations }
+    procedure ValidateValuesComponents;
   public
     { Public declarations }
   end;
@@ -48,6 +53,12 @@ implementation
 
 uses UnitDataModuleGeral, UnitRoutines;
 
+procedure TFormCadastreCreditCard.buttonSaveClick(Sender: TObject);
+begin
+  //Valida os valores dos campos.
+  ValidateValuesComponents;
+end;
+
 procedure TFormCadastreCreditCard.editCSCChange(Sender: TObject);
 begin
   //Permite apenas números no campo editNumber.
@@ -57,6 +68,29 @@ end;
 procedure TFormCadastreCreditCard.editNameChange(Sender: TObject);
 begin
   SetTextUpperCaseEditChange(Sender);
+end;
+
+procedure TFormCadastreCreditCard.editNameKeyDown(Sender: TObject;
+  var Key: Word; var KeyChar: Char; Shift: TShiftState);
+begin
+  AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
+end;
+
+procedure TFormCadastreCreditCard.editNumberChange(Sender: TObject);
+begin
+  //Permite apenas números no campo editNumber.
+  editNumber.Text := GetJustNumbersOfString(editNumber.Text);
+end;
+
+procedure TFormCadastreCreditCard.ValidateValuesComponents;
+begin
+  //Valida os valores de todos os campos.
+  Focused := nil;
+  editNumber.Text := GetJustNumbersOfString(editNumber.Text);
+  editCSC.Text    := GetJustNumbersOfString(editCSC.Text);
+  ValidateValueComponent(editName, editName.Text, 'Informe o nome impresso no cartão!');
+  ValidateValueComponent(editNumber, editNumber.Text, 'Informe o número do cartão!', 16);
+  ValidateValueComponent(editCSC, editCSC.Text, 'Informe o código de segurança!', 3);
 end;
 
 end.

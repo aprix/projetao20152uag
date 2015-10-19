@@ -55,22 +55,30 @@ var
 DayTime, DeadlineTime: TDateTime;
 Plate: String;
 begin
-  //Valida os valores dos campos.
-  ValidateValuesComponents;
 
-  //Junta as letras e números da placa.
-  Plate := editPlateLetters.Text+editPlateNumbers.Text;
+  try
+    //Valida os valores dos campos.
+    ValidateValuesComponents;
 
-  //Consulta no servidor se o estacionamento está pago para a placa informada.
-  if (DataModuleGeral.ConsultPayment(Plate, DayTime, DeadlineTime)) then
-  begin
-    //Exibe como resultado que o pagamento foi confirmado.
-    SetPaymentAuthorized(DayTime, Time);
-  end
-  else
-  begin
-    //Exibe o resultado de não pagamento do estacionamento.
-    SetPaymentUnauthorized;
+    //Junta as letras e números da placa.
+    Plate := editPlateLetters.Text+editPlateNumbers.Text;
+
+    //Consulta no servidor se o estacionamento está pago para a placa informada.
+    if (DataModuleGeral.ConsultPayment(Plate, DayTime, DeadlineTime)) then
+    begin
+      //Exibe como resultado que o pagamento foi confirmado.
+      SetPaymentAuthorized(DayTime, DeadlineTime);
+    end
+    else
+    begin
+      //Exibe o resultado de não pagamento do estacionamento.
+      SetPaymentUnauthorized;
+    end;
+  except
+    on Error: Exception do
+    begin
+      ShowMessage(Error.Message);
+    end;
   end;
 end;
 
@@ -145,6 +153,7 @@ end;
 procedure TFrameConsultPayments.ValidateValuesComponents;
 begin
   //Verifica os valores dos campos.
+  editPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
   ValidateValueComponent(editPlateLetters, editPlateLetters.Text, 'Informe as letras da placa!', 3);
   ValidateValueComponent(editPlateNumbers, editPlateNumbers.Text, 'Informe os números da placa!', 4);
 end;
