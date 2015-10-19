@@ -50,7 +50,7 @@ begin
   inherited;
 
   //Exibe o label de mensagem se não existir nenhum tíquete adquirido.
-  //lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty);
+  lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty);
   lblMessage.Text    := 'Nenhum tíquete comprado'+#13+#13+'Clique no botão Novo para comprar um novo tíquete';
 
 end;

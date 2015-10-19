@@ -3879,4 +3879,50 @@ object DataModuleGeral: TDataModuleGeral
     Left = 47
     Top = 14
   end
+  object ClientWebService: TRESTClient
+    Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
+    AcceptCharset = 'UTF-8, *;q=0.8'
+    BaseURL = 'http://diogoespinhara.com.br'
+    ContentType = 'application/x-www-form-urlencoded'
+    Params = <>
+    HandleRedirects = True
+    Left = 62
+    Top = 88
+  end
+  object RequestGetPayment: TRESTRequest
+    Client = ClientWebService
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/get_vacancy_location'
+    Response = ResponseGetPayment
+    SynchronizedEvents = False
+    Left = 62
+    Top = 152
+  end
+  object ResponseGetPayment: TRESTResponse
+    Left = 62
+    Top = 216
+  end
+  object RequestPostPayment: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_vacancy_location'
+    Response = ResponsePostPayment
+    SynchronizedEvents = False
+    Left = 192
+    Top = 152
+  end
+  object ResponsePostPayment: TRESTResponse
+    ContentType = 'application/json'
+    Left = 192
+    Top = 216
+  end
 end

@@ -258,6 +258,7 @@ object DataModuleLocal: TDataModuleLocal
         'ulApp\ZonaAzul.s3db'
       'LockingMode=Normal'
       'DriverID=sQLite')
+    Connected = True
     LoginPrompt = False
     AfterConnect = FDConnectionLocalAfterConnect
     BeforeConnect = FDConnectionLocalBeforeConnect
@@ -271,10 +272,12 @@ object DataModuleLocal: TDataModuleLocal
       'Plate'
       ',StartTime'
       ',Time'
-      ',Datetime(StartTime, '#39'+'#39' || Time || '#39' minutes'#39') as DeadlineTime'
+      
+        ',strftime('#39'%d/%m/%Y %H:%M:%S'#39', Datetime(StartTime, '#39'+'#39' || Time |' +
+        '| '#39' minutes'#39')) as DeadlineTime'
       
         ',Case When Datetime(StartTime, '#39'+'#39' || Time || '#39' minutes'#39') > Date' +
-        'time('#39'now'#39') Then 1 Else 0 End as IconIndex'
+        'time('#39'now'#39', '#39'localtime'#39') Then 1 Else 0 End as IconIndex'
       'From Tickets')
     Left = 336
     Top = 168

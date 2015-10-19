@@ -18,19 +18,18 @@ type
     editPlateNumbers: TEdit;
     LayoutResultConsult: TLayout;
     LabelResult: TLabel;
-    buttonActiveTickets: TSpeedButton;
-    Rectangle2: TRectangle;
+    buttonConsultTicket: TSpeedButton;
+    RectangleResult: TRectangle;
     Layout4: TLayout;
-    LabelDay: TLabel;
     LabelTimeInterval: TLabel;
-    procedure buttonActiveTicketsClick(Sender: TObject);
+    procedure buttonConsultTicketClick(Sender: TObject);
     procedure editPlateNumbersChange(Sender: TObject);
     procedure editPlateLettersChange(Sender: TObject);
     procedure editPlateLettersKeyDown(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
   private
     { Private declarations }
-    procedure SetPaymentAuthorized(DayTime: TDateTime; Time: Integer);
+    procedure SetPaymentAuthorized(DayTime, DeadlineTime: TDateTime);
     procedure SetPaymentUnauthorized;
     procedure SetFontColorResultLabels(Color: TAlphaColor);
     procedure ValidateValuesComponents;
@@ -51,10 +50,9 @@ uses UnitDataModuleGeral, UnitRoutines;
 
 { TFrameConsultPayments }
 
-procedure TFrameConsultPayments.buttonActiveTicketsClick(Sender: TObject);
+procedure TFrameConsultPayments.buttonConsultTicketClick(Sender: TObject);
 var
-DayTime: TDateTime;
-Time: Integer;
+DayTime, DeadlineTime: TDateTime;
 Plate: String;
 begin
   //Valida os valores dos campos.
@@ -64,7 +62,7 @@ begin
   Plate := editPlateLetters.Text+editPlateNumbers.Text;
 
   //Consulta no servidor se o estacionamento está pago para a placa informada.
-  if (DataModuleGeral.ConsultPayment(Plate, DayTime, Time)) then
+  if (DataModuleGeral.ConsultPayment(Plate, DayTime, DeadlineTime)) then
   begin
     //Exibe como resultado que o pagamento foi confirmado.
     SetPaymentAuthorized(DayTime, Time);
@@ -79,9 +77,7 @@ end;
 procedure TFrameConsultPayments.ClearComponents;
 begin
   //Limpa os campos da consulta.
-  {LayoutResultConsult.Visible := False;
-  editPlateLetters.Text := '';
-  editPlateNumbers.Text := '';}
+  RectangleResult.Visible := False;
 end;
 
 constructor TFrameConsultPayments.Create(AWOner: TComponent);
@@ -115,22 +111,19 @@ procedure TFrameConsultPayments.SetFontColorResultLabels(Color: TAlphaColor);
 begin
   //Atribui aos labels a cor de fonte passada como argumento.
   LabelResult.TextSettings.FontColor := Color;
-  LabelDay.TextSettings.FontColor := Color;
   LabelTimeInterval.TextSettings.FontColor := Color;
 end;
 
-procedure TFrameConsultPayments.SetPaymentAuthorized(DayTime: TDateTime;
-  Time: Integer);
+procedure TFrameConsultPayments.SetPaymentAuthorized(DayTime, DeadlineTime: TDateTime);
 begin
   //Exibe os campos de resultados.
-  LayoutResultConsult.Visible := True;
+  RectangleResult.Visible := True;
 
   //Atribui os dados do pagamento aos campos de resultados.
   LabelResult.Text := 'Estacionamento Autorizado';
-  LabelDay.Text    := FormatDateTime('dd/mm/yyyy', DayTime);
-  LabelTimeInterval.Text := Format('de %s a %s'
-                                  ,[FormatDateTime('hh:MM', DayTime)
-                                   ,FormatDateTime('hh:MM', IncMinute(DayTime, Time))]);
+  LabelTimeInterval.Text := Format('de %s'+#13+' a %s'
+                                  ,[FormatDateTime('dd/mm/yyyy hh:MM', DayTime)
+                                   ,FormatDateTime('dd/mm/yyyy hh:MM', DeadlineTime)]);
 
   //Coloca a fonte verde nos labels de resultado.
   SetFontColorResultLabels(TAlphaColors.Green);
@@ -139,12 +132,11 @@ end;
 procedure TFrameConsultPayments.SetPaymentUnauthorized;
 begin
   //Exibe os campos de resultados.
-  LayoutResultConsult.Visible := True;
+  RectangleResult.Visible := True;
 
   //Atribui ao label de resultado o texto de não autorização.
   LabelResult.Text := 'Estacionamento'+#13+'Não Autorizado';
-  LabelDay.Text    := FormatDateTime('dd/mm/yyyy hh:MM', now);
-  LabelTimeInterval.Text := '';
+  LabelTimeInterval.Text := FormatDateTime('dd/mm/yyyy hh:MM', now);
 
   //Coloca a fonte vermelha nos labels de resultado.
   SetFontColorResultLabels(TAlphaColors.Red);

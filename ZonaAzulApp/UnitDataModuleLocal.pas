@@ -63,6 +63,8 @@ procedure TDataModuleLocal.FDConnectionLocalBeforeConnect(Sender: TObject);
 begin
   {$IF DEFINED(IOS) or DEFINED(ANDROID)}
   FDConnectionLocal.Params.Values['Database'] :=   TPath.GetDocumentsPath + PathDelim + 'ZonaAzul.s3db';
+  {$ELSE}
+  FDConnectionLocal.Params.Values['Database'] := 'ZonaAzul.s3db';
   {$ENDIF}
 end;
 
