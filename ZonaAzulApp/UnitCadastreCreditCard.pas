@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.Edit, FMX.ListBox;
+  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.Edit, FMX.ListBox, DateUtils;
 
 type
   TFormCadastreCreditCard = class(TForm)
@@ -67,6 +67,8 @@ end;
 
 procedure TFormCadastreCreditCard.editNameChange(Sender: TObject);
 begin
+  //Permite apenas letras A-Z, e deixa as letras em maiúsculo.
+  editName.Text := GetJustLettersOfString(editName.Text);
   SetTextUpperCaseEditChange(Sender);
 end;
 
@@ -83,6 +85,8 @@ begin
 end;
 
 procedure TFormCadastreCreditCard.ValidateValuesComponents;
+var
+Month, Year, MonthCurrent, YearCurrent: Integer;
 begin
   //Valida os valores de todos os campos.
   Focused := nil;
@@ -91,6 +95,19 @@ begin
   ValidateValueComponent(editName, editName.Text, 'Informe o nome impresso no cartão!');
   ValidateValueComponent(editNumber, editNumber.Text, 'Informe o número do cartão!', 16);
   ValidateValueComponent(editCSC, editCSC.Text, 'Informe o código de segurança!', 3);
+
+  //Verifica se o cartão de crédito está vencido.
+  Month := StrToInt(cboMonth.Selected.Text);
+  Year  := StrToInt(cboYear.Selected.Text);
+  MonthCurrent := MonthOf(Date);
+  YearCurrent  := YearOf(Date);
+  if (Year < YearCurrent)
+  or ((Month < MonthCurrent) and (Year = YearCurrent)) then
+  begin
+    //Levanta uma exceção informando sobre a validade do cartão de crédito.
+    raise Exception.Create('Cartão de crédito vencido!');
+  end;
+
 end;
 
 end.

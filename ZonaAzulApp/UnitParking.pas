@@ -181,6 +181,7 @@ end;
 procedure TFormParking.ValidateValuesComponents;
 begin
   //Valida se foi informado todos os valores dos componentes.
+  editPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
   ValidateValueComponent(editPlateLetters, editPlateLetters.Text, 'Informe as letras da placa.', 3);
   ValidateValueComponent(editPlateNumbers, editPlateNumbers.Text, 'Informe os números da placa.', 4);
 end;
