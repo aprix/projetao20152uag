@@ -4,7 +4,12 @@ function select_vacancy_location($plate){
 	return "SELECT vacancy_location.date_location as initialDate, (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE) as finalDate
 		FROM vacancy_location
 		INNER JOIN vehicle ON vacancy_location.id_vehicle = vehicle.id AND vehicle.plate = '$plate'
-		WHERE CURRENT_TIMESTAMP < (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE)";
+		WHERE CREATE FUNCTION NOW_CORRECT() RETURNS DATETIME
+			BEGIN
+				RETURNS NOW() + INTERVAL 50 MINUTE;
+			END
+
+		 /*< (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE)";*/
 }
 
 function select_vehicle($plate, $id_user){
