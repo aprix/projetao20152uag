@@ -27,6 +27,7 @@ object FrameTickets: TFrameTickets
       ItemAppearanceObjects.ItemEditObjects.TextButton.Visible = False
       ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
       CanSwipeDelete = False
+      OnItemsChange = ListViewTicketsItemsChange
       OnFilter = ListViewTicketsFilter
       ShowSelection = False
       PullToRefresh = True

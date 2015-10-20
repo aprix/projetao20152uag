@@ -10,6 +10,8 @@ procedure AllowJustLettersEditKeyDown(Sender: TObject; var Key: Word; var KeyCha
 
 function GetJustNumbersOfString(Value: String): String;
 
+function GetJustLettersOfString(Value: String): String;
+
 function FormatValue(Value : Double): String;
 
 function Max(x, y: Integer): Integer;
@@ -36,12 +38,12 @@ procedure AllowJustLettersEditKeyDown(Sender: TObject; var Key: Word;
 begin
 
   {$IFDEF Android}
-  if not CharInSet(Key, ['A'..'Z','a'..'z']) then
+  if not CharInSet(Key, ['A'..'Z','a'..'z', ' ']) then
     KeyChar := #0;
   {$ENDIF}
 
   {$IFDEF Win32 or Win64}
-  if not (KeyChar in ['A'..'Z', 'a'..'z']) then
+  if not (KeyChar in ['A'..'Z', 'a'..'z', ' ']) then
     KeyChar := #0;
   {$ENDIF}
 end;
@@ -59,6 +61,23 @@ begin
   {$ENDIF}
   begin
     if (Value[I] in ['0'..'9']) then
+      Result := Result + Value[I];
+  end;
+end;
+
+function GetJustLettersOfString(Value: String): String;
+var
+I : Integer;
+begin
+  Result := '';
+
+  {$IFDEF Android}
+  for I := 0 to Value.Length do
+  {$ELSE}
+  for I := 1 to Value.Length do
+  {$ENDIF}
+  begin
+    if (Value[I] in ['A'..'Z', 'a'..'z', ' ']) then
       Result := Result + Value[I];
   end;
 end;
