@@ -124,3 +124,10 @@ CREATE TABLE IF NOT EXISTS supervisor(
 
 INSERT INTO user(id, cpf, saldo, senha, email)
 VALUES (1, 000000000000, 0.0, 123456, 'notemail');
+
+-- funcoes
+
+CREATE FUNCTION correct_timestamp()
+	RETURNS TIMESTAMP
+    
+	RETURN CURRENT_TIMESTAMP + INTERVAL 50 MINUTE;

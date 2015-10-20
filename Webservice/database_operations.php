@@ -4,7 +4,7 @@ function select_vacancy_location($plate){
 	return "SELECT vacancy_location.date_location as initialDate, (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE) as finalDate
 		FROM vacancy_location
 		INNER JOIN vehicle ON vacancy_location.id_vehicle = vehicle.id AND vehicle.plate = '$plate'
-		WHERE CURRENT_TIMESTAMP < (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE)";
+		WHERE correct_timestamp() < (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE)";
 }
 
 function select_vehicle($plate, $id_user){
@@ -21,7 +21,7 @@ function insert_vehicle($plate){
 function insert_vacancy_location($plate, $time){
 	return "INSERT INTO vacancy_location (id_user, id_vehicle, date_location, time_location, total_payment)
 		VALUES (1, (SELECT vehicle.id from vehicle where id_user = 1 and plate = '$plate')
-		, CURRENT_TIMESTAMP, $time, (SELECT prices.un_price * $time from prices) );";
+		, correct_timestamp(), $time, (SELECT prices.un_price * $time from prices) );";
 }
 
 function select_vacancy_location_date($plate){
