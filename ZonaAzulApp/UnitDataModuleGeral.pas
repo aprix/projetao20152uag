@@ -5,41 +5,37 @@ interface
 uses
   System.SysUtils, System.Classes, FMX.Types, FMX.Controls, Data.DB,
   Datasnap.DBClient, DateUtils, System.UITypes, FMX.Forms, System.ImageList,
-  FMX.ImgList, Data.FMTBcd, Data.SqlExpr, System.iOUtils, Data.DbxSqlite;
+  FMX.ImgList, Data.FMTBcd, Data.SqlExpr, System.iOUtils, Data.DbxSqlite,
+  Datasnap.Provider, IPPeerClient, REST.Client, Data.Bind.Components,
+  Data.Bind.ObjectScope, DBXJSON, System.JSON;
 
 type
   IPaymentListener = interface
      procedure OnAfterPayment;
+     procedure OnError(Msg: String);
   end;
 
   TDataModuleGeral = class(TDataModule)
     CustomStyleBook: TStyleBook;
-    DataSetTickets: TClientDataSet;
-    DataSetTicketsPlate: TStringField;
-    DataSetTicketsTime: TIntegerField;
-    DataSetTicketsStartTime: TDateTimeField;
-    DataSetTicketsDeadlineTime: TDateTimeField;
-    DataSetTicketsIconIndex: TIntegerField;
-    IconsTicketsList: TImageList;
-    SQLConnectionLocal: TSQLConnection;
-    DataSetPlates: TSQLTable;
-    QueryPlates: TSQLQuery;
-    procedure DataModuleCreate(Sender: TObject);
-    procedure DataSetTicketsCalcFields(DataSet: TDataSet);
-    procedure SQLConnectionLocalAfterConnect(Sender: TObject);
-    procedure SQLConnectionLocalBeforeConnect(Sender: TObject);
+    ClientWebService: TRESTClient;
+    RequestGetPayment: TRESTRequest;
+    ResponseGetPayment: TRESTResponse;
+    RequestPostPayment: TRESTRequest;
+    ResponsePostPayment: TRESTResponse;
   private
     { Private declarations }
-    procedure postPayment(Plate: String;
+    function PostPayment(Plate: String;
                           Time: Integer;
                           FlagCreditCard: String;
                           NameCreditCard: String;
                           NumberCreditCard: String;
                           MonthCreditCard: Integer;
                           YearCreditCard: Integer;
-                          CSCCredCard: Integer);
+                          CSCCredCard: Integer): TDateTime;
   public
     { Public declarations }
+
+    function ConsultPayment(Plate: String; var DayTime, DeadlineTime: TDateTime): Boolean;
 
     procedure sendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
 
@@ -58,10 +54,6 @@ type
     function GetDiscountPrice: Double;
 
     function GetLastPlate: String;
-
-    procedure SetLastPlate(Plate: String);
-
-    procedure ExecSQL(Query: TSQLQuery; Command: String);
   end;
 
 var
@@ -71,71 +63,10 @@ implementation
 
 {%CLASSGROUP 'FMX.Controls.TControl'}
 
-uses UnitCreditCardSeparate, UnitBuyCredits, UnitTickets;
+uses UnitCreditCardSeparate, UnitBuyCredits, UnitTickets, UnitDataModuleLocal,
+  UnitRoutines;
 
 {$R *.dfm}
-
-procedure TDataModuleGeral.DataModuleCreate(Sender: TObject);
-begin
-  //Abre a conexão da base local e suas respectivas tabelas.
-  SQLConnectionLocal.Open;
-  DataSetPlates.Open;
-
-  //TESTE
-  DataSetTickets.CreateDataSet;
-  DataSetTickets.IndexDefs.Add('OrderBy', 'DeadlineTime', [ixDescending]);
-  DataSetTickets.IndexName := 'OrderBy';
-
-  DataSetTickets.Append;
-  DataSetTicketsPlate.AsString := 'PES16860';
-  DataSetTicketsTime.AsInteger := 60;
-  DataSetTicketsStartTime.AsDateTime := IncMinute(Now,-120);
-  DataSetTickets.Post;
-
-  DataSetTickets.Append;
-  DataSetTicketsPlate.AsString := 'PES16860';
-  DataSetTicketsTime.AsInteger := 60;
-  DataSetTicketsStartTime.AsDateTime := IncMinute(Now,-30);
-  DataSetTickets.Post;
-end;
-
-procedure TDataModuleGeral.DataSetTicketsCalcFields(DataSet: TDataSet);
-var
-ResourceStream : TResourceStream;
-DeadlineTime: TDateTime;
-IconName: String;
-begin
-  //Verifica se o estado do objeto DataSetTickets é dsInternalCalc.
-  if (DataSetTickets.State = dsInternalCalc) then
-  begin
-    //Calcula o tempo limite do tíquete corrente.
-    DeadlineTime := IncMinute(DataSetTicketsStartTime.AsDateTime, DataSetTicketsTime.AsInteger);
-
-    //Atualiza os valores dos atributos internos calculados.
-    DataSetTicketsDeadlineTime.AsDateTime := DeadlineTime;
-
-    //Verifica se o tíquete passou do limite.
-    if (Now > DeadlineTime) then
-    begin
-      //O ícone a ser atribuído ao tíquete será o de tíquete vencido.
-      DataSetTicketsIconIndex.AsInteger := 0;
-    end
-    else
-    begin
-      //O ícone a ser atribuído ao tíquete será o de tíquete válido(ativo).
-      DataSetTicketsIconIndex.AsInteger := 1;
-    end;
-  end;
-end;
-
-procedure TDataModuleGeral.ExecSQL(Query: TSQLQuery; Command: String);
-begin
-  //Executa o comando SQL usando o objeto Query passado como argumento.
-  Query.Close;
-  Query.SQL.Clear;
-  Query.SQL.Add(Command);
-  Query.ExecSQL();
-end;
 
 function TDataModuleGeral.GetDiscountPrice: Double;
 begin
@@ -145,7 +76,46 @@ end;
 function TDataModuleGeral.GetLastPlate: String;
 begin
   //Carrega da base local a última placa usada.
-  Result := DataSetPlates.FieldByName('Plate').AsString;
+  Result := DataModuleLocal.DataSetTickets.FieldByName('Plate').AsString;
+end;
+
+function TDataModuleGeral.ConsultPayment(Plate: String; var DayTime, DeadlineTime: TDateTime): Boolean;
+var
+Json: TJSONObject;
+Error: String;
+begin
+  //Consulta no servidor o pagamento do estacionamento referente à placa passada como argumento.
+  RequestGetPayment.Params.ParameterByName('json').Value := '{"Plate":"'+Plate+'"}';
+  RequestGetPayment.Execute;
+
+  //Pega o registro JSON retornado pela consulta.
+  Json := (TJSONObject.ParseJSONValue(RequestGetPayment.Response.Content) as TJSONObject);
+
+  //Se o json não tiver um par de chave "error", significa que a consulta foi realizada com sucesso.
+  if (Json.Values['Error'] = nil) then
+  begin
+    //Pega a data de início e a data de limite do pagamento retornado pelo webservice.
+    DayTime      := StrToDateTimeFromWebService(Json.GetValue('DateBegin').Value);
+    DeadlineTime := StrToDateTimeFromWebService(Json.GetValue('DeadlineTime').Value);
+
+    //Retorna como resultado o valor true.
+    Result := True;
+  end
+  else
+  begin
+    //Verifica se a mensagem retornada é "sem pagamento".
+    Error := Json.GetValue('Error').Value;
+    if (Error.Contains('Veiculo nao estacionado')) then
+    begin
+      //Retorna como resultado falso.
+      Result := False;
+    end
+    else
+    begin
+      //Neste caso, levanta uma exceção com a mensagem do erro.
+      raise Exception.Create(Error);
+    end;
+  end;
 end;
 
 function TDataModuleGeral.GetCreditsUser: Double;
@@ -175,19 +145,49 @@ begin
   Result := 1;
 end;
 
-procedure TDataModuleGeral.postPayment(Plate: String;
+function TDataModuleGeral.postPayment(Plate: String;
   Time: Integer; FlagCreditCard, NameCreditCard,
   NumberCreditCard: String; MonthCreditCard, YearCreditCard,
-  CSCCredCard: Integer);
+  CSCCredCard: Integer): TDateTime;
+var
+Json: TJSONObject;
+JsonResponse: TJSONObject;
 begin
-  //Método sem corpo, falta implementar o Webservice.
+  //Constroi o JSON contendo os parâmetros para serem enviados ao webservice.
+  Json := TJSONObject.Create;
+  Json.AddPair('Plate', TJSONString.Create(Plate));
+  Json.AddPair('Time', TJSONNumber.Create(Time));
+  Json.AddPair('FlagCreditCard', TJSONString.Create(FlagCreditCard));
+  Json.AddPair('NameCreditCard', TJSONString.Create(NameCreditCard));
+  Json.AddPair('NumberCreditCard', TJSONString.Create(NumberCreditCard));
+  Json.AddPair('MonthCreditCard', TJSONNumber.Create(MonthCreditCard));
+  Json.AddPair('YearCreditCard', TJSONNumber.Create(YearCreditCard));
+  Json.AddPair('CSCCredCard', TJSONNumber.Create(CSCCredCard));
+
+  //Envia a requisição POST para o pagamento.
+  RequestPostPayment.Params.ParameterByName('json').Value := Json.ToString;
+  RequestPostPayment.Execute;
+
+  //Pega a resposta do webservice.
+  JsonResponse := (TJSONObject.ParseJSONValue(RequestPostPayment.Response.Content) as TJSONObject);
+
+  //Se o json com a resposta contém o par de chave "Sucess", significa que o pagamento foi realizado com sucesso.
+  if (JsonResponse.Values['Sucess'] <> nil) then
+  begin
+    //Retorna a data do tíquete atribuída pelo servidor.
+    Result := StrToDateTimeFromWebService(JsonResponse.GetValue('Sucess').Value);
+  end
+  else
+  begin
+    //Levanta uma exceção com o erro retornado na resposta do webservice.
+    raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
 end;
 
 procedure TDataModuleGeral.sendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
+var
+StartTime: TDateTime;
 begin
-  //Armazena a placa na base local.
-  SetLastPlate(Plate);
-
   //Verifica se não existe usuário logado. Ou seja, pagamento avulso.
   if not(IsUserLogged) then
   begin
@@ -202,28 +202,31 @@ begin
                         //Verifica se o usuário confirmou a operação.
                         if (ModalResult = mrOk) then
                         begin
-                          //Envia ao servidor a requisição HTTP Post do pagamento.
-                          postPayment(Plate
-                                     ,Time
-                                     ,FormCreditCardSeparate.cboFlag.Selected.Text
-                                     ,FormCreditCardSeparate.editName.Text
-                                     ,FormCreditCardSeparate.editNumber.Text.Replace('-','')
-                                     ,StrToInt(FormCreditCardSeparate.cboMonth.Selected.Text)
-                                     ,StrToInt(FormCreditCardSeparate.cboYear.Selected.Text)
-                                     ,StrToInt(FormCreditCardSeparate.editCSC.Text)
-                                     );
+                          try
+                            //Envia ao servidor a requisição HTTP Post do pagamento.
+                            StartTime:= postPayment(
+                                            Plate
+                                           ,Time
+                                           ,FormCreditCardSeparate.cboFlag.Selected.Text
+                                           ,FormCreditCardSeparate.editName.Text
+                                           ,FormCreditCardSeparate.editNumber.Text.Replace('-','')
+                                           ,StrToInt(FormCreditCardSeparate.cboMonth.Selected.Text)
+                                           ,StrToInt(FormCreditCardSeparate.cboYear.Selected.Text)
+                                           ,StrToInt(FormCreditCardSeparate.editCSC.Text)
+                                        );
 
-                          //Para o teste, salva o pagamento no ClientDataSet de tíquetes.
-                          DataSetTickets.Append;
-                          DataSetTicketsPlate.AsString := Plate;
-                          DataSetTicketsTime.AsInteger := Time;
-                          DataSetTicketsStartTime.AsDateTime:= Now;
-                          DataSetTickets.Post;
-                          DataSetTickets.Close;
-                          DataSetTickets.Open;
+                            //Insere o novo tíquete na base local.
+                            DataModuleLocal.InsertTicketLocal(Plate, StartTime, Time);
 
-                          //Chama o procedimento do ouvinte de pagamento.
-                          PaymentListener.OnAfterPayment;
+                            //Chama o procedimento do ouvinte de pagamento.
+                            PaymentListener.OnAfterPayment;
+                          except
+                            on Error: Exception do
+                            begin
+                              //Chama o procedimento OnError do objeto ouvinte de pagamentos.
+                              PaymentListener.OnError(Error.Message);
+                            end;
+                          end;
                         end;
 
                         //Dispensa(elimina) o formulário.
@@ -232,37 +235,10 @@ begin
   end;
 end;
 
-procedure TDataModuleGeral.SetLastPlate(Plate: String);
-var
-CommandSQL : String;
-begin
-  //Armazena a placa na base de dados.
-  if (DataSetPlates.IsEmpty) then
-    ExecSQL(QueryPlates, Format('INSERT INTO Plates(Plate) VALUES(%s);', [QuotedStr(Plate)]))
-  else
-    ExecSQL(QueryPlates, Format('UPDATE Plates SET Plate = %s;', [QuotedStr(Plate)]));
-
-  DataSetPlates.Refresh;
-end;
-
-procedure TDataModuleGeral.SQLConnectionLocalAfterConnect(Sender: TObject);
-begin
-  //Cria as tabelas da base de dados local.
-  SQLConnectionLocal.ExecuteDirect('CREATE TABLE IF NOT EXISTS Plates('
-                                  +'Plate TEXT NOT NULL'
-                                  +');');
-end;
-
-procedure TDataModuleGeral.SQLConnectionLocalBeforeConnect(Sender: TObject);
-begin
-  {$IF DEFINED(IOS) or DEFINED(ANDROID)}
-  SQLConnectionLocal.Params.Values['Database'] :=   TPath.GetDocumentsPath + PathDelim + 'tasks.s3db';
-  {$ENDIF}
-end;
-
 function TDataModuleGeral.GetUnitTime: Integer;
 begin
   Result := 10;
 end;
 
 end.
+

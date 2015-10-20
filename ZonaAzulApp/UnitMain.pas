@@ -102,6 +102,7 @@ end;
 
 procedure TFormMain.ButtonConsultPaymentClick(Sender: TObject);
 begin
+  FrameConsultPayments.ClearComponents;
   Show(FrameConsultPayments, LayoutFrame, 'Consultar Veículo');
   MultiView1.HideMaster;
 end;

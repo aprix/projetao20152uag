@@ -20,6 +20,8 @@ procedure ValidateValueComponent(Control: TControl; Value: String; Msg : String 
 procedure ValidateValueComponent(Control: TControl; Value: Double; Msg : String = 'Valor obrigatório'); overload;
 procedure ValidateValueComponent(Control: TControl; Value: Integer; Msg : String = 'Valor obrigatório'); overload;
 
+function StrToDateTimeFromWebService(DateTime : String): TDatetime;
+
 procedure Show(Form: TForm);
 
 implementation
@@ -123,6 +125,18 @@ begin
       Free;
     end;
   end;
+end;
+
+function StrToDateTimeFromWebService(DateTime : String): TDatetime;
+var
+StrDateTime: String;
+begin
+  StrDateTime := Format('%s/%s/%s %s'
+                                , [ Copy(DateTime, 9, 2)
+                                  , Copy(DateTime, 6, 2)
+                                  , Copy(DateTime, 1, 4)
+                                  , Copy(DateTime, 12, 8)]);
+  Result := StrToDateTime(StrDateTime);
 end;
 
 

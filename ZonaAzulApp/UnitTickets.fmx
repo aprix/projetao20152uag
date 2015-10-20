@@ -15,7 +15,7 @@ object FrameTickets: TFrameTickets
       HeaderAppearanceClassName = 'TListHeaderObjects'
       FooterAppearanceClassName = 'TListHeaderObjects'
       Transparent = True
-      Images = DataModuleGeral.IconsTicketsList
+      Images = DataModuleLocal.IconsTicketsList
       Align = Client
       Size.Width = 333.000000000000000000
       Size.Height = 464.000000000000000000
@@ -29,7 +29,6 @@ object FrameTickets: TFrameTickets
       CanSwipeDelete = False
       OnFilter = ListViewTicketsFilter
       ShowSelection = False
-      SearchVisible = True
       PullToRefresh = True
       object buttonNew: TSpeedButton
         Anchors = [akRight, akBottom]
@@ -60,7 +59,7 @@ object FrameTickets: TFrameTickets
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
-    Left = 68
+    Left = 60
     Top = 85
     object LinkFillControlToField1: TLinkFillControlToField
       Category = 'Quick Bindings'
@@ -83,33 +82,9 @@ object FrameTickets: TFrameTickets
     end
   end
   object BindSourceDB1: TBindSourceDB
-    DataSet = DataModuleGeral.DataSetTickets
+    DataSet = DataModuleLocal.DataSetTickets
     ScopeMappings = <>
-    Left = 136
-    Top = 88
-  end
-  object PrototypeBindSource1: TPrototypeBindSource
-    AutoActivate = True
-    AutoPost = False
-    FieldDefs = <
-      item
-        Name = 'ContactName1'
-        Generator = 'ContactNames'
-        ReadOnly = False
-      end
-      item
-        Name = 'DateTimeField1'
-        Generator = 'DateTime'
-        ReadOnly = False
-      end
-      item
-        Name = 'ContactBitmap1'
-        FieldType = ftBitmap
-        Generator = 'ContactBitmaps'
-        ReadOnly = False
-      end>
-    ScopeMappings = <>
-    Left = 96
-    Top = 176
+    Left = 152
+    Top = 216
   end
 end

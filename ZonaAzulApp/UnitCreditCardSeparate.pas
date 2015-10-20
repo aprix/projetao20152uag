@@ -13,7 +13,6 @@ type
     procedure buttonSaveClick(Sender: TObject);
   private
     { Private declarations }
-    procedure ValidateValuesComponents;
   public
     { Public declarations }
   end;
@@ -29,21 +28,11 @@ uses UnitRoutines, UnitDataModuleGeral;
 
 procedure TFormCreditCardSeparate.buttonSaveClick(Sender: TObject);
 begin
+  //Chama o procedimento herdado da superclasse.
   inherited;
-
-  //Valida os valores de todos os campos.
-  ValidateValuesComponents;
 
   //Retorna como resultado mrOK.
   ModalResult := mrOk;
-end;
-
-procedure TFormCreditCardSeparate.ValidateValuesComponents;
-begin
-  //Valida os valores de todos os campos.
-  ValidateValueComponent(editName, editName.Text, 'Informe o nome impresso no cartão!');
-  ValidateValueComponent(editNumber, editNumber.Text, 'Informe o número do cartão!', 16);
-  ValidateValueComponent(editCSC, editCSC.Text, 'Informe o código de segurança!', 3);
 end;
 
 end.

@@ -113,6 +113,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
         Size.PlatformDefault = False
         StyledSettings = [Family, Style, FontColor]
         OnChange = editNameChange
+        OnKeyDown = editNameKeyDown
       end
     end
     object Layout4: TLayout
@@ -227,6 +228,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
       Size.PlatformDefault = False
       Text = 'Salvar'
       TextSettings.Font.Size = 28.000000000000000000
+      OnClick = buttonSaveClick
     end
     object Layout7: TLayout
       Align = Top
@@ -262,6 +264,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
         Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
         StyledSettings = [Family, Style, FontColor]
+        OnChange = editNumberChange
       end
     end
   end

@@ -14,26 +14,39 @@ Coordinates=186,10,46,51
 Coordinates=242,10,69,33
 
 []
-Coordinates=160,100,159,141
-
-[DataModuleGeral.DataSetTickets]
-Coordinates=325,110,175,33
+Coordinates=287,81,69,141
 Visible=False
-
-[BindingsList1]
-Coordinates=90,62,82,33
 
 [ListViewTickets]
 Coordinates=10,100,91,213
 Visible=True
 
-[BindSourceDB1]
-Coordinates=325,110,159,159
-
 [lblMessage]
 Coordinates=0,0,69,51
 Visible=True
 
-[PrototypeBindSource1]
-Coordinates=195,80,125,105
+[DataModuleGeral.]
+Coordinates=325,110,175,33
+Visible=False
+
+[BindingsList1]
+Coordinates=214,125,82,33
+
+[DataModuleLocal.]
+Visible=False
+Coordinates=195,1,176,33
+
+[DataModuleLocal.DataSetTickets]
+Coordinates=280,80,176,33
+Visible=False
+
+[DataModuleLocal.SQLTableTickets]
+Coordinates=204,1,186,51
+
+[DataModuleLocal.DataSetTickets2]
+Coordinates=522,53,182,33
+Visible=False
+
+[BindSourceDB1]
+Coordinates=270,90,159,159
 
