@@ -240,6 +240,62 @@ if ($soma%10 != 0){
 		$this->response($response_json, 200);
 	}
 
+	private function post_user(){
+		if ($this->get_request_method() != 'POST') {
+            $this->response($this->get_request_method(), 406);
+        }
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+	
+		// variaveis
+		$id = $vector['id'];
+		$email = $vector['Email'];
+		$nick = $vector['Nickname'];
+		$cpf = $vector['CPF'];		
+		$password = $vector['Password'];
+
+		$response = array();
+		
+		if($id == 0){
+			// insert
+			$sql = insert_user($cpf, $password, $email);
+
+			if($query = mysqli_query($this->db, $sql)){
+
+				// pega o id do insert
+				$response['id'] = (string) mysqli_insert_id($this->db);
+				$this->response(json_encode($response), 200);
+
+			} else {
+
+				$response['Error'] = mysqli_error($this->db);
+				$this->response(json_encode($response), 200);
+
+			}
+		} else {
+
+			//update
+			$sql = update_user($id, $cpf, $password, $email);
+
+			if($query = mysqli_query($this->db, $sql)){
+				
+				// retorna o id que ja foi passado
+				$response['id'] = $id;
+				$this->response(json_encode($response), 200);
+
+			} else {
+
+				$response['Error'] = mysqli_error($this->db);
+				$this->response(json_encode($response), 200);
+
+			}
+		}
+			
+	}
+
 
 
 	private function get_vacancy_location_date(){

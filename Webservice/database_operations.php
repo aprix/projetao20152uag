@@ -31,6 +31,19 @@ function select_vacancy_location_date($plate){
 		LIMIT 10";
 }
 
+function insert_user($cpf, $password, $email){
+	return "INSERT INTO user(cpf, saldo, senha, email)
+		VALUES ($cpf, 0.0, '$password', '$email');";
+}
+
+function update_user($id, $cpf, $password, $email){
+	return "UPDATE user SET
+		cpf = $cpf,
+		senha = '$password',
+		email = '$email'
+		WHERE user.id = $id;";
+}
+
 /**
  * método que simula o pagamento utilizando cartão de crédito
  * @param type $name
