@@ -261,7 +261,7 @@ if ($soma%10 != 0){
 		
 		if($id == 0){
 			// insert
-			$sql = insert_user($cpf, $password, $email);
+			$sql = insert_user($cpf, $password, $email, $nick);
 
 			if($query = mysqli_query($this->db, $sql)){
 
@@ -278,7 +278,7 @@ if ($soma%10 != 0){
 		} else {
 
 			//update
-			$sql = update_user($id, $cpf, $password, $email);
+			$sql = update_user($id, $cpf, $password, $email, $nick);
 
 			if($query = mysqli_query($this->db, $sql)){
 				
