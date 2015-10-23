@@ -251,7 +251,7 @@ if ($soma%10 != 0){
         $vector = json_decode($json, TRUE);
 	
 		// variaveis
-		$id = $vector['id'];
+		$id = $vector['Id'];
 		$email = $vector['Email'];
 		$nick = $vector['Nickname'];
 		$cpf = $vector['CPF'];		
@@ -266,7 +266,7 @@ if ($soma%10 != 0){
 			if($query = mysqli_query($this->db, $sql)){
 
 				// pega o id do insert
-				$response['id'] = (string) mysqli_insert_id($this->db);
+				$response['Id'] = (string) mysqli_insert_id($this->db);
 				$this->response(json_encode($response), 200);
 
 			} else {
@@ -283,7 +283,7 @@ if ($soma%10 != 0){
 			if($query = mysqli_query($this->db, $sql)){
 				
 				// retorna o id que ja foi passado
-				$response['id'] = $id;
+				$response['Id'] = $id;
 				$this->response(json_encode($response), 200);
 
 			} else {
