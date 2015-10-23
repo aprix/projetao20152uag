@@ -33,12 +33,12 @@ function select_vacancy_location_date($plate){
 
 function insert_user($cpf, $password, $email, $nick){
 	return "INSERT INTO user(cpf, saldo, senha, email, nickname)
-		VALUES ($cpf, 0.0, '$password', '$email', '$nick');";
+		VALUES ('$cpf', 0.0, '$password', '$email', '$nick');";
 }
 
 function update_user($id, $cpf, $password, $email, $nick){
 	return "UPDATE user SET
-		cpf = $cpf,
+		cpf = '$cpf',
 		senha = '$password',
 		email = '$email',
 		nickname = '$nick'
