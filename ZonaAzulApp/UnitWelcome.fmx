@@ -1,0 +1,106 @@
+object FormWelcome: TFormWelcome
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 480
+  ClientWidth = 326
+  StyleBook = DataModuleGeral.CustomStyleBook
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnCloseQuery = FormCloseQuery
+  DesignerMasterStyle = 0
+  object LayoutFrame: TLayout
+    Align = Client
+    Size.Width = 326.000000000000000000
+    Size.Height = 373.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object LayoutDescription: TLayout
+      Align = Center
+      Size.Width = 165.000000000000000000
+      Size.Height = 80.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object LabelDescription: TLabel
+        Align = Client
+        StyledSettings = [Family, Size, FontColor]
+        Size.Width = 165.000000000000000000
+        Size.Height = 80.000000000000000000
+        Size.PlatformDefault = False
+        TextSettings.Font.Style = [fsBold]
+        TextSettings.HorzAlign = Center
+        Text = 'Texto de Boas Vindas do Aplicativo'
+      end
+    end
+  end
+  object LayoutButtons: TLayout
+    Align = MostBottom
+    Margins.Bottom = 5.000000000000000000
+    Position.Y = 373.000000000000000000
+    Size.Width = 326.000000000000000000
+    Size.Height = 102.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object Layout3: TLayout
+      Align = MostTop
+      Margins.Left = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Size.Width = 306.000000000000000000
+      Size.Height = 57.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      object Layout5: TLayout
+        Align = Center
+        Size.Width = 273.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object ButtonLogin: TSpeedButton
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 7.000000000000000000
+          Position.Y = 2.000000000000000000
+          Size.Width = 124.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'ENTRAR'
+          TextSettings.Font.Size = 20.000000000000000000
+        end
+        object ButtonCadastreUser: TSpeedButton
+          StyledSettings = [Family, Style, FontColor]
+          Position.X = 135.000000000000000000
+          Position.Y = 2.000000000000000000
+          Size.Width = 132.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'CADASTRAR'
+          TextSettings.Font.Size = 20.000000000000000000
+          OnClick = ButtonCadastreUserClick
+        end
+      end
+    end
+    object Layout4: TLayout
+      Align = Top
+      Margins.Left = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 57.000000000000000000
+      Size.Width = 306.000000000000000000
+      Size.Height = 45.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object ButtonStart: TSpeedButton
+        Align = Center
+        StyledSettings = [Family, Style, FontColor]
+        Size.Width = 118.000000000000000000
+        Size.Height = 45.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'COME'#199'AR'
+        TextSettings.Font.Size = 20.000000000000000000
+        OnClick = ButtonStartClick
+      end
+    end
+  end
+end

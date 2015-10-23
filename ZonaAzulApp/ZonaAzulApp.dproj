@@ -366,6 +366,15 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="UnitCadastreUser.pas">
+            <Form>FrameCadastreUser</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="UnitWelcome.pas">
+            <Form>FormWelcome</Form>
+            <FormType>fmx</FormType>
+        </DCCReference>
         <RcItem Include="Ícones\ball green.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>BallGreen</ResourceId>
@@ -407,6 +416,12 @@
                     </Platform>
                 </DeployFile>
                 <DeployFile LocalName="All Platforms\Debug\ZonaAzulApp" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="Ícones\ball green.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Win32\Debug\ZonaAzulApp.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="Ícones\ball green.png" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="Android\Release\libZonaAzulApp.so" Configuration="Release" Class="ProjectOutput">
@@ -432,6 +447,12 @@
                 <DeployFile LocalName="$(BDS)\bin\Artwork\Android\FM_SplashImage_426x320.png" Configuration="Debug" Class="Android_SplashImage426">
                     <Platform Name="Android">
                         <RemoteName>splash_image.png</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win32\Release\ZonaAzulApp.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>ZonaAzulApp.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -638,6 +659,12 @@
                 <DeployFile LocalName="$(BDS)\lib\android\release\x86\libnative-activity.so" Configuration="Release" Class="AndroidLibnativeX86File">
                     <Platform Name="Android">
                         <RemoteName>libZonaAzulApp.so</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Ícones\ball red.png" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

@@ -7,6 +7,11 @@ inherited FormCreditCardSeparate: TFormCreditCardSeparate
         Text = 'Cart'#227'o de Cr'#233'dito'
       end
     end
+    inherited Layout3: TLayout
+      inherited Label2: TLabel
+        Text = 'Bandeira do Cart'#227'o'
+      end
+    end
     inherited Layout2: TLayout
       inherited editName: TEdit
         Text = ''
@@ -14,7 +19,15 @@ inherited FormCreditCardSeparate: TFormCreditCardSeparate
       end
     end
     inherited Layout4: TLayout
+      inherited Layout5: TLayout
+        inherited Label4: TLabel
+          Text = 'Validade'
+        end
+      end
       inherited Layout6: TLayout
+        inherited Label5: TLabel
+          Text = 'C'#243'd. Seguran'#231'a'
+        end
         inherited editCSC: TEdit
           Text = ''
         end
@@ -24,6 +37,9 @@ inherited FormCreditCardSeparate: TFormCreditCardSeparate
       Text = 'Confirmar'
     end
     inherited Layout7: TLayout
+      inherited Label6: TLabel
+        Text = 'N'#250'mero do Cart'#227'o'
+      end
       inherited editNumber: TEdit
         MaxLength = 16
         Text = ''

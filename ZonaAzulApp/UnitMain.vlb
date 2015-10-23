@@ -1,7 +1,4 @@
-﻿[MultiView1]
-Coordinates=78,204,67,33
-
-[SpeedButton3]
+﻿[SpeedButton3]
 Coordinates=104,143,84,51
 
 [ToolBar1]
@@ -31,12 +28,6 @@ Coordinates=316,80,53,33
 [ButtonConsultPayment]
 Coordinates=146,71,128,51
 
-[Label2]
-Coordinates=46,70,46,51
-
-[Label1]
-Coordinates=0,0,46,51
-
 [LayoutFrame]
 Coordinates=203,160,79,33
 
@@ -51,4 +42,13 @@ Coordinates=320,195,41,33
 
 [LabelTitle]
 Coordinates=65,1,62,51
+
+[MultiViewMenu]
+Coordinates=78,204,67,33
+
+[LabelNickname]
+Coordinates=0,0,46,51
+
+[LabelEmail]
+Coordinates=46,70,46,51
 

@@ -216,14 +216,11 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
       end
     end
     object buttonSave: TSpeedButton
-      Align = Top
+      Align = MostBottom
       StyledSettings = [Family, Style, FontColor]
-      Margins.Left = 20.000000000000000000
       Margins.Top = 10.000000000000000000
-      Margins.Right = 20.000000000000000000
-      Position.X = 20.000000000000000000
-      Position.Y = 294.000000000000000000
-      Size.Width = 275.000000000000000000
+      Position.Y = 432.000000000000000000
+      Size.Width = 315.000000000000000000
       Size.Height = 48.000000000000000000
       Size.PlatformDefault = False
       Text = 'Salvar'

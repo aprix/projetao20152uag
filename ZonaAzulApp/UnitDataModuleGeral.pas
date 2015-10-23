@@ -11,7 +11,7 @@ uses
 
 type
   IPaymentListener = interface
-     procedure OnAfterPayment;
+     procedure OnSucess;
      procedure OnError(Msg: String);
   end;
 
@@ -22,6 +22,8 @@ type
     ResponseGetPayment: TRESTResponse;
     RequestPostPayment: TRESTRequest;
     ResponsePostPayment: TRESTResponse;
+    RequestPostUser: TRESTRequest;
+    ResponsePostUser: TRESTResponse;
   private
     { Private declarations }
     function PostPayment(Plate: String;
@@ -32,12 +34,20 @@ type
                           MonthCreditCard: Integer;
                           YearCreditCard: Integer;
                           CSCCredCard: Integer): TDateTime;
+
+    function PostUser(Id: Integer; Nickname, Email, CPF, Password: String): Integer;
   public
     { Public declarations }
 
     function ConsultPayment(Plate: String; var DayTime, DeadlineTime: TDateTime): Boolean;
 
-    procedure sendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
+    procedure SendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
+
+    procedure SendPaymentSeparate(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
+
+    procedure SendPaymentByCredit(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
+
+    procedure SendUser(Nickname, Email, CPF, Password: String);
 
     function IsUserLogged: Boolean;
 
@@ -126,8 +136,8 @@ end;
 
 function TDataModuleGeral.IsUserLogged: Boolean;
 begin
-  //Retorna false para os testes. Não está implementado o cadastro do usuário.
-  Result := False;
+  //Se a consulta do usuário na base local não for vazia, significa que existe um usuário logado.
+  Result := not (DataModuleLocal.DataSetUser.IsEmpty);
 end;
 
 function TDataModuleGeral.GetMaxTime: Integer;
@@ -145,7 +155,7 @@ begin
   Result := 1;
 end;
 
-function TDataModuleGeral.postPayment(Plate: String;
+function TDataModuleGeral.PostPayment(Plate: String;
   Time: Integer; FlagCreditCard, NameCreditCard,
   NumberCreditCard: String; MonthCreditCard, YearCreditCard,
   CSCCredCard: Integer): TDateTime;
@@ -184,55 +194,121 @@ begin
   end;
 end;
 
-procedure TDataModuleGeral.sendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
+function TDataModuleGeral.PostUser(Id: Integer; Nickname, Email, CPF,
+  Password: String): Integer;
 var
-StartTime: TDateTime;
+Json, JsonResponse: TJSONObject;
+begin
+  //Constroi o JSON do usuário que vai ser enviado ao webservice.
+  Json := TJSONObject.Create;
+  Json.AddPair('Id', TJSONNumber.Create(Id));
+  Json.AddPair('Nickname', TJSONString.Create(Nickname));
+  Json.AddPair('Email', TJSONString.Create(Email));
+  Json.AddPair('CPF', TJSONString.Create(CPF));
+  Json.AddPair('Password', TJSONString.Create(Password));
+
+  //Envia a requisição POST contendo o JSON do usuário.
+  RequestPostUser.Params.ParameterByName('json').Value := Json.ToString;
+  RequestPostUser.Execute;
+
+  //Pega o JSON contendo a resposta da requisição POST.
+  JsonResponse := (TJSONObject.ParseJSONValue(ResponsePostUser.Content) as TJSONObject);
+
+  //Verifica se o JSON objeto contém o par de chave Id, significando que houve sucesso.
+  if (JsonResponse.Values['Id'] <> nil) then
+  begin
+    //Atribui ao resultado o Id recebido como resposta.
+    Result := StrToInt(JsonResponse.GetValue('Id').Value);
+  end
+  else
+  begin
+    //Levanta uma exceção com o erro retornado pelo webservice.
+    raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
+end;
+
+procedure TDataModuleGeral.SendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
 begin
   //Verifica se não existe usuário logado. Ou seja, pagamento avulso.
   if not(IsUserLogged) then
   begin
-    //Exibe o formulário de cartão de crédito avulso.
-    FormCreditCardSeparate := TFormCreditCardSeparate.Create(Self);
-    FormCreditCardSeparate
-          .ShowModal(procedure(ModalResult: TModalResult)
-                     begin
-                        //Oculta o formulário.
-                        FormCreditCardSeparate.Hide;
+    //Chama o procedimento de pagamento de tíquete avulso.
+    SendPaymentSeparate(Plate, Time, PaymentListener);
+  end
+  else
+  begin
+    //Chama o procedimento de pagamento que utiliza os créditos já adquiridos pelo usuário.
+    SendPaymentByCredit(Plate, Time, PaymentListener);
+  end;
+end;
 
-                        //Verifica se o usuário confirmou a operação.
-                        if (ModalResult = mrOk) then
-                        begin
-                          try
-                            //Envia ao servidor a requisição HTTP Post do pagamento.
-                            StartTime:= postPayment(
-                                            Plate
-                                           ,Time
-                                           ,FormCreditCardSeparate.cboFlag.Selected.Text
-                                           ,FormCreditCardSeparate.editName.Text
-                                           ,FormCreditCardSeparate.editNumber.Text.Replace('-','')
-                                           ,StrToInt(FormCreditCardSeparate.cboMonth.Selected.Text)
-                                           ,StrToInt(FormCreditCardSeparate.cboYear.Selected.Text)
-                                           ,StrToInt(FormCreditCardSeparate.editCSC.Text)
-                                        );
+procedure TDataModuleGeral.SendPaymentByCredit(Plate: String; Time: Integer;
+  PaymentListener: IPaymentListener);
+begin
+  //Falta implementar.
+end;
 
-                            //Insere o novo tíquete na base local.
-                            DataModuleLocal.InsertTicketLocal(Plate, StartTime, Time);
+procedure TDataModuleGeral.SendPaymentSeparate(Plate: String; Time: Integer;
+  PaymentListener: IPaymentListener);
+var
+StartTime: TDateTime;
+begin
+  //Exibe o formulário de cartão de crédito avulso.
+  FormCreditCardSeparate := TFormCreditCardSeparate.Create(Self);
+  FormCreditCardSeparate
+        .ShowModal(procedure(ModalResult: TModalResult)
+                   begin
+                      //Oculta o formulário.
+                      FormCreditCardSeparate.Hide;
 
-                            //Chama o procedimento do ouvinte de pagamento.
-                            PaymentListener.OnAfterPayment;
-                          except
-                            on Error: Exception do
-                            begin
-                              //Chama o procedimento OnError do objeto ouvinte de pagamentos.
-                              PaymentListener.OnError(Error.Message);
-                            end;
+                      //Verifica se o usuário confirmou a operação.
+                      if (ModalResult = mrOk) then
+                      begin
+                        try
+                          //Envia ao servidor a requisição HTTP Post do pagamento.
+                          StartTime:= postPayment(
+                                          Plate
+                                         ,Time
+                                         ,FormCreditCardSeparate.cboFlag.Selected.Text
+                                         ,FormCreditCardSeparate.editName.Text
+                                         ,FormCreditCardSeparate.editNumber.Text.Replace('-','')
+                                         ,StrToInt(FormCreditCardSeparate.cboMonth.Selected.Text)
+                                         ,StrToInt(FormCreditCardSeparate.cboYear.Selected.Text)
+                                         ,StrToInt(FormCreditCardSeparate.editCSC.Text)
+                                      );
+
+                          //Insere o novo tíquete na base local.
+                          DataModuleLocal.InsertTicket(Plate, StartTime, Time);
+
+                          //Chama o procedimento do ouvinte de pagamento.
+                          PaymentListener.OnSucess;
+                        except
+                          on Error: Exception do
+                          begin
+                            //Chama o procedimento OnError do objeto ouvinte de pagamentos.
+                            PaymentListener.OnError(Error.Message);
                           end;
                         end;
+                      end;
 
-                        //Dispensa(elimina) o formulário.
-                        //FormCreditCardSeparate.DisposeOf();
-                     end);
-  end;
+                      //Dispensa(elimina) o formulário.
+                      //FormCreditCardSeparate.DisposeOf();
+                   end);
+end;
+
+procedure TDataModuleGeral.SendUser(Nickname, Email, CPF, Password: String);
+var
+Id: Integer;
+begin
+  //Envia o cadastro do usuário para o webservidor.
+  Id := PostUser(DataModuleLocal.DataSetUser.FieldByName('Id').AsInteger
+                ,Nickname
+                ,Email
+                ,CPF
+                ,Password);
+
+  //Armazena na base local as alterações do usuário.
+  DataModuleLocal.InsertUser(Id, Nickname, Email, CPF, Password);
 end;
 
 function TDataModuleGeral.GetUnitTime: Integer;
