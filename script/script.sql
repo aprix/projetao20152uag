@@ -6,7 +6,7 @@ USE zona_azul;
 -- criando tabelas
 CREATE TABLE IF NOT EXISTS user(
 	id INT AUTO_INCREMENT NOT NULL,
-	cpf INT (12) NOT NULL,
+	cpf VARCHAR (12) NOT NULL,
 	saldo NUMERIC  NOT NULL,
 	senha VARCHAR (16) NOT NULL,
 	email VARCHAR (200) NOT NULL,
