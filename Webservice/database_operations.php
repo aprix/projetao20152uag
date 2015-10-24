@@ -46,6 +46,33 @@ function update_user($id, $cpf, $password, $email, $nick){
 		WHERE user.id = $id;";
 }
 
+function insert_credit_card($id_user, $name, $number, $flag, $month, $year, $status){
+	return "INSERT INTO credit_card(id_user, name, num, flag, validate_month, validate_year, status)
+		VALUES ($id_user, '$name', $number, '$flag', $month, $year, $status);";
+}
+
+function update_credit_card($id, $id_user, $name, $number, $flag, $month, $year, $status){
+	return "UPDATE credit_card SET
+		id_user = $id_user,
+		name = '$name',
+		num = $number,
+		flag = '$flag',
+		validate_month = $month,
+		validate_year = $year,
+		status = $status
+		
+		WHERE credit_card.id = $id;";
+}
+
+function select_credit_card($id_user){
+	return "SELECT credit_card.id, credit_card.name, credit_card.num, credit_card.flag, credit_card.validate_month, credit_card.validate_year
+
+		FROM credit_card
+		INNER JOIN user ON credit_card.id_user = user.id AND credit_card.id_user = $id_user
+
+		ORDER BY credit_card.id";
+}
+
 /**
  * método que simula o pagamento utilizando cartão de crédito
  * @param type $name
