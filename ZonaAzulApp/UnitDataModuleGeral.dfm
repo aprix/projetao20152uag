@@ -3883,7 +3883,6 @@ object DataModuleGeral: TDataModuleGeral
     Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
     AcceptCharset = 'UTF-8, *;q=0.8'
     BaseURL = 'http://diogoespinhara.com.br'
-    ContentType = 'application/x-www-form-urlencoded'
     Params = <>
     HandleRedirects = True
     Left = 62
@@ -3923,6 +3922,24 @@ object DataModuleGeral: TDataModuleGeral
   object ResponsePostPayment: TRESTResponse
     ContentType = 'application/json'
     Left = 192
+    Top = 216
+  end
+  object RequestPostUser: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_user'
+    Response = ResponsePostUser
+    SynchronizedEvents = False
+    Left = 320
+    Top = 152
+  end
+  object ResponsePostUser: TRESTResponse
+    Left = 320
     Top = 216
   end
 end

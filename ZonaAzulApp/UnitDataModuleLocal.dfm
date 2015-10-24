@@ -248,8 +248,8 @@ object DataModuleLocal: TDataModuleLocal
             SourceRect.Bottom = 48.000000000000000000
           end>
       end>
-    Left = 112
-    Top = 64
+    Left = 32
+    Top = 8
   end
   object FDConnectionLocal: TFDConnection
     Params.Strings = (
@@ -262,8 +262,8 @@ object DataModuleLocal: TDataModuleLocal
     LoginPrompt = False
     AfterConnect = FDConnectionLocalAfterConnect
     BeforeConnect = FDConnectionLocalBeforeConnect
-    Left = 328
-    Top = 104
+    Left = 40
+    Top = 72
   end
   object DataSetTickets: TFDQuery
     Connection = FDConnectionLocal
@@ -279,7 +279,15 @@ object DataModuleLocal: TDataModuleLocal
         ',Case When Datetime(StartTime, '#39'+'#39' || Time || '#39' minutes'#39') > Date' +
         'time('#39'now'#39', '#39'localtime'#39') Then 1 Else 0 End as IconIndex'
       'From Tickets')
-    Left = 336
-    Top = 168
+    Left = 40
+    Top = 136
+  end
+  object DataSetUser: TFDQuery
+    Connection = FDConnectionLocal
+    SQL.Strings = (
+      'SELECT * '
+      'FROM User')
+    Left = 136
+    Top = 136
   end
 end

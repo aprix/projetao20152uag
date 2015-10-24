@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<ActiveMobileDevice>
+		<NoProfile iOSSimulator="iPhone5" Android="0425339928"/>
+	</ActiveMobileDevice>
+	<BT_BuildType>AppStore</BT_BuildType>
+	<Transactions>
+    <Transaction>2015/10/21 15:34:44.000.727,=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.pas</Transaction>
+    <Transaction>2015/10/21 15:41:03.000.074,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.pas=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UDataUser.pas</Transaction>
+    <Transaction>2015/10/21 15:41:03.000.075,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.fmx=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UDataUser.fmx</Transaction>
+    <Transaction>2015/10/21 15:50:19.000.096,=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.pas</Transaction>
+    <Transaction>2015/10/21 15:52:27.000.628,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.fmx=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitWelcome.fmx</Transaction>
+    <Transaction>2015/10/21 15:52:27.000.628,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.pas=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitWelcome.pas</Transaction>
+    <Transaction>2015/10/21 15:52:37.000.772,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UDataUser.pas=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitDataUser.pas</Transaction>
+    <Transaction>2015/10/21 15:52:37.000.772,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UDataUser.fmx=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitDataUser.fmx</Transaction>
+    <Transaction>2015/10/21 15:53:14.000.242,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitDataUser.pas=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitCadastreUser.pas</Transaction>
+    <Transaction>2015/10/21 15:53:14.000.242,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitDataUser.fmx=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitCadastreUser.fmx</Transaction>
+    <Transaction>2015/10/21 17:01:43.000.210,=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.pas</Transaction>
+    <Transaction>2015/10/21 17:03:04.000.107,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.fmx=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitWelcomeDetails.fmx</Transaction>
+    <Transaction>2015/10/21 17:03:04.000.107,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\Unit1.pas=C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitWelcomeDetails.pas</Transaction>
+    <Transaction>2015/10/21 17:40:25.000.958,C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\UnitWelcomeDetails.pas=</Transaction>
+  </Transactions>
+</BorlandProject>

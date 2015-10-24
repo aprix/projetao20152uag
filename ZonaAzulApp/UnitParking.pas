@@ -51,7 +51,7 @@ type
     { Private declarations }
     procedure UpdateValuesComponents;
     procedure ValidateValuesComponents;
-    procedure OnAfterPayment;
+    procedure OnSucess;
     procedure OnError(Msg: String);
     var
     Time: Integer;
@@ -149,7 +149,7 @@ begin
   UpdateValuesComponents();
 end;
 
-procedure TFormParking.OnAfterPayment;
+procedure TFormParking.OnSucess;
 begin
   //Exibe uma mensagem de sucesso para o usuário.
   ShowMessage('Pagamento realizado!');
