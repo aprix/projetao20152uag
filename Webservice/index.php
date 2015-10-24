@@ -113,27 +113,27 @@ class API extends REST {
 							$impares = substr($numeroCartao, $i, 1)*2;
 							if ($impares > 9) {
 								$impares = $impares - 9;
-			}
+							}
 							$soma= $soma + $impares;
    							
-		}
+						}
 	
 						if (($i%2)!= 0) {
 		
-				$soma = $soma+ substr($numeroCartao, $i, 1);
+							$soma = $soma+ substr($numeroCartao, $i, 1);
 
-		}
-	}
+						}
+					}
 
 
-if ($soma%10 != 0){
+					if ($soma%10 != 0){
 
-		$response['Error'] = "Cartão com numeração inválida";
-		$this->response(json_encode($response), 200);
+						$response['Error'] = "Cartão com numeração inválida";
+						$this->response(json_encode($response), 200);
 
-}else{
+					}else{
 
-	// TODO verificar este método....
+					// TODO verificar este método....
  				$pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
 
 				// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
@@ -296,7 +296,121 @@ if ($soma%10 != 0){
 			
 	}
 
+	private function post_credit_card(){
+		if ($this->get_request_method() != 'POST') {
+            $this->response($this->get_request_method(), 406);
+        }
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
 
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+	
+		// variaveis
+		$id = $vector['Id'];
+		$id_user = $vector['IdUser'];
+		$name = $vector['Name'];
+		$number = $vector['Number'];
+		$flag = $vector['Flag'];		
+		$month = $vector['MonthValidate'];
+		$year = $vector['YearValidate'];
+		$status = $vector['Status'];
+
+		if($status == "True"){
+			$status = 1;
+		} else {
+			$status = 0;
+		}
+
+		$response = array();
+		
+		if($id == 0){
+			// insert
+			$sql = insert_credit_card($id_user, $name, $number, $flag, $month, $year, $status);
+
+			if($query = mysqli_query($this->db, $sql)){
+
+				// pega o id do insert
+				$response['Id'] = (string) mysqli_insert_id($this->db);
+				$this->response(json_encode($response), 200);
+
+			} else {
+
+				$response['Error'] = mysqli_error($this->db);
+				$this->response(json_encode($response), 200);
+
+			}
+		} else {
+
+			//update
+			$sql = update_credit_card($id, $id_user, $name, $number, $flag, $month, $year, $status);
+
+			if($query = mysqli_query($this->db, $sql)){
+				
+				// retorna o id que ja foi passado
+				$response['Id'] = $id;
+				$this->response(json_encode($response), 200);
+
+			} else {
+
+				$response['Error'] = mysqli_error($this->db);
+				$this->response(json_encode($response), 200);
+
+			}
+		}
+			
+	}
+
+	private function get_credit_card(){		
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+		//Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		// pega a variavel Plate(placa do carro)
+		$id_user = $vector['IdUser'];
+		
+		// este sql é uma consulta que retorna a data de inicio da locação
+		// e a data de fim da locação...
+		$sql = select_credit_card($id_user);
+
+		$response = array();
+
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				$response_row = array();
+				$i = 0;
+				// este laço varre as linhas da consulta e vai as armazenando em $response...
+				while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
+					$response_row['Id'] = $row['id'];
+					$response_row['Name'] = $row['name'];
+					$response_row['Number'] = $row['num'];
+					$response_row['Flag'] = $row['flag'];
+					$response_row['MonthValidate'] = $row['validate_month'];
+					$response_row['YearValidate'] = $row['validate_year'];					
+
+					$response[$i] = $response_row;
+					$i++;
+				}
+			}
+
+		}  else {
+
+			$response['Error'] = mysqli_error($this->db);
+			$this->response(json_encode($response), 200);
+
+		}
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);
+	}
 
 	private function get_vacancy_location_date(){
 		if ($this->get_request_method() != 'GET') {
