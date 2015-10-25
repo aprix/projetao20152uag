@@ -65,7 +65,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
         TextSettings.Font.Style = [fsBold]
         Text = 'Bandeira do Cart'#227'o:'
       end
-      object cboFlag: TComboBox
+      object ComboboxFlag: TComboBox
         Align = Bottom
         Items.Strings = (
           'MasterCard'
@@ -99,21 +99,20 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
         TextSettings.Font.Style = [fsBold]
         Text = 'Nome Impresso no Cart'#227'o'
       end
-      object editName: TEdit
+      object EditName: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
         Align = Bottom
         StyleLookup = 'Edit1Style1'
         TabOrder = 1
         KeyboardType = Alphabet
-        Text = 'NOME SOBRENOME'
         TextSettings.Font.Size = 18.000000000000000000
         Position.Y = 18.000000000000000000
         Size.Width = 305.000000000000000000
         Size.Height = 32.000000000000000000
         Size.PlatformDefault = False
         StyledSettings = [Family, Style, FontColor]
-        OnChange = editNameChange
-        OnKeyDown = editNameKeyDown
+        OnChange = EditNameChange
+        OnKeyDown = EditNameKeyDown
       end
     end
     object Layout4: TLayout
@@ -143,7 +142,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
           TextSettings.Font.Style = [fsBold]
           Text = 'Validade:'
         end
-        object cboMonth: TComboBox
+        object ComboboxMonth: TComboBox
           Items.Strings = (
             '01'
             '02'
@@ -164,7 +163,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
           Size.PlatformDefault = False
           TabOrder = 1
         end
-        object cboYear: TComboBox
+        object ComboboxYear: TComboBox
           Items.Strings = (
             '2015'
             '2016'
@@ -179,39 +178,6 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
           Size.Height = 28.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 2
-        end
-      end
-      object Layout6: TLayout
-        Align = Left
-        Position.X = 153.000000000000000000
-        Size.Width = 153.000000000000000000
-        Size.Height = 48.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 2
-        object Label5: TLabel
-          Align = Top
-          StyledSettings = [Family, FontColor]
-          Size.Width = 153.000000000000000000
-          Size.Height = 20.000000000000000000
-          Size.PlatformDefault = False
-          TextSettings.Font.Size = 14.000000000000000000
-          TextSettings.Font.Style = [fsBold]
-          Text = 'C'#243'd. Seguran'#231'a:'
-        end
-        object editCSC: TEdit
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
-          TabOrder = 0
-          KeyboardType = NumberPad
-          MaxLength = 3
-          Text = '123'
-          TextSettings.Font.Size = 18.000000000000000000
-          TextSettings.HorzAlign = Center
-          Position.Y = 20.000000000000000000
-          Size.Width = 105.000000000000000000
-          Size.Height = 28.000000000000000000
-          Size.PlatformDefault = False
-          StyledSettings = [Family, Style, FontColor]
-          OnChange = editCSCChange
         end
       end
     end
@@ -248,20 +214,19 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
         TextSettings.Font.Style = [fsBold]
         Text = 'N'#250'mero do Cart'#227'o:'
       end
-      object editNumber: TEdit
+      object EditNumber: TEdit
         Touch.InteractiveGestures = [LongTap, DoubleTap]
         Align = Bottom
         TabOrder = 1
         KeyboardType = NumberPad
         MaxLength = 19
-        Text = 'XXXX-XXXX-XXXX-XXXX'
         TextSettings.Font.Size = 18.000000000000000000
         Position.Y = 20.000000000000000000
         Size.Width = 305.000000000000000000
         Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
         StyledSettings = [Family, Style, FontColor]
-        OnChange = editNumberChange
+        OnChange = EditNumberChange
       end
     end
   end

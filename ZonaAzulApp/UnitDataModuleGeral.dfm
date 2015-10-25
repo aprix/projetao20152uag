@@ -3942,4 +3942,76 @@ object DataModuleGeral: TDataModuleGeral
     Left = 320
     Top = 216
   end
+  object RequestPostCreditCard: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_credit_card'
+    Response = ResponsePostCreditCard
+    SynchronizedEvents = False
+    Left = 440
+    Top = 152
+  end
+  object ResponsePostCreditCard: TRESTResponse
+    Left = 440
+    Top = 216
+  end
+  object RequestGetCreditCards: TRESTRequest
+    Client = ClientWebService
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/get_credit_card'
+    Response = ResponseGetCreditCards
+    SynchronizedEvents = False
+    Left = 568
+    Top = 152
+  end
+  object ResponseGetCreditCards: TRESTResponse
+    Left = 568
+    Top = 216
+  end
+  object AdapterCreditCards: TRESTResponseDataSetAdapter
+    Dataset = DataSetCreditCards
+    FieldDefs = <>
+    Response = ResponseGetCreditCards
+    Left = 568
+    Top = 272
+  end
+  object DataSetCreditCards: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 568
+    Top = 328
+    object DataSetCreditCardsFlag: TStringField
+      FieldName = 'Flag'
+      Size = 50
+    end
+    object DataSetCreditCardsName: TStringField
+      FieldName = 'Name'
+      Size = 100
+    end
+    object DataSetCreditCardsNumber: TStringField
+      FieldName = 'Number'
+      Size = 16
+    end
+    object DataSetCreditCardsMonthValidate: TIntegerField
+      FieldName = 'MonthValidate'
+    end
+    object DataSetCreditCardsYearValidate: TIntegerField
+      FieldName = 'YearValidate'
+    end
+    object DataSetCreditCardsStatus: TBooleanField
+      FieldName = 'Status'
+    end
+    object DataSetCreditCardsId: TIntegerField
+      FieldName = 'Id'
+    end
+  end
 end

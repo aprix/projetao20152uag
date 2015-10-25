@@ -89,6 +89,7 @@ object FormMain: TFormMain
           Size.Height = 44.000000000000000000
           Size.PlatformDefault = False
           Text = 'Cart'#245'es de Cr'#233'dito'
+          OnClick = ButtonCreditCardsClick
         end
         object ButtonTickets: TSpeedButton
           Align = Top
@@ -156,7 +157,7 @@ object FormMain: TFormMain
           Size.Width = 249.000000000000000000
           Size.Height = 44.000000000000000000
           Size.PlatformDefault = False
-          Text = 'Sair'
+          Text = 'Desconectar'
           OnClick = ButtonExitClick
         end
       end
