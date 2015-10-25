@@ -38,6 +38,10 @@ type
     procedure EditPasswordKeyDown(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
     procedure ButtonAlterPasswordClick(Sender: TObject);
+    procedure EditNicknameChange(Sender: TObject);
+    procedure EditNicknameKeyDown(Sender: TObject; var Key: Word;
+      var KeyChar: Char; Shift: TShiftState);
+    procedure EditCPFChange(Sender: TObject);
   private
     { Private declarations }
     CadastreListener: ICadastreListener;
@@ -127,6 +131,25 @@ begin
   ButtonAlterPassword.Visible := False;
 end;
 
+procedure TFrameCadastreUser.EditCPFChange(Sender: TObject);
+begin
+  //Permite apenas a digitação de números no campo de CPF.
+  EditCPF.Text := GetJustNumbersOfString(EditCPF.Text);
+end;
+
+procedure TFrameCadastreUser.EditNicknameChange(Sender: TObject);
+begin
+  //Permite apenas letras no campo.
+  EditNickname.Text := GetJustLettersOfString(EditNickname.Text);
+end;
+
+procedure TFrameCadastreUser.EditNicknameKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  //Permite apenas a digitação de letras no campo de apelido.
+  AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
+end;
+
 procedure TFrameCadastreUser.EditPasswordKeyDown(Sender: TObject; var Key: Word;
   var KeyChar: Char; Shift: TShiftState);
 begin
@@ -171,6 +194,8 @@ end;
 procedure TFrameCadastreUser.ValidateValuesComponents;
 begin
   //Valida os valores de todos os componentes.
+  EditNickname.Text := GetJustLettersOfString(EditNickname.Text);
+  EditCPF.Text := GetJustNumbersOfString(EditCPF.Text);
   ValidateValueComponent(EditNickname, EditNickname.Text, 'Informe o seu Nome ou Apelido!');
   ValidateValueComponent(EditEmail, EditEmail.Text, 'Informe o seu Email!');
   ValidateValueComponent(EditPassword, EditPassword.Text, 'Informe a sua Senha!');

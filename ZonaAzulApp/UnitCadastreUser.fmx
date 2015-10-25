@@ -51,6 +51,8 @@ object FrameCadastreUser: TFrameCadastreUser
             StyledSettings = [Family, Style, FontColor]
             ParentShowHint = False
             ShowHint = True
+            OnChange = EditNicknameChange
+            OnKeyDown = EditNicknameKeyDown
           end
           object Label1: TLabel
             Align = Top
@@ -124,6 +126,7 @@ object FrameCadastreUser: TFrameCadastreUser
             StyledSettings = [Family, Style, FontColor]
             ParentShowHint = False
             ShowHint = True
+            OnChange = EditCPFChange
           end
           object Label3: TLabel
             Align = Top
