@@ -6,9 +6,9 @@ USE zona_azul;
 -- criando tabelas
 CREATE TABLE IF NOT EXISTS user(
 	id INT AUTO_INCREMENT NOT NULL,
-	cpf VARCHAR (12) NOT NULL,
+	cpf CHAR (11) NOT NULL,
 	saldo NUMERIC  NOT NULL,
-	senha VARCHAR (16) NOT NULL,
+	senha CHAR(32) NOT NULL,
 	email VARCHAR (200) NOT NULL,
 	nickname VARCHAR(200) NOT NULL,
 
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS institution(
 	id INT AUTO_INCREMENT NOT NULL,
 	razao_social VARCHAR (200) NOT NULL,
 	name VARCHAR (100) NOT NULL,
-	cnpj INT NOT NULL,
+	cnpj CHAR(14) NOT NULL,
 	state_registration INT NOT NULL,
 	address VARCHAR (100) NOT NULL,
 	address_num INT NOT NULL,
