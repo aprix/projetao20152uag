@@ -29,7 +29,7 @@ type
     procedure InsertTicket(Plate: String; StartTime: TDateTime; Time: Integer);
     procedure InsertUser(Id: Integer; Nickname, Email, CPF, Password: String);
     procedure ClearDataBase;
-    function GetId: Integer;
+    function GetIdUser: Integer;
     function GetNicknameUser: String;
     function GetEmailUser: String;
     function GetCPF: String;
@@ -108,7 +108,7 @@ begin
   Result := DataSetUser.FieldByName('Email').AsString;
 end;
 
-function TDataModuleLocal.GetId: Integer;
+function TDataModuleLocal.GetIdUser: Integer;
 begin
   Result := DataSetUser.FieldByName('Id').AsInteger;
 end;

@@ -26,9 +26,9 @@ Coordinates=10,166,99,36
 Coordinates=440,80,81,36
 Visible=True
 
-[cboFlag]
-Coordinates=10,10,101,146
-
-[editName]
+[EditName]
 Coordinates=184,10,44,58
+
+[ComboboxFlag]
+Coordinates=10,10,101,146
 

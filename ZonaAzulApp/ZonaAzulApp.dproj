@@ -375,6 +375,11 @@
             <Form>FormWelcome</Form>
             <FormType>fmx</FormType>
         </DCCReference>
+        <DCCReference Include="UnitCreditCards.pas">
+            <Form>FrameCreditCards</Form>
+            <FormType>fmx</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <RcItem Include="Ícones\ball green.png">
             <ResourceType>RCDATA</ResourceType>
             <ResourceId>BallGreen</ResourceId>

@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.MultiView, FMX.Layouts,
-  FMX.Objects, FMX.ExtCtrls, UnitConsultPayments
+  FMX.Objects, FMX.ExtCtrls, UnitConsultPayments , UnitCreditCards
   ,UnitBuyCredits, UnitCadastreCreditCard,
   UnitTickets, UnitDataModuleLocal, UnitWelcome, UnitCadastreUser;
 
@@ -36,6 +36,7 @@ type
     procedure PanelDataUserClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
     procedure MultiViewMenuStartShowing(Sender: TObject);
+    procedure ButtonCreditCardsClick(Sender: TObject);
   private
     { Private declarations }
     procedure Show(Frame: TFrame; Parent: TFmxObject; Title: String);
@@ -46,6 +47,7 @@ type
     FrameTickets: TFrameTickets;
     FrameConsultPayments: TFrameConsultPayments;
     FrameCadastreUser: TFrameCadastreUser;
+    FrameCreditCards: TFrameCreditCards;
   public
     { Public declarations }
     procedure OnSucess;
@@ -77,6 +79,7 @@ begin
   FrameTickets    := TFrameTickets.Create(Self);
   FrameConsultPayments := TFrameConsultPayments.Create(Self);
   FrameCadastreUser    := TFrameCadastreUser.Create(Self, Self);
+  FrameCreditCards     := TFrameCreditCards.Create(Self);
 
   //Exibe o frame(tela) de tíquetes como default.
   ButtonTicketsClick(Self);
@@ -140,13 +143,30 @@ begin
   Show(FrameConsultPayments, LayoutFrame, 'Consultar Veículo');
 end;
 
+procedure TFormMain.ButtonCreditCardsClick(Sender: TObject);
+begin
+  //Verifica se existe um usuário logado.
+  if (DataModuleGeral.IsUserLogged) then
+  begin
+    //Exibe o frame de cartões de crédito.
+    FrameCreditCards.UpdateCreditCardsList;
+    Show(FrameCreditCards, LayoutFrame, 'Cartões de Crédito');
+  end
+  else
+  begin
+    //Exibe uma mensagem ao usuário informando que o cadastro de cartão
+    //só é permitido para usuário logado
+    raise Exception.Create('Necessário cadastrar o usuário para prosseguir!');
+  end;
+end;
+
 procedure TFormMain.ButtonExitClick(Sender: TObject);
 begin
   //Fecha o menu.
   MultiViewMenu.HideMaster;
 
   //Abre o diálogo para averiguar se o usuário deseja sair da aplicação.
-  MessageDlg( 'Deseja sair da aplicação?'
+  MessageDlg( 'Deseja desconectar da sua conta?'
                  , System.UITypes.TMsgDlgType.mtConfirmation
                  , [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo]
                  , 0

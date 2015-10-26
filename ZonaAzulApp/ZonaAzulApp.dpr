@@ -18,7 +18,8 @@ uses
   UnitCreditCardSeparate in 'UnitCreditCardSeparate.pas' {FormCreditCardSeparate},
   UnitDataModuleLocal in 'UnitDataModuleLocal.pas' {DataModuleLocal: TDataModule},
   UnitCadastreUser in 'UnitCadastreUser.pas' {FrameCadastreUser: TFrame},
-  UnitWelcome in 'UnitWelcome.pas' {FormWelcome};
+  UnitWelcome in 'UnitWelcome.pas' {FormWelcome},
+  UnitCreditCards in 'UnitCreditCards.pas' {FrameCreditCards: TFrame};
 
 {$R *.res}
 

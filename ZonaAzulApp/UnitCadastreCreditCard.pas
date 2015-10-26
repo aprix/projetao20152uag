@@ -17,31 +17,33 @@ type
     Label2: TLabel;
     Layout2: TLayout;
     Label1: TLabel;
-    editName: TEdit;
-    cboFlag: TComboBox;
+    EditName: TEdit;
+    ComboboxFlag: TComboBox;
     Layout4: TLayout;
     Layout5: TLayout;
     Label4: TLabel;
-    cboMonth: TComboBox;
-    cboYear: TComboBox;
-    Layout6: TLayout;
-    Label5: TLabel;
-    editCSC: TEdit;
+    ComboboxMonth: TComboBox;
+    ComboboxYear: TComboBox;
     buttonSave: TSpeedButton;
     Layout7: TLayout;
     Label6: TLabel;
-    editNumber: TEdit;
-    procedure editNameChange(Sender: TObject);
-    procedure editCSCChange(Sender: TObject);
+    EditNumber: TEdit;
+    procedure EditNameChange(Sender: TObject);
     procedure buttonSaveClick(Sender: TObject);
-    procedure editNameKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
+    procedure EditNameKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
-    procedure editNumberChange(Sender: TObject);
+    procedure EditNumberChange(Sender: TObject);
   private
     { Private declarations }
-    procedure ValidateValuesComponents;
+    var
+    Id: Integer;
+  protected
+    { Protected declarations }
+    procedure ValidateValuesComponents; virtual;
   public
     { Public declarations }
+    constructor Create(AWoner: TComponent); overload;
+    constructor Create(AWoner: TComponent; NumberForEdit: String); overload;
   end;
 
 var
@@ -55,33 +57,73 @@ uses UnitDataModuleGeral, UnitRoutines;
 
 procedure TFormCadastreCreditCard.buttonSaveClick(Sender: TObject);
 begin
-  //Valida os valores dos campos.
-  ValidateValuesComponents;
+  try
+    //Valida os valores dos campos.
+    ValidateValuesComponents;
+
+    //Envia o cartão de crédito para o servidor.
+    DataModuleGeral.SendCreditCard(Id
+                                  ,ComboboxFlag.Selected.Text
+                                  ,EditName.Text
+                                  ,EditNumber.Text
+                                  ,StrToInt(ComboboxMonth.Selected.Text)
+                                  ,StrToInt(ComboboxYear.Selected.Text)
+                                  ,True);
+
+    //Fecha o cadastro do cartão de crédito.
+    Close;
+  except
+    on Error: Exception do
+    begin
+      //Exibe o erro para o usuário.
+      ShowMessage(Error.Message);
+    end;
+  end;
 end;
 
-procedure TFormCadastreCreditCard.editCSCChange(Sender: TObject);
+constructor TFormCadastreCreditCard.Create(AWoner: TComponent);
 begin
-  //Permite apenas números no campo editNumber.
-  editCSC.Text := GetJustNumbersOfString(editCSC.Text);
+  //Chama o construtor herdado.
+  inherited Create(AWoner);
+  Id := 0;
 end;
 
-procedure TFormCadastreCreditCard.editNameChange(Sender: TObject);
+constructor TFormCadastreCreditCard.Create(AWoner: TComponent;
+  NumberForEdit: String);
+begin
+  //Chama o construtor herdado.
+  inherited Create(AWoner);
+
+  //Busca o registro a ser editado no conjunto de cartões.
+  if (DataModuleGeral.DataSetCreditCards.Locate('Number', NumberForEdit, [])) then
+  begin
+    //Carrega nos campos os valores do cartão de crédito a ser editado.
+    Id              := DataModuleGeral.GetIdCreditCardSelected();
+    EditName.Text   := DataModuleGeral.GetNameCreditCardSelected();
+    EditNumber.Text := DataModuleGeral.GetNumberCreditCardSelected();
+    ComboboxFlag.ItemIndex := ComboboxFlag.Items.IndexOf(DataModuleGeral.GetFlagCreditCardSelected);
+    ComboboxMonth.ItemIndex:= DataModuleGeral.GetMonthCreditCardSelected - 1;
+    ComboboxYear.ItemIndex := ComboboxYear.Items.IndexOf(IntToStr(DataModuleGeral.GetYearCreditCardSelected));
+  end;
+end;
+
+procedure TFormCadastreCreditCard.EditNameChange(Sender: TObject);
 begin
   //Permite apenas letras A-Z, e deixa as letras em maiúsculo.
-  editName.Text := GetJustLettersOfString(editName.Text);
+  EditName.Text := GetJustLettersOfString(editName.Text);
   SetTextUpperCaseEditChange(Sender);
 end;
 
-procedure TFormCadastreCreditCard.editNameKeyDown(Sender: TObject;
+procedure TFormCadastreCreditCard.EditNameKeyDown(Sender: TObject;
   var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
 end;
 
-procedure TFormCadastreCreditCard.editNumberChange(Sender: TObject);
+procedure TFormCadastreCreditCard.EditNumberChange(Sender: TObject);
 begin
   //Permite apenas números no campo editNumber.
-  editNumber.Text := GetJustNumbersOfString(editNumber.Text);
+  EditNumber.Text := GetJustNumbersOfString(editNumber.Text);
 end;
 
 procedure TFormCadastreCreditCard.ValidateValuesComponents;
@@ -90,15 +132,14 @@ Month, Year, MonthCurrent, YearCurrent: Integer;
 begin
   //Valida os valores de todos os campos.
   Focused := nil;
-  editNumber.Text := GetJustNumbersOfString(editNumber.Text);
-  editCSC.Text    := GetJustNumbersOfString(editCSC.Text);
-  ValidateValueComponent(editName, editName.Text, 'Informe o nome impresso no cartão!');
-  ValidateValueComponent(editNumber, editNumber.Text, 'Informe o número do cartão!', 16);
-  ValidateValueComponent(editCSC, editCSC.Text, 'Informe o código de segurança!', 3);
+  EditName.Text := GetJustLettersOfString(editName.Text);
+  EditNumber.Text := GetJustNumbersOfString(editNumber.Text);
+  ValidateValueComponent(EditName, editName.Text, 'Informe o nome impresso no cartão!');
+  ValidateValueComponent(EditNumber, editNumber.Text, 'Informe o número do cartão!', 16);
 
   //Verifica se o cartão de crédito está vencido.
-  Month := StrToInt(cboMonth.Selected.Text);
-  Year  := StrToInt(cboYear.Selected.Text);
+  Month := StrToInt(ComboboxMonth.Selected.Text);
+  Year  := StrToInt(ComboboxYear.Selected.Text);
   MonthCurrent := MonthOf(Date);
   YearCurrent  := YearOf(Date);
   if (Year < YearCurrent)

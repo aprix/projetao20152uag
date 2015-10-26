@@ -7,7 +7,7 @@ uses
   Datasnap.DBClient, DateUtils, System.UITypes, FMX.Forms, System.ImageList,
   FMX.ImgList, Data.FMTBcd, Data.SqlExpr, System.iOUtils, Data.DbxSqlite,
   Datasnap.Provider, IPPeerClient, REST.Client, Data.Bind.Components,
-  Data.Bind.ObjectScope, DBXJSON, System.JSON;
+  Data.Bind.ObjectScope, DBXJSON, System.JSON, REST.Response.Adapter;
 
 type
   IPaymentListener = interface
@@ -24,6 +24,19 @@ type
     ResponsePostPayment: TRESTResponse;
     RequestPostUser: TRESTRequest;
     ResponsePostUser: TRESTResponse;
+    RequestPostCreditCard: TRESTRequest;
+    ResponsePostCreditCard: TRESTResponse;
+    RequestGetCreditCards: TRESTRequest;
+    ResponseGetCreditCards: TRESTResponse;
+    AdapterCreditCards: TRESTResponseDataSetAdapter;
+    DataSetCreditCards: TClientDataSet;
+    DataSetCreditCardsNumber: TStringField;
+    DataSetCreditCardsMonthValidate: TIntegerField;
+    DataSetCreditCardsYearValidate: TIntegerField;
+    DataSetCreditCardsName: TStringField;
+    DataSetCreditCardsFlag: TStringField;
+    DataSetCreditCardsId: TIntegerField;
+    DataSetCreditCardsStatus: TBooleanField;
   private
     { Private declarations }
     function PostPayment(Plate: String;
@@ -36,6 +49,8 @@ type
                           CSCCredCard: Integer): TDateTime;
 
     function PostUser(Id: Integer; Nickname, Email, CPF, Password: String): Integer;
+
+    function PostCreditCard(IdUser,Id: Integer; Flag, Name, Number: String; MonthValidate, YearValidate: Integer; Status: Boolean): Integer;
   public
     { Public declarations }
 
@@ -48,6 +63,10 @@ type
     procedure SendPaymentByCredit(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
 
     procedure SendUser(Nickname, Email, CPF, Password: String);
+
+    procedure SendCreditCard(Id: Integer; Flag, Name, Number: String; MonthValidate, YearValidate: Integer; Status: Boolean);
+
+    procedure OpenQueryCreditCards;
 
     function IsUserLogged: Boolean;
 
@@ -64,6 +83,13 @@ type
     function GetDiscountPrice: Double;
 
     function GetLastPlate: String;
+
+    function GetNameCreditCardSelected: String;
+    function GetNumberCreditCardSelected: String;
+    function GetFlagCreditCardSelected: String;
+    function GetMonthCreditCardSelected: Integer;
+    function GetYearCreditCardSelected: Integer;
+    function GetIdCreditCardSelected: Integer;
   end;
 
 var
@@ -81,6 +107,16 @@ uses UnitCreditCardSeparate, UnitBuyCredits, UnitTickets, UnitDataModuleLocal,
 function TDataModuleGeral.GetDiscountPrice: Double;
 begin
   Result := 0;
+end;
+
+function TDataModuleGeral.GetFlagCreditCardSelected: String;
+begin
+  Result := DataSetCreditCards.FieldByName('Flag').AsString;
+end;
+
+function TDataModuleGeral.GetIdCreditCardSelected: Integer;
+begin
+  Result := DataSetCreditCards.FieldByName('Id').AsInteger;
 end;
 
 function TDataModuleGeral.GetLastPlate: String;
@@ -140,6 +176,14 @@ begin
   Result := not (DataModuleLocal.DataSetUser.IsEmpty);
 end;
 
+procedure TDataModuleGeral.OpenQueryCreditCards;
+begin
+  //Envia a requisição GET de consulta de cartões de créditos.
+  RequestGetCreditCards.ClearBody;
+  RequestGetCreditCards.Params.ParameterByName('json').Value := '{"IdUser":'+IntToStr(DataModuleLocal.GetIdUser)+'}';
+  RequestGetCreditCards.Execute;
+end;
+
 function TDataModuleGeral.GetMaxTime: Integer;
 begin
   Result := 120;
@@ -150,9 +194,60 @@ begin
   Result := 10;
 end;
 
+function TDataModuleGeral.GetMonthCreditCardSelected: Integer;
+begin
+  Result := DataSetCreditCards.FieldByName('MonthValidate').AsInteger;
+end;
+
+function TDataModuleGeral.GetNameCreditCardSelected: String;
+begin
+  Result := DataSetCreditCards.FieldByName('Name').AsString;
+end;
+
+function TDataModuleGeral.GetNumberCreditCardSelected: String;
+begin
+  Result := DataSetCreditCards.FieldByName('Number').AsString;
+end;
+
 function TDataModuleGeral.GetPriceTime: Double;
 begin
   Result := 1;
+end;
+
+function TDataModuleGeral.PostCreditCard(IdUser, Id: Integer; Flag, Name, Number: String;
+  MonthValidate, YearValidate: Integer; Status: Boolean): Integer;
+var
+Json, JsonResponse: TJSONObject;
+begin
+  //Constroi o JSON a ser enviado na requisição POST.
+  Json := TJSONObject.Create;
+  Json.AddPair('IdUser', TJSONNumber.Create(IdUser));
+  Json.AddPair('Id', TJSONNumber.Create(Id));
+  Json.AddPair('Flag', TJSONString.Create(Flag));
+  Json.AddPair('Name', TJSONString.Create(Name));
+  Json.AddPair('Number', TJSONString.Create(Number));
+  Json.AddPair('MonthValidate', TJSONNumber.Create(MonthValidate));
+  Json.AddPair('YearValidate', TJSONNumber.Create(YearValidate));
+  Json.AddPair('Status', TJSONBool.Create(Status));
+
+  //Envia a requisição POST com o cadastro do cartão.
+  RequestPostCreditCard.Params.ParameterByName('json').Value := Json.ToString;
+  RequestPostCreditCard.Execute;
+
+  //Pega o json contendo a resposta do servidor.
+  JsonResponse := (TJSONObject.ParseJSONValue(ResponsePostCreditCard.Content) as TJSONObject);
+
+  //Verifica se o json com a resposta contém o par de chave Id, significando sucesso.
+  if (JsonResponse.Values['Id'] <> nil) then
+  begin
+    //Atribui a resposta o Id retornado pelo webservice.
+    Result := StrToInt(JsonResponse.GetValue('Id').Value);
+  end
+  else
+  begin
+    //Levanta uma exceção com o erro retornado pelo webservice.
+    raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
 end;
 
 function TDataModuleGeral.PostPayment(Plate: String;
@@ -227,6 +322,23 @@ begin
   end;
 end;
 
+procedure TDataModuleGeral.SendCreditCard(Id: Integer; Flag, Name, Number: String;
+  MonthValidate, YearValidate: Integer; Status: Boolean);
+begin
+  //Envia a requisição POST com os dados do cartão de crédito para o WebService.
+  Id:= PostCreditCard(DataModuleLocal.GetIdUser
+                    ,Id
+                    ,Flag
+                    ,Name
+                    ,Number
+                    ,MonthValidate
+                    ,YearValidate
+                    ,Status);
+
+  //Atualiza a consulta de cartões de crédito.
+  OpenQueryCreditCards;
+end;
+
 procedure TDataModuleGeral.SendPayment(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
 begin
   //Verifica se não existe usuário logado. Ou seja, pagamento avulso.
@@ -269,12 +381,12 @@ begin
                           StartTime:= postPayment(
                                           Plate
                                          ,Time
-                                         ,FormCreditCardSeparate.cboFlag.Selected.Text
-                                         ,FormCreditCardSeparate.editName.Text
-                                         ,FormCreditCardSeparate.editNumber.Text.Replace('-','')
-                                         ,StrToInt(FormCreditCardSeparate.cboMonth.Selected.Text)
-                                         ,StrToInt(FormCreditCardSeparate.cboYear.Selected.Text)
-                                         ,StrToInt(FormCreditCardSeparate.editCSC.Text)
+                                         ,FormCreditCardSeparate.ComboboxFlag.Selected.Text
+                                         ,FormCreditCardSeparate.EditName.Text
+                                         ,FormCreditCardSeparate.EditNumber.Text.Replace('-','')
+                                         ,StrToInt(FormCreditCardSeparate.ComboboxMonth.Selected.Text)
+                                         ,StrToInt(FormCreditCardSeparate.ComboboxYear.Selected.Text)
+                                         ,StrToInt(FormCreditCardSeparate.EditCSC.Text)
                                       );
 
                           //Insere o novo tíquete na base local.
@@ -314,6 +426,11 @@ end;
 function TDataModuleGeral.GetUnitTime: Integer;
 begin
   Result := 10;
+end;
+
+function TDataModuleGeral.GetYearCreditCardSelected: Integer;
+begin
+  Result := DataSetCreditCards.FieldByName('YearValidate').AsInteger;
 end;
 
 end.

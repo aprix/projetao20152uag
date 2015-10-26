@@ -1,0 +1,79 @@
+object FrameCreditCards: TFrameCreditCards
+  Size.Width = 320.000000000000000000
+  Size.Height = 446.000000000000000000
+  Size.PlatformDefault = False
+  object ListViewCreditCards: TListView
+    ItemAppearanceClassName = 'TImageListItemBottomDetailRightButtonAppearance'
+    ItemEditAppearanceClassName = 'TImageListItemBottomDetailRightButtonShowCheckAppearance'
+    HeaderAppearanceClassName = 'TListHeaderObjects'
+    FooterAppearanceClassName = 'TListHeaderObjects'
+    Transparent = True
+    Images = DataModuleLocal.IconsTicketsList
+    Align = Client
+    Size.Width = 320.000000000000000000
+    Size.Height = 446.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    ItemAppearanceObjects.ItemObjects.Detail.Font.Size = 16.000000000000000000
+    ItemAppearanceObjects.ItemObjects.Detail.TextColor = claBlack
+    ItemAppearanceObjects.ItemObjects.Image.Visible = False
+    ItemAppearanceObjects.ItemObjects.TextButton.Visible = False
+    ItemAppearanceObjects.ItemEditObjects.TextButton.Visible = False
+    ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
+    CanSwipeDelete = False
+    OnItemsChange = ListViewCreditCardsItemsChange
+    OnItemClick = ListViewCreditCardsItemClick
+    PullToRefresh = True
+    object buttonNew: TSpeedButton
+      Anchors = [akRight, akBottom]
+      Position.X = 250.000000000000000000
+      Position.Y = 388.000000000000000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'SpeedButton1Style1'
+      Text = 'Novo'
+      OnClick = buttonNewClick
+    end
+    object lblMessage: TLabel
+      Align = Center
+      StyledSettings = [Family, FontColor]
+      Size.Width = 154.000000000000000000
+      Size.Height = 154.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.Font.Size = 14.000000000000000000
+      TextSettings.Font.Style = [fsBold]
+      TextSettings.HorzAlign = Center
+      Text = 
+        'Nenhum cart'#227'o cadastrado. Clique no bot'#227'o Novo para cadastrar um' +
+        ' cart'#227'o.'
+    end
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = DataModuleGeral.DataSetCreditCards
+    ScopeMappings = <>
+    Left = 144
+    Top = 208
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 20
+    Top = 5
+    object LinkFillControlToField1: TLinkFillControlToField
+      Category = 'Quick Bindings'
+      Control = ListViewCreditCards
+      Track = True
+      FillDataSource = BindSourceDB1
+      FillDisplayFieldName = 'Flag'
+      AutoFill = True
+      FillExpressions = <
+        item
+          SourceMemberName = 'Number'
+          ControlMemberName = 'Detail'
+        end>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
+    end
+  end
+end
