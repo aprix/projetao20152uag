@@ -48,14 +48,14 @@ function update_user($id, $cpf, $password, $email, $nick){
 
 function insert_credit_card($id_user, $name, $number, $flag, $month, $year, $status){
 	return "INSERT INTO credit_card(id_user, name, num, flag, validate_month, validate_year, status)
-		VALUES ($id_user, '$name', $number, '$flag', $month, $year, $status);";
+		VALUES ($id_user, '$name', '$number', '$flag', $month, $year, $status);";
 }
 
 function update_credit_card($id, $id_user, $name, $number, $flag, $month, $year, $status){
 	return "UPDATE credit_card SET
 		id_user = $id_user,
 		name = '$name',
-		num = $number,
+		num = '$number',
 		flag = '$flag',
 		validate_month = $month,
 		validate_year = $year,

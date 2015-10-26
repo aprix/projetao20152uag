@@ -87,106 +87,57 @@ class API extends REST {
 				$this->response(json_encode($response), 200);
 
             } else {
+				
+				$this->validate_credit_card($numeroCartao, $response);
 
-            	// faz as validações de pagamento...
-
-            	if(strlen($numeroCartao) != 16){
-
-					$response['Error'] = "Número do cartão deve ter 16 dígitos";
-					$this->response(json_encode($response), 200);
-
-
-				}else if(substr($numeroCartao, 0, 1) != 4 && substr($numeroCartao, 0, 1) != 5 && substr($numeroCartao, 0, 1) != 3)  {
-
-					$response['Error'] = "Cartão com numeração inválida";
-					$this->response(json_encode($response), 200);
-
-				}else{
-
-
-					for($i = strlen($numeroCartao) - 1; $i >= 0; $i--){
-
-     					$lenght = $i+1;
-
-						if(($i % 2) == 0){	
-
-							$impares = substr($numeroCartao, $i, 1)*2;
-							if ($impares > 9) {
-								$impares = $impares - 9;
-							}
-							$soma= $soma + $impares;
-   							
-						}
-	
-						if (($i%2)!= 0) {
+				// TODO verificar este método....
+		 		$pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
 		
-							$soma = $soma+ substr($numeroCartao, $i, 1);
-
-						}
-					}
-
-
-					if ($soma%10 != 0){
-
-						$response['Error'] = "Cartão com numeração inválida";
-						$this->response(json_encode($response), 200);
-
-					}else{
-
-					// TODO verificar este método....
- 				$pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
-
 				// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
 				$sql_select_vehicle = select_vehicle($placaVeiculo, 1);
 				$select_vehicle = mysqli_query($this->db, $sql_select_vehicle);
-				
+						
 				// se não existe registro( == 0) então...
 				if(mysqli_num_rows($select_vehicle) == 0){
-					
+							
 					// é inserido um novo registro...
 					$sql_insert_vehicle = insert_vehicle($placaVeiculo);
-		            $insert_vehicle = mysqli_query($this->db, $sql_insert_vehicle );
-
+				    $insert_vehicle = mysqli_query($this->db, $sql_insert_vehicle );
+		
 					// em caso de erro será enviado para a aplicação...
 					if(! $insert_vehicle){
 						$response['Error'] = mysqli_error($this->db);
 						$this->response(json_encode($response), 200);
 					}
-
+		
 				}
-				
+						
 				// como já foi verificado na consulta $query que não existe locação de vaga
 				// neste momento para o veiculo é realizada a locação de vaga...
 				$sql_insert_vacancy_location = insert_vacancy_location($placaVeiculo, $hora);
-                $insert_vacancy_location = mysqli_query($this->db,  $sql_insert_vacancy_location);
-
+		        $insert_vacancy_location = mysqli_query($this->db,  $sql_insert_vacancy_location);
+		
 				// em caso de erro será enviado para a aplicação...
 				if(! $insert_vacancy_location){
 					$response['Error'] = mysqli_error($this->db);					
 					$this->response(json_encode($response), 200);
 				}
-
+		
 				// feito novamente a consulta para pegar a data salva
 				$query = mysqli_query($this->db, $sql);
 				if(mysqli_num_rows($query) > 0){
 					$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-				
+						
 					// caso ocorra tudo certo será retornada a aplicação uma mensagem de sucesso...
 					$response['Sucess'] = $row['initialDate'];					
 					$this->response(json_encode($response), 200);
-		        } else {
+				} else {
 					//Para mensagens de erro.
-            		$response['Error'] = mysqli_error($this->db);
+		            $response['Error'] = mysqli_error($this->db);
 					$this->response(json_encode($response), 200);
 				}
-
-	}
  
-}
-                								
-               
-
-            }
+			}
         } else {
             //Para mensagens de erro.
             $response['Error'] = mysqli_error($this->db);
@@ -324,6 +275,8 @@ class API extends REST {
 
 		$response = array();
 		
+		$this->validate_credit_card($number, $response);
+		
 		if($id == 0){
 			// insert
 			$sql = insert_credit_card($id_user, $name, $number, $flag, $month, $year, $status);
@@ -451,6 +404,56 @@ class API extends REST {
 		// e enviado para aplicação...
 		$this->response($response_json, 200);
 
+	}
+	
+	// funcao especifica da validacao do numero do cartao
+	private function validate_credit_card($numeroCartao, $response){
+		// faz as validações de pagamento...
+
+        if(strlen($numeroCartao) != 16){
+
+			$response['Error'] = "Número do cartão deve ter 16 dígitos";
+			$this->response(json_encode($response), 200);
+
+
+		} else if(substr($numeroCartao, 0, 1) != 4 && substr($numeroCartao, 0, 1) != 5 && substr($numeroCartao, 0, 1) != 3)  {
+
+			$response['Error'] = "Cartão com numeração inválida";
+			$this->response(json_encode($response), 200);
+
+		} else{
+			
+			$soma = 0;
+
+			for($i = strlen($numeroCartao) - 1; $i >= 0; $i--){
+
+     			$lenght = $i+1;
+
+				if(($i % 2) == 0){	
+
+					$impares = substr($numeroCartao, $i, 1)*2;
+					if ($impares > 9) {
+						$impares = $impares - 9;
+					}
+					$soma= $soma + $impares;
+   							
+				}
+	
+				if (($i%2)!= 0) {
+		
+					$soma = $soma+ substr($numeroCartao, $i, 1);
+
+				}
+			}
+
+
+			if ($soma%10 != 0){
+
+				$response['Error'] = "Cartão com numeração inválida";
+				$this->response(json_encode($response), 200);
+
+			}
+		}
 	}
 
     /*
