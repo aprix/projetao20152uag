@@ -69,7 +69,7 @@ function select_credit_card($id_user){
 
 		FROM credit_card
 		INNER JOIN user ON credit_card.id_user = user.id AND credit_card.id_user = $id_user
-
+		WHERE credit_card.status = 1
 		ORDER BY credit_card.id";
 }
 
