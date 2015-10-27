@@ -7,7 +7,12 @@ uses
   Datasnap.DBClient, DateUtils, System.UITypes, FMX.Forms, System.ImageList,
   FMX.ImgList, Data.FMTBcd, Data.SqlExpr, System.iOUtils, Data.DbxSqlite,
   Datasnap.Provider, IPPeerClient, REST.Client, Data.Bind.Components,
-  Data.Bind.ObjectScope, DBXJSON, System.JSON, REST.Response.Adapter;
+  Data.Bind.ObjectScope, DBXJSON, System.JSON, REST.Response.Adapter
+{$IFDEF Win32 or Win64}
+, MidasLib;
+{$ELSE}
+;
+{$ENDIF}
 
 type
   IPaymentListener = interface
