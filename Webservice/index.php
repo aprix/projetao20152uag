@@ -275,7 +275,9 @@ class API extends REST {
 
 		$response = array();
 		
-		$this->validate_credit_card($number, $response);
+		if($status == 1){
+			$this->validate_credit_card($number, $response);
+		}
 		
 		if($id == 0){
 			// insert
@@ -474,3 +476,4 @@ class API extends REST {
 $api = new API;
 $api->processApi();
 ?>
+
