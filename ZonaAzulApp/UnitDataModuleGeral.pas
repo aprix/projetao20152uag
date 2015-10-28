@@ -386,12 +386,12 @@ begin
                           StartTime:= postPayment(
                                           Plate
                                          ,Time
-                                         ,FormCreditCardSeparate.ComboboxFlag.Selected.Text
-                                         ,FormCreditCardSeparate.EditName.Text
-                                         ,FormCreditCardSeparate.EditNumber.Text.Replace('-','')
-                                         ,StrToInt(FormCreditCardSeparate.ComboboxMonth.Selected.Text)
-                                         ,StrToInt(FormCreditCardSeparate.ComboboxYear.Selected.Text)
-                                         ,StrToInt(FormCreditCardSeparate.EditCSC.Text)
+                                         ,FormCreditCardSeparate.GetFlag()
+                                         ,FormCreditCardSeparate.GetName()
+                                         ,FormCreditCardSeparate.GetNumber()
+                                         ,FormCreditCardSeparate.GetMonth()
+                                         ,FormCreditCardSeparate.GetYear()
+                                         ,FormCreditCardSeparate.GetCSC()
                                       );
 
                           //Insere o novo tíquete na base local.
