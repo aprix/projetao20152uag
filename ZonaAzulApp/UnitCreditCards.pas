@@ -61,13 +61,14 @@ begin
                 DataModuleGeral.DataSetCreditCards.Locate('Number', Number, []);
 
                 //Envia a atualização do cartão de crédito para o webservice.
-                DataModuleGeral.SendCreditCard(DataModuleGeral.GetIdCreditCardSelected
-                                              ,DataModuleGeral.GetFlagCreditCardSelected
-                                              ,DataModuleGeral.GetNameCreditCardSelected
-                                              ,DataModuleGeral.GetNumberCreditCardSelected
-                                              ,DataModuleGeral.GetMonthCreditCardSelected
-                                              ,DataModuleGeral.GetYearCreditCardSelected
-                                              ,False);
+                DataModuleGeral.SendCreditCard(
+                                     DataModuleGeral.GetIdCreditCardSelected
+                                    ,DataModuleGeral.GetFlagCreditCardSelected
+                                    ,''
+                                    ,Copy(UnitRoutines.GenerateMD5(DataModuleGeral.GetNumberCreditCardSelected+FormatDateTime('ddHHmmss', Now())), 1,16)
+                                    ,0
+                                    ,0
+                                    ,False);
 
                 //Atualiza a consulta de cartões.
                 DataModuleGeral.OpenQueryCreditCards;

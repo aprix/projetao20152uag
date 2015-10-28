@@ -46,6 +46,7 @@ type
     { Private declarations }
     CadastreListener: ICadastreListener;
     procedure ValidateValuesComponents;
+    procedure ShowCadastreCreditCard;
     var
     IsPasswordChanged : Boolean;
   public
@@ -58,7 +59,8 @@ implementation
 
 {$R *.fmx}
 
-uses UnitDataModuleGeral, UnitDataModuleLocal, UnitRoutines;
+uses UnitDataModuleGeral, UnitDataModuleLocal, UnitRoutines,
+  UnitCadastreCreditCard;
 
 procedure TFrameCadastreUser.ButtonAlterPasswordClick(Sender: TObject);
 var
@@ -106,9 +108,8 @@ begin
                             ,EditCPF.Text
                             ,PasswordMD5);
 
-
-    //Chama o procedimento de sucesso do objeto ouvinte de eventos de cadastro.
-    CadastreListener.OnSucess;
+    //Exibe o cadastro de cartão.
+    ShowCadastreCreditCard;
   except
     on Error: Exception do
     begin
@@ -164,6 +165,21 @@ begin
     //Atualiza o atributo isPasswordChanged.
     IsPasswordChanged := True;
   end;
+end;
+
+procedure TFrameCadastreUser.ShowCadastreCreditCard;
+var
+FormCadastreCreditCard: TFormCadastreCreditCard;
+begin
+  //Exibe o cadastro de cartão de crédito.
+  FormCadastreCreditCard := TFormCadastreCreditCard.Create(Self);
+  FormCadastreCreditCard.ShowModal( procedure (ModalResult: TModalResult)
+                                    begin
+                                      //Chama o procedimento de sucesso do objeto
+                                      //ouvinte de eventos de cadastro.
+                                      CadastreListener.OnSucess;
+                                    end
+                                  );
 end;
 
 procedure TFrameCadastreUser.UpdateValuesComponents;
