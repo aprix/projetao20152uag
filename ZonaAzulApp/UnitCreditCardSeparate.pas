@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants, 
   FMX.Types, FMX.Graphics, FMX.Controls, FMX.Forms, FMX.Dialogs, FMX.StdCtrls,
   UnitCadastreCreditCard, FMX.Edit, FMX.ListBox, FMX.Objects,
-  FMX.Controls.Presentation, FMX.Layouts;
+  FMX.Controls.Presentation, FMX.Layouts, System.ImageList, FMX.ImgList;
 
 type
   TFormCreditCardSeparate = class(TFormCadastreCreditCard)
@@ -22,6 +22,7 @@ type
     procedure ValidateValuesComponents; override;
   public
     { Public declarations }
+    function GetCSC(): Integer;
   end;
 
 var
@@ -46,6 +47,11 @@ procedure TFormCreditCardSeparate.EditCSCChange(Sender: TObject);
 begin
   //Permite apenas números no campo editNumber.
   editCSC.Text := GetJustNumbersOfString(editCSC.Text);
+end;
+
+function TFormCreditCardSeparate.GetCSC: Integer;
+begin
+  Result := StrToInt(EditCSC.Text);
 end;
 
 procedure TFormCreditCardSeparate.ValidateValuesComponents;

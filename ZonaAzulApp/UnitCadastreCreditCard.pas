@@ -5,7 +5,8 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.StdCtrls,
-  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.Edit, FMX.ListBox, DateUtils;
+  FMX.Objects, FMX.Controls.Presentation, FMX.Layouts, FMX.Edit, FMX.ListBox, DateUtils
+  ,StrUtils, System.ImageList, FMX.ImgList, FMX.ExtCtrls;
 
 type
   TFormCadastreCreditCard = class(TForm)
@@ -13,12 +14,9 @@ type
     MasterToolBar: TToolBar;
     Rectangle1: TRectangle;
     Label3: TLabel;
-    Layout3: TLayout;
-    Label2: TLabel;
     Layout2: TLayout;
     Label1: TLabel;
     EditName: TEdit;
-    ComboboxFlag: TComboBox;
     Layout4: TLayout;
     Layout5: TLayout;
     Label4: TLabel;
@@ -28,6 +26,10 @@ type
     Layout7: TLayout;
     Label6: TLabel;
     EditNumber: TEdit;
+    Layout6: TLayout;
+    ImageFlag: TImage;
+    IconsGenericList: TImageList;
+    Layout3: TLayout;
     procedure EditNameChange(Sender: TObject);
     procedure buttonSaveClick(Sender: TObject);
     procedure EditNameKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
@@ -40,10 +42,18 @@ type
   protected
     { Protected declarations }
     procedure ValidateValuesComponents; virtual;
+
+    var
+    Flag: String;
   public
     { Public declarations }
     constructor Create(AWoner: TComponent); overload;
     constructor Create(AWoner: TComponent; NumberForEdit: String); overload;
+    function GetFlag(): String;
+    function GetNumber(): String;
+    function GetName(): String;
+    function GetMonth(): Integer;
+    function GetYear(): Integer;
   end;
 
 var
@@ -53,7 +63,7 @@ implementation
 
 {$R *.fmx}
 
-uses UnitDataModuleGeral, UnitRoutines;
+uses UnitDataModuleGeral, UnitRoutines, UnitDataModuleLocal;
 
 procedure TFormCadastreCreditCard.buttonSaveClick(Sender: TObject);
 begin
@@ -63,7 +73,7 @@ begin
 
     //Envia o cartão de crédito para o servidor.
     DataModuleGeral.SendCreditCard(Id
-                                  ,ComboboxFlag.Selected.Text
+                                  ,Flag
                                   ,EditName.Text
                                   ,EditNumber.Text
                                   ,StrToInt(ComboboxMonth.Selected.Text)
@@ -71,7 +81,8 @@ begin
                                   ,True);
 
     //Fecha o cadastro do cartão de crédito.
-    Close;
+    Hide;
+    ModalResult := mrOk;
   except
     on Error: Exception do
     begin
@@ -101,7 +112,6 @@ begin
     Id              := DataModuleGeral.GetIdCreditCardSelected();
     EditName.Text   := DataModuleGeral.GetNameCreditCardSelected();
     EditNumber.Text := DataModuleGeral.GetNumberCreditCardSelected();
-    ComboboxFlag.ItemIndex := ComboboxFlag.Items.IndexOf(DataModuleGeral.GetFlagCreditCardSelected);
     ComboboxMonth.ItemIndex:= DataModuleGeral.GetMonthCreditCardSelected - 1;
     ComboboxYear.ItemIndex := ComboboxYear.Items.IndexOf(IntToStr(DataModuleGeral.GetYearCreditCardSelected));
   end;
@@ -121,9 +131,53 @@ begin
 end;
 
 procedure TFormCadastreCreditCard.EditNumberChange(Sender: TObject);
+var
+Index: Integer;
 begin
   //Permite apenas números no campo editNumber.
   EditNumber.Text := GetJustNumbersOfString(editNumber.Text);
+
+  //Atualiza o ícone da bandeira relacionada ao cartão digitado~.
+  {$IFDEF Win32 or Win64}
+  Index := 1;
+  {$ELSE}
+  Index := 0;
+  {$ENDIF}
+  if (EditNumber.Text[Index] = '4') then
+  begin
+    ImageFlag.Bitmap := IconsGenericList.Bitmap(TSizeF.Create(32,32), 0);
+    Flag := 'VISA';
+  end
+  else
+  begin
+    ImageFlag.Bitmap := IconsGenericList.Bitmap(TSizeF.Create(32,32), 1);
+    Flag := 'MASTERCARD';
+  end;
+end;
+
+function TFormCadastreCreditCard.GetFlag: String;
+begin
+  Result := Flag;
+end;
+
+function TFormCadastreCreditCard.GetMonth: Integer;
+begin
+  Result := StrToInt(ComboboxMonth.Selected.Text);
+end;
+
+function TFormCadastreCreditCard.GetName: String;
+begin
+  Result := EditName.Text;
+end;
+
+function TFormCadastreCreditCard.GetNumber: String;
+begin
+  Result := EditNumber.Text.Replace('-', '');
+end;
+
+function TFormCadastreCreditCard.GetYear: Integer;
+begin
+  Result := StrToInt(ComboboxYear.Selected.Text);
 end;
 
 procedure TFormCadastreCreditCard.ValidateValuesComponents;
