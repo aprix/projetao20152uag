@@ -1,0 +1,5 @@
+suites:
+    main:
+        namespace: Retaguarda
+        psr4_prefix: Retaguarda
+        src_path: app
