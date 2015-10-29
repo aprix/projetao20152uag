@@ -23,11 +23,11 @@ type
     procedure ListViewTicketsFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
     procedure buttonNewClick(Sender: TObject);
+    procedure ListViewTicketsItemsChange(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
-    constructor Create(AWOner: TComponent); override;
   end;
 
 var
@@ -45,22 +45,19 @@ begin
   UnitRoutines.Show(TFormParking.Create(Self));
 end;
 
-constructor TFrameTickets.Create(AWOner: TComponent);
-begin
-  inherited;
-
-  //Exibe o label de mensagem se não existir nenhum tíquete adquirido.
-  //lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty);
-  lblMessage.Text    := 'Nenhum tíquete comprado'+#13+#13+'Clique no botão Novo para comprar um novo tíquete';
-
-end;
-
 procedure TFrameTickets.ListViewTicketsFilter(Sender: TObject; const AFilter,
   AValue: string; var Accept: Boolean);
 begin
   //Exibe registro se o fitlro está vazio.
   //Ou se o valor filtrado está contido no valor de seu campo sendo avaliado.
   Accept := (AFilter = EmptyStr) or (Pos(AFilter, AValue) > 0);
+end;
+
+procedure TFrameTickets.ListViewTicketsItemsChange(Sender: TObject);
+begin
+  //Exibe o label de mensagem se não existir nenhum tíquete adquirido.
+  lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty);
+  lblMessage.Text    := 'Nenhum tíquete comprado'+#13+#13+'Clique no botão Novo para comprar um novo tíquete';
 end;
 
 end.

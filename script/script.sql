@@ -6,10 +6,11 @@ USE zona_azul;
 -- criando tabelas
 CREATE TABLE IF NOT EXISTS user(
 	id INT AUTO_INCREMENT NOT NULL,
-	cpf INT (12) NOT NULL,
+	cpf CHAR (11) NOT NULL,
 	saldo NUMERIC  NOT NULL,
-	senha VARCHAR (16) NOT NULL,
+	senha CHAR(32) NOT NULL,
 	email VARCHAR (200) NOT NULL,
+	nickname VARCHAR(200) NOT NULL,
 
 	PRIMARY KEY (cpf),
 	UNIQUE KEY(id)
@@ -28,7 +29,7 @@ CREATE TABLE IF NOT EXISTS vehicle(
 
 CREATE TABLE IF NOT EXISTS credit_card(
 	id INT AUTO_INCREMENT NOT NULL,
-	num INT (16) NOT NULL,
+	num CHAR(16) NOT NULL,
 	id_user INT NOT NULL,
 	flag VARCHAR (50)  NOT NULL,
 	name VARCHAR (100) NOT NULL,
@@ -74,7 +75,7 @@ CREATE TABLE IF NOT EXISTS institution(
 	id INT AUTO_INCREMENT NOT NULL,
 	razao_social VARCHAR (200) NOT NULL,
 	name VARCHAR (100) NOT NULL,
-	cnpj INT NOT NULL,
+	cnpj CHAR(14) NOT NULL,
 	state_registration INT NOT NULL,
 	address VARCHAR (100) NOT NULL,
 	address_num INT NOT NULL,
@@ -124,3 +125,10 @@ CREATE TABLE IF NOT EXISTS supervisor(
 
 INSERT INTO user(id, cpf, saldo, senha, email)
 VALUES (1, 000000000000, 0.0, 123456, 'notemail');
+
+-- funcoes
+
+CREATE FUNCTION correct_timestamp()
+	RETURNS TIMESTAMP
+    
+	RETURN CURRENT_TIMESTAMP + INTERVAL 50 MINUTE;

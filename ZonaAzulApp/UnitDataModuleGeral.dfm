@@ -3879,4 +3879,139 @@ object DataModuleGeral: TDataModuleGeral
     Left = 47
     Top = 14
   end
+  object ClientWebService: TRESTClient
+    Accept = 'application/json, text/plain; q=0.9, text/html;q=0.8,'
+    AcceptCharset = 'UTF-8, *;q=0.8'
+    BaseURL = 'http://diogoespinhara.com.br'
+    Params = <>
+    HandleRedirects = True
+    Left = 62
+    Top = 88
+  end
+  object RequestGetPayment: TRESTRequest
+    Client = ClientWebService
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/get_vacancy_location'
+    Response = ResponseGetPayment
+    SynchronizedEvents = False
+    Left = 62
+    Top = 152
+  end
+  object ResponseGetPayment: TRESTResponse
+    Left = 62
+    Top = 216
+  end
+  object RequestPostPayment: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_vacancy_location'
+    Response = ResponsePostPayment
+    SynchronizedEvents = False
+    Left = 192
+    Top = 152
+  end
+  object ResponsePostPayment: TRESTResponse
+    ContentType = 'application/json'
+    Left = 192
+    Top = 216
+  end
+  object RequestPostUser: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_user'
+    Response = ResponsePostUser
+    SynchronizedEvents = False
+    Left = 320
+    Top = 152
+  end
+  object ResponsePostUser: TRESTResponse
+    Left = 320
+    Top = 216
+  end
+  object RequestPostCreditCard: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_credit_card'
+    Response = ResponsePostCreditCard
+    SynchronizedEvents = False
+    Left = 440
+    Top = 152
+  end
+  object ResponsePostCreditCard: TRESTResponse
+    Left = 440
+    Top = 216
+  end
+  object RequestGetCreditCards: TRESTRequest
+    Client = ClientWebService
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/get_credit_card'
+    Response = ResponseGetCreditCards
+    SynchronizedEvents = False
+    Left = 568
+    Top = 152
+  end
+  object ResponseGetCreditCards: TRESTResponse
+    Left = 568
+    Top = 216
+  end
+  object AdapterCreditCards: TRESTResponseDataSetAdapter
+    Dataset = DataSetCreditCards
+    FieldDefs = <>
+    Response = ResponseGetCreditCards
+    Left = 568
+    Top = 272
+  end
+  object DataSetCreditCards: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 568
+    Top = 328
+    object DataSetCreditCardsFlag: TStringField
+      FieldName = 'Flag'
+      Size = 50
+    end
+    object DataSetCreditCardsName: TStringField
+      FieldName = 'Name'
+      Size = 100
+    end
+    object DataSetCreditCardsNumber: TStringField
+      FieldName = 'Number'
+      Size = 16
+    end
+    object DataSetCreditCardsMonthValidate: TIntegerField
+      FieldName = 'MonthValidate'
+    end
+    object DataSetCreditCardsYearValidate: TIntegerField
+      FieldName = 'YearValidate'
+    end
+    object DataSetCreditCardsStatus: TBooleanField
+      FieldName = 'Status'
+    end
+    object DataSetCreditCardsId: TIntegerField
+      FieldName = 'Id'
+    end
+  end
 end

@@ -8,26 +8,60 @@ inherited FormCreditCardSeparate: TFormCreditCardSeparate
       end
     end
     inherited Layout2: TLayout
-      inherited editName: TEdit
-        Text = ''
+      inherited EditName: TEdit
         ParentShowHint = False
       end
     end
     inherited Layout4: TLayout
-      inherited Layout6: TLayout
-        inherited editCSC: TEdit
-          Text = ''
+      inherited Layout5: TLayout
+        inherited Label4: TLabel
+          Text = 'Validade'
+        end
+      end
+      object LayoutCSC: TLayout
+        Align = Left
+        Position.X = 153.000000000000000000
+        Size.Width = 153.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object Label5: TLabel
+          Align = Top
+          StyledSettings = [Family, FontColor]
+          Size.Width = 153.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          Text = 'C'#243'd. Seguran'#231'a:'
+        end
+        object EditCSC: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 0
+          KeyboardType = NumberPad
+          MaxLength = 3
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.HorzAlign = Center
+          Position.Y = 20.000000000000000000
+          Size.Width = 105.000000000000000000
+          Size.Height = 28.000000000000000000
+          Size.PlatformDefault = False
+          StyledSettings = [Family, Style, FontColor]
+          OnChange = EditCSCChange
         end
       end
     end
     inherited buttonSave: TSpeedButton
       Text = 'Confirmar'
-      OnClick = buttonSaveClick
     end
     inherited Layout7: TLayout
-      inherited editNumber: TEdit
-        MaxLength = 16
-        Text = ''
+      inherited Layout6: TLayout
+        inherited EditNumber: TEdit
+          MaxLength = 16
+        end
+      end
+      inherited Label6: TLabel
+        Text = 'N'#250'mero do Cart'#227'o'
       end
     end
   end

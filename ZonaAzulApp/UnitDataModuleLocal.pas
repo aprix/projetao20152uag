@@ -17,6 +17,7 @@ type
     IconsTicketsList: TImageList;
     FDConnectionLocal: TFDConnection;
     DataSetTickets: TFDQuery;
+    DataSetUser: TFDQuery;
     procedure DataModuleCreate(Sender: TObject);
     procedure FDConnectionLocalBeforeConnect(Sender: TObject);
     procedure FDConnectionLocalAfterConnect(Sender: TObject);
@@ -25,7 +26,14 @@ type
   public
     { Public declarations }
 
-    procedure InsertTicketLocal(Plate: String; StartTime: TDateTime; Time: Integer);
+    procedure InsertTicket(Plate: String; StartTime: TDateTime; Time: Integer);
+    procedure InsertUser(Id: Integer; Nickname, Email, CPF, Password: String);
+    procedure ClearDataBase;
+    function GetIdUser: Integer;
+    function GetNicknameUser: String;
+    function GetEmailUser: String;
+    function GetCPF: String;
+    function GetPassword: String;
   end;
 
 var
@@ -41,6 +49,7 @@ procedure TDataModuleLocal.DataModuleCreate(Sender: TObject);
 begin
   //Abre a conexão da base local e suas respectivas tabelas.
   FDConnectionLocal.Connected := True;
+  DataSetUser.Open();
 
   //Atribui a ordenação aos tíquetes da base local.
   DataSetTickets.IndexDefs.Add('OrderByTickets', 'DeadlineTime', [ixDescending]);
@@ -49,24 +58,72 @@ begin
 
 end;
 
+procedure TDataModuleLocal.ClearDataBase;
+begin
+  //Deleta todas as tabelas da base local.
+  FDConnectionLocal.ExecSQL(' DELETE FROM User;'
+                           +' DELETE FROM Tickets;');
+
+  //Atualiza todas as consultas.
+  DataSetUser.Close;
+  DataSetUser.Open();
+  DataSetTickets.Close;
+  DataSetTickets.Open();
+end;
+
 procedure TDataModuleLocal.FDConnectionLocalAfterConnect(Sender: TObject);
 begin
   //Cria as tabelas da base de dados local.
   FDConnectionLocal.ExecSQL('CREATE TABLE IF NOT EXISTS Tickets('
-                                  +'Plate VARCHAR(10) NOT NULL'
+                                  +'Plate STRING(10) NOT NULL'
                                   +',StartTime DATETIME NOT NULL'
                                   +',Time INTEGER NOT NULL'
                                   +');');
+
+  FDConnectionLocal.ExecSQL('CREATE TABLE IF NOT EXISTS User ('
+                              +'Id       INTEGER     PRIMARY KEY,'
+                              +'Nickname STRING (50),'
+                              +'Email    STRING (50),'
+                              +'CPF      CHAR (14),'
+                              +'Password STRING (50)'
+                              +');');
 end;
 
 procedure TDataModuleLocal.FDConnectionLocalBeforeConnect(Sender: TObject);
 begin
   {$IF DEFINED(IOS) or DEFINED(ANDROID)}
   FDConnectionLocal.Params.Values['Database'] :=   TPath.GetDocumentsPath + PathDelim + 'ZonaAzul.s3db';
+  {$ELSE}
+  FDConnectionLocal.Params.Values['Database'] := 'ZonaAzul.s3db';
   {$ENDIF}
 end;
 
-procedure TDataModuleLocal.InsertTicketLocal(Plate: String;
+function TDataModuleLocal.GetCPF: String;
+begin
+  Result := DataSetUser.FieldByName('CPF').AsString;
+end;
+
+function TDataModuleLocal.GetEmailUser: String;
+begin
+  Result := DataSetUser.FieldByName('Email').AsString;
+end;
+
+function TDataModuleLocal.GetIdUser: Integer;
+begin
+  Result := DataSetUser.FieldByName('Id').AsInteger;
+end;
+
+function TDataModuleLocal.GetNicknameUser: String;
+begin
+  Result := DataSetUser.FieldByName('Nickname').AsString;
+end;
+
+function TDataModuleLocal.GetPassword: String;
+begin
+  Result := DataSetUser.FieldByName('Password').AsString;
+end;
+
+procedure TDataModuleLocal.InsertTicket(Plate: String;
   StartTime: TDateTime; Time: Integer);
 var
 CommandSQL: String;
@@ -83,6 +140,29 @@ begin
   //Atualiza a consulta de DataSetTickets.
   DataSetTickets.Close;
   DataSetTickets.Open;
+end;
+
+procedure TDataModuleLocal.InsertUser(Id: Integer; Nickname, Email, CPF,
+  Password: String);
+var
+  CommandSQL: String;
+begin
+  //Deleta o registro existente, caso exista alguma informação antiga.
+  FDConnectionLocal.ExecSQL('DELETE FROM User');
+
+  //Salva na base local as novas informações do usuário.
+  CommandSQL := Format( 'INSERT INTO User(Id, Nickname, Email, CPF, Password) '
+                        +'VALUES(%d, %s, %s, %s, %s);'
+                      ,[Id
+                       ,QuotedStr(Nickname)
+                       ,QuotedStr(Email)
+                       ,QuotedStr(CPF)
+                       ,QuotedStr(Password)]);
+  FDConnectionLocal.ExecSQL(CommandSQL);
+
+  //Atualiza a consulta aberta do usuário.
+  DataSetUser.Close;
+  DataSetUser.Open();
 end;
 
 end.

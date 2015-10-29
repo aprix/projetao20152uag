@@ -6,11 +6,13 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs,
   FMX.Controls.Presentation, FMX.StdCtrls, FMX.MultiView, FMX.Layouts,
-  FMX.Objects, FMX.ExtCtrls;
+  FMX.Objects, FMX.ExtCtrls, UnitConsultPayments , UnitCreditCards
+  ,UnitBuyCredits, UnitCadastreCreditCard,
+  UnitTickets, UnitDataModuleLocal, UnitWelcome, UnitCadastreUser;
 
 type
-  TFormMain = class(TForm)
-    MultiView1: TMultiView;
+  TFormMain = class(TForm, ICadastreListener)
+    MultiViewMenu: TMultiView;
     Layout1: TLayout;
     ButtonBuyCredits: TSpeedButton;
     ButtonTickets: TSpeedButton;
@@ -23,21 +25,32 @@ type
     VertScrollBox1: TVertScrollBox;
     Layout2: TLayout;
     Line1: TLine;
-    Label1: TLabel;
-    Label2: TLabel;
+    LabelNickname: TLabel;
+    LabelEmail: TLabel;
     PanelDataUser: TPanel;
+    ButtonExit: TSpeedButton;
     procedure ButtonBuyCreditsClick(Sender: TObject);
     procedure ButtonTicketsClick(Sender: TObject);
     procedure ButtonConsultPaymentClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure PanelDataUserClick(Sender: TObject);
+    procedure ButtonExitClick(Sender: TObject);
+    procedure MultiViewMenuStartShowing(Sender: TObject);
+    procedure ButtonCreditCardsClick(Sender: TObject);
   private
     { Private declarations }
     procedure Show(Frame: TFrame; Parent: TFmxObject; Title: String);
+    procedure UpdateValuesUserLabels;
     var
     VisibleFrame: TFrame;
+    FrameBuyCredits: TFrameBuyCredits;
+    FrameTickets: TFrameTickets;
+    FrameConsultPayments: TFrameConsultPayments;
+    FrameCadastreUser: TFrameCadastreUser;
+    FrameCreditCards: TFrameCreditCards;
   public
     { Public declarations }
+    procedure OnSucess;
   end;
 
 var
@@ -47,20 +60,16 @@ implementation
 
 {$R *.fmx}
 
-uses UnitConsultPayments, UnitRoutines
-  ,UnitBuyCredits, UnitDataModuleGeral, UnitCadastreCreditCard,
-  UnitTickets;
+uses UnitRoutines, UnitDataModuleGeral;
 
 procedure TFormMain.ButtonBuyCreditsClick(Sender: TObject);
 begin
   Show( FrameBuyCredits,  LayoutFrame, 'Compra de Créditos');
-  MultiView1.HideMaster;
 end;
 
 procedure TFormMain.ButtonTicketsClick(Sender: TObject);
 begin
   Show( FrameTickets, LayoutFrame, 'Tíquetes' );
-  MultiView1.HideMaster;
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
@@ -69,14 +78,32 @@ begin
   FrameBuyCredits := TFrameBuyCredits.Create(Self);
   FrameTickets    := TFrameTickets.Create(Self);
   FrameConsultPayments := TFrameConsultPayments.Create(Self);
+  FrameCadastreUser    := TFrameCadastreUser.Create(Self, Self);
+  FrameCreditCards     := TFrameCreditCards.Create(Self);
 
   //Exibe o frame(tela) de tíquetes como default.
   ButtonTicketsClick(Self);
 end;
 
+procedure TFormMain.MultiViewMenuStartShowing(Sender: TObject);
+begin
+  //Atualiza os labels de dados do usuário.
+  UpdateValuesUserLabels;
+end;
+
+procedure TFormMain.OnSucess;
+begin
+  //Exibe o frame de tíquetes.
+  Show(FrameTickets, LayoutFrame, 'Tíquetes');
+end;
+
 procedure TFormMain.PanelDataUserClick(Sender: TObject);
 begin
-  ShowMessage('Abre os dados do usuário');
+  //Atualiza os valores dos campos do frame de cadastro do usuário.
+  FrameCadastreUser.UpdateValuesComponents;
+
+  //Exibe o frame com as informações do usuário.
+  Show(FrameCadastreUser, LayoutFrame, 'Informações Pessoais');
 end;
 
 procedure TFormMain.Show(Frame: TFrame; Parent: TFmxObject; Title: String);
@@ -98,13 +125,73 @@ begin
 
   //Atualiza o atributo que contém a referência do Frame em exibição.
   VisibleFrame := Frame;
+
+  //Oculta o menu.
+  MultiViewMenu.HideMaster;
+end;
+
+procedure TFormMain.UpdateValuesUserLabels;
+begin
+  //Pega os valores do usuário na base local e atualiza os labels relacionados.
+  LabelNickname.Text := DataModuleLocal.GetNicknameUser();
+  LabelEmail.Text    := DataModuleLocal.GetEmailUser();
 end;
 
 procedure TFormMain.ButtonConsultPaymentClick(Sender: TObject);
 begin
   FrameConsultPayments.ClearComponents;
   Show(FrameConsultPayments, LayoutFrame, 'Consultar Veículo');
-  MultiView1.HideMaster;
+end;
+
+procedure TFormMain.ButtonCreditCardsClick(Sender: TObject);
+begin
+  //Verifica se existe um usuário logado.
+  if (DataModuleGeral.IsUserLogged) then
+  begin
+    //Exibe o frame de cartões de crédito.
+    FrameCreditCards.UpdateCreditCardsList;
+    Show(FrameCreditCards, LayoutFrame, 'Cartões de Crédito');
+  end
+  else
+  begin
+    //Exibe uma mensagem ao usuário informando que o cadastro de cartão
+    //só é permitido para usuário logado
+    raise Exception.Create('Necessário cadastrar o usuário para prosseguir!');
+  end;
+end;
+
+procedure TFormMain.ButtonExitClick(Sender: TObject);
+begin
+  //Fecha o menu.
+  MultiViewMenu.HideMaster;
+
+  //Abre o diálogo para averiguar se o usuário deseja sair da aplicação.
+  MessageDlg( 'Deseja desconectar da sua conta?'
+                 , System.UITypes.TMsgDlgType.mtConfirmation
+                 , [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo]
+                 , 0
+                 , procedure (const Result: TModalResult)
+                   begin
+                      case Result of
+                        mrYes:
+                          begin
+                            //Limpa a base de dados local.
+                            DataModuleLocal.ClearDataBase;
+
+                            //Oculta o formulário principal.
+                            Hide;
+
+                            //Abre o formulário de boas vindas.
+                            UnitRoutines.Show(TFormWelcome.Create(Application));
+
+                            //Fecha o formulário principal.
+                            Close;
+                          end;
+                      end;
+                   end
+            );
+
+
 end;
 
 end.

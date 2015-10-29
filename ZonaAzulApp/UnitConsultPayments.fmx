@@ -27,7 +27,7 @@ object FrameConsultPayments: TFrameConsultPayments
         Size.Height = 20.000000000000000000
         Size.PlatformDefault = False
         TextSettings.Font.Style = [fsBold]
-        Text = 'Placa do Ve'#237'culo:'
+        Text = 'Placa do Ve'#237'culo'
       end
       object Layout8: TLayout
         Align = Center
@@ -41,7 +41,6 @@ object FrameConsultPayments: TFrameConsultPayments
           TabOrder = 0
           KeyboardType = Alphabet
           MaxLength = 3
-          Text = 'PES'
           TextSettings.Font.Size = 24.000000000000000000
           TextSettings.HorzAlign = Center
           Size.Width = 58.000000000000000000
@@ -68,7 +67,6 @@ object FrameConsultPayments: TFrameConsultPayments
           TabOrder = 1
           KeyboardType = NumberPad
           MaxLength = 4
-          Text = '6816'
           TextSettings.Font.Size = 24.000000000000000000
           TextSettings.HorzAlign = Center
           Size.Width = 76.000000000000000000
@@ -90,7 +88,7 @@ object FrameConsultPayments: TFrameConsultPayments
       Size.Height = 96.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
-      object Rectangle2: TRectangle
+      object RectangleResult: TRectangle
         Align = Client
         Fill.Color = claWhite
         Size.Width = 321.000000000000000000
@@ -126,47 +124,34 @@ object FrameConsultPayments: TFrameConsultPayments
           Size.Height = 62.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 1
-          object LabelDay: TLabel
-            Align = MostTop
-            StyledSettings = [Family]
-            Size.Width = 301.000000000000000000
-            Size.Height = 22.000000000000000000
-            Size.PlatformDefault = False
-            TextSettings.Font.Size = 20.000000000000000000
-            TextSettings.Font.Style = [fsBold]
-            TextSettings.FontColor = claGreen
-            TextSettings.HorzAlign = Center
-            Text = '21/09/2014'
-          end
           object LabelTimeInterval: TLabel
             Align = Client
+            AutoSize = True
             StyledSettings = [Family]
             Size.Width = 301.000000000000000000
-            Size.Height = 40.000000000000000000
+            Size.Height = 62.000000000000000000
             Size.PlatformDefault = False
             TextSettings.Font.Size = 20.000000000000000000
             TextSettings.Font.Style = [fsBold]
             TextSettings.FontColor = claGreen
             TextSettings.HorzAlign = Center
+            TextSettings.WordWrap = False
             Text = 'de 13:00 a 14:50'
           end
         end
       end
     end
-    object buttonActiveTickets: TSpeedButton
+    object buttonConsultTicket: TSpeedButton
       Align = Top
       StyledSettings = [Family, Style, FontColor]
-      Margins.Left = 20.000000000000000000
       Margins.Top = 10.000000000000000000
-      Margins.Right = 20.000000000000000000
-      Position.X = 20.000000000000000000
       Position.Y = 87.000000000000000000
-      Size.Width = 291.000000000000000000
+      Size.Width = 331.000000000000000000
       Size.Height = 48.000000000000000000
       Size.PlatformDefault = False
       Text = 'Consultar'
       TextSettings.Font.Size = 28.000000000000000000
-      OnClick = buttonActiveTicketsClick
+      OnClick = buttonConsultTicketClick
     end
   end
 end

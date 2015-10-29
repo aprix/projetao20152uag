@@ -1,15 +1,15 @@
-object FrameTickets: TFrameTickets
+object FrameCreditCards: TFrameCreditCards
   Align = Client
-  Size.Width = 333.000000000000000000
-  Size.Height = 464.000000000000000000
+  Size.Width = 320.000000000000000000
+  Size.Height = 446.000000000000000000
   Size.PlatformDefault = False
-  object Layout1: TLayout
+  object LayoutPrincipal: TLayout
     Align = Client
-    Size.Width = 333.000000000000000000
-    Size.Height = 464.000000000000000000
+    Size.Width = 320.000000000000000000
+    Size.Height = 446.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 0
-    object ListViewTickets: TListView
+    TabOrder = 2
+    object ListViewCreditCards: TListView
       ItemAppearanceClassName = 'TImageListItemBottomDetailRightButtonAppearance'
       ItemEditAppearanceClassName = 'TImageListItemBottomDetailRightButtonShowCheckAppearance'
       HeaderAppearanceClassName = 'TListHeaderObjects'
@@ -17,24 +17,26 @@ object FrameTickets: TFrameTickets
       Transparent = True
       Images = DataModuleLocal.IconsTicketsList
       Align = Client
-      Size.Width = 333.000000000000000000
-      Size.Height = 464.000000000000000000
+      Size.Width = 320.000000000000000000
+      Size.Height = 446.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
       ItemAppearanceObjects.ItemObjects.Detail.Font.Size = 16.000000000000000000
       ItemAppearanceObjects.ItemObjects.Detail.TextColor = claBlack
+      ItemAppearanceObjects.ItemObjects.Image.Visible = False
       ItemAppearanceObjects.ItemObjects.TextButton.Visible = False
       ItemAppearanceObjects.ItemEditObjects.TextButton.Visible = False
       ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
       CanSwipeDelete = False
-      OnItemsChange = ListViewTicketsItemsChange
-      OnFilter = ListViewTicketsFilter
+      OnItemsChange = ListViewCreditCardsItemsChange
+      OnItemClick = ListViewCreditCardsItemClick
+      DeleteButtonText = 'Excluir'
       ShowSelection = False
       PullToRefresh = True
       object buttonNew: TSpeedButton
         Anchors = [akRight, akBottom]
-        Position.X = 263.000000000000000000
-        Position.Y = 406.000000000000000000
+        Position.X = 250.000000000000000000
+        Position.Y = 388.000000000000000000
         Size.Width = 50.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
@@ -52,40 +54,36 @@ object FrameTickets: TFrameTickets
         TextSettings.Font.Style = [fsBold]
         TextSettings.HorzAlign = Center
         Text = 
-          'Nenhum t'#237'quete adquirido. Clique no bot'#227'o Novo para comprar um t' +
-          #237'quete.'
+          'Nenhum cart'#227'o cadastrado. Clique no bot'#227'o Novo para cadastrar um' +
+          ' cart'#227'o.'
       end
     end
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = DataModuleGeral.DataSetCreditCards
+    ScopeMappings = <>
+    Left = 144
+    Top = 208
   end
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
-    Left = 60
-    Top = 85
+    Left = 20
+    Top = 5
     object LinkFillControlToField1: TLinkFillControlToField
       Category = 'Quick Bindings'
-      Control = ListViewTickets
+      Control = ListViewCreditCards
       Track = True
       FillDataSource = BindSourceDB1
-      FillDisplayFieldName = 'Plate'
+      FillDisplayFieldName = 'Flag'
       AutoFill = True
       FillExpressions = <
         item
-          SourceMemberName = 'DeadlineTime'
+          SourceMemberName = 'Number'
           ControlMemberName = 'Detail'
-        end
-        item
-          SourceMemberName = 'IconIndex'
-          ControlMemberName = 'ImageIndex'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-  end
-  object BindSourceDB1: TBindSourceDB
-    DataSet = DataModuleLocal.DataSetTickets
-    ScopeMappings = <>
-    Left = 152
-    Top = 216
   end
 end

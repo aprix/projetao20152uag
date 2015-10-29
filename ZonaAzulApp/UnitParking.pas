@@ -51,7 +51,8 @@ type
     { Private declarations }
     procedure UpdateValuesComponents;
     procedure ValidateValuesComponents;
-    procedure OnAfterPayment;
+    procedure OnSucess;
+    procedure OnError(Msg: String);
     var
     Time: Integer;
   public
@@ -148,13 +149,19 @@ begin
   UpdateValuesComponents();
 end;
 
-procedure TFormParking.OnAfterPayment;
+procedure TFormParking.OnSucess;
 begin
   //Exibe uma mensagem de sucesso para o usuário.
   ShowMessage('Pagamento realizado!');
 
   //O formulário é fechado.
   Close;
+end;
+
+procedure TFormParking.OnError(Msg: String);
+begin
+  //Exibe a mensagem do erro para o usuário.
+  ShowMessage(Msg);
 end;
 
 procedure TFormParking.TimerUpdateValuesTimer(Sender: TObject);
@@ -174,6 +181,7 @@ end;
 procedure TFormParking.ValidateValuesComponents;
 begin
   //Valida se foi informado todos os valores dos componentes.
+  editPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
   ValidateValueComponent(editPlateLetters, editPlateLetters.Text, 'Informe as letras da placa.', 3);
   ValidateValueComponent(editPlateNumbers, editPlateNumbers.Text, 'Informe os números da placa.', 4);
 end;
