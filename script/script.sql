@@ -121,6 +121,13 @@ CREATE TABLE IF NOT EXISTS supervisor(
 	UNIQUE  KEY(id)	
 );
 
+CREATE TABLE IF NOT EXISTS admin(
+	login VARCHAR(20) NOT NULL,
+	senha CHAR(32) NOT NULL,
+
+	PRIMARY KEY(login)
+);
+
 -- inserindo usuario default
 
 INSERT INTO user(id, cpf, saldo, senha, email)
