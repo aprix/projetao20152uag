@@ -1,0 +1,68 @@
+<?php $__env->startSection('content'); ?>
+
+<?php echo Form:open(); ?>
+
+<fieldset>
+
+<!-- Form Name -->
+<legend>Tabela de preços</legend>
+
+
+<div class="form-group">
+    <?php echo Form::label('Tempo mínimo'); ?>  
+  
+   <?php echo Form::text('min-time', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>   
+ 
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <?php echo Form::label('Preço unitário'); ?>
+
+  
+    <?php echo Form::text('un_price', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>
+
+
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <?php echo Form::label('Tempo unitário'); ?>
+
+ 
+    <?php echo Form::text('un_time', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>
+
+  
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <?php echo Form::label('Desconto p/ vendedores'); ?>
+
+  
+  <?php echo Form::text('discount_sellers', null, ['class'=>'form-control', 'placeholder'=>'']); ?>
+
+
+</div>
+
+<!-- Text input-->
+<div class="form-group">
+  <?php echo Form::label('max_price'); ?>  
+ 
+  <?php echo Form::text('max_price', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>    
+  
+</div>
+
+<div class="form-group">
+   <?php echo Form::submit('Confirmar', ['class'=>'btn btn-primary']); ?>
+
+</div>
+
+
+</fieldset>
+
+<?php echo Form::close(); ?>
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

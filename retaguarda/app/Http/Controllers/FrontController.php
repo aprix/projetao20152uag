@@ -31,7 +31,7 @@ class FrontController extends Controller
 
      public function admin(){
 
-        return view('adminlogin');
+        return view('auth/login');
         
     }
 

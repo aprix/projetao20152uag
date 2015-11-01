@@ -1,0 +1,39 @@
+<?php $__env->startSection('content'); ?>
+
+<?php $message=Session::get('message')?>
+
+<?php if($message=='update'): ?>
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  Tabela de preços editada com sucesso
+</div>
+
+<?php endif; ?>
+
+<legend>Tabela de Preços</legend>
+
+  <table class="table">
+    <thead>
+      <th>Tempo mínimo</th>
+      <th>Tempo unitário</th>
+      <th>Preço unitário</th>
+      <th>Desconto p/ vendedores</th>
+      <th>Max Price</th>
+    </thead>
+    <?php foreach($prices as $price): ?>
+    <tbody>
+        <td><?php echo $price->min_time; ?></td>
+        <td><?php echo $price->un_time; ?></td>
+        <td><?php echo $price->un_price; ?></td>
+        <td><?php echo $price->discount_sellers; ?></td>
+        <td><?php echo $price->max_price; ?></td>
+        <td><?php echo Link_to_route('tabela.edit', $title='Editar', $parameters=$price->id, $attributes= ['class'=>'btn btn-primary']); ?></td>
+    </tbody>
+    <?php endforeach; ?>
+
+ </table>
+
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

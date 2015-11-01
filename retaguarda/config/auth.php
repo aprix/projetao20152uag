@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'model' => Retaguarda\User::class,
+    'model' => Retaguarda\Admin::Class,
 
     /*
     |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return [
     |
     */
 
-    'table' => 'users',
+    'table' => 'admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -59,7 +59,7 @@ return [
     */
 
     'password' => [
-        'email' => 'emails.password',
+        'name' => 'names.password',
         'table' => 'password_resets',
         'expire' => 60,
     ],

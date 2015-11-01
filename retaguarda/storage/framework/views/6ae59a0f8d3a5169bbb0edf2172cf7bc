@@ -1,0 +1,123 @@
+<?php $__env->startSection('content'); ?>
+
+<?php if($errors->any()): ?>
+<ul class="alert alert-warning">
+<?php foreach($errors->all() as $error): ?>
+<li><?php echo e($error); ?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+
+  <?php echo Form::open(['url'=>'instituicao/store']); ?>
+
+
+<fieldset>
+
+<!-- Form Name -->
+<legend>Cadastrar Instituição</legend>
+
+<!-- Text input-->
+<div class="form-group col-md-2">
+    <?php echo Form::label('CNPJ'); ?>  
+  
+   <?php echo Form::text('cnpj', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>   
+ 
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-5">
+  <?php echo Form::label('Nome'); ?>
+
+  
+    <?php echo Form::text('name', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>
+
+
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-5">
+  <?php echo Form::label('Razão Social'); ?>
+
+ 
+    <?php echo Form::text('razao_social', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>
+
+  
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-2">
+  <?php echo Form::label('Inscrição Estadual'); ?>
+
+  
+  <?php echo Form::text('state_registration', null, ['class'=>'form-control', 'placeholder'=>'']); ?>
+
+
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-6">
+  <?php echo Form::label('Endereço'); ?>  
+ 
+  <?php echo Form::text('adress', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>    
+  
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-1">
+  <?php echo Form::label('Número'); ?>  
+  
+  <?php echo Form::text('adress_num', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>        
+ 
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-2">
+  <?php echo Form::label('Bairro'); ?>   
+  
+  <?php echo Form::text('adress_neighborhood', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>        
+    
+  
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-2">
+  <?php echo Form::label('Cidade'); ?> 
+  
+  <?php echo Form::text('city', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>        
+    
+  
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-2">
+  <?php echo Form::label('Estado'); ?> 
+  
+  <?php echo Form::text('state', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>        
+    
+  
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-2">
+  <?php echo Form::label('CEP'); ?> 
+ 
+  <?php echo Form::text('cep', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>        
+    
+ 
+</div>
+
+<!-- Button (Double) -->
+<div class="form-group col-md-10">
+   <?php echo Form::submit('cadastrar', ['class'=>'btn btn-primary']); ?>
+
+</div>
+
+</fieldset>
+
+<?php echo Form::close(); ?>
+
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.administrador', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
