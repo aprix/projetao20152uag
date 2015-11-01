@@ -54,7 +54,7 @@
 <div class="form-group col-md-6">
   {!!Form::label('Endereço')!!}  
  
-  {!!Form::text('adress', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}    
+  {!!Form::text('address', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}    
   
 </div>
 
@@ -62,7 +62,7 @@
 <div class="form-group col-md-1">
   {!!Form::label('Número')!!}  
   
-  {!!Form::text('adress_num', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}        
+  {!!Form::text('address_num', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}        
  
 </div>
 
@@ -70,7 +70,7 @@
 <div class="form-group col-md-2">
   {!!Form::label('Bairro')!!}   
   
-  {!!Form::text('adress_neighborhood', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}        
+  {!!Form::text('address_neighborhood', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}        
     
   
 </div>

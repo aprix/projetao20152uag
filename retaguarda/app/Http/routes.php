@@ -16,9 +16,9 @@
 Route::get('painel','FrontController@painel');
 Route::resource('tabela','PriceController');
 Route::post('tabela/create','PriceController@create');
-//Route::get('admin','FrontController@admin');
+Route::get('admin','FrontController@admin');
 Route::get('paineladmin','FrontController@paineladmin');
-
+//Route::resource('log','LogController');
 Route::resource('/','FrontController');
 //Route::get('tabeladeprecos','FrontController@tabeladeprecos');
 Route::resource('instituicao','InstitutionController');
@@ -27,5 +27,9 @@ Route::post('tabela/store','PriceController@store');
 //Route::get('cadvendedor','FrontController@cadastrovendedor');
 //Route::get('tabela/{id}/edit','PriceController@edit');
 Route::put('tabela/{id}/update','PriceController@update');
-
-
+//Route::get('auth/login', 'Auth\AuthController@getLogin');
+//Route::post('auth/login', 'Auth\AuthController@postLogin');
+Route::controllers([
+'auth' => 'Auth\AuthController',
+'password' => 'Auth\PasswordController',
+ ]);

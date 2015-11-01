@@ -45,7 +45,7 @@
 
             <ul class="nav navbar-nav">
                 <li><a href="#">Cadastrar Vendedor</a></li>
-                <li><a href="tabela">Tabela de preços</a></li>
+                <li>{!!Link_to_route('tabela.index', $title='Tabela de preços')!!}</li>
                 <li><a href="#">Perfil</a></li>
             </ul>
 

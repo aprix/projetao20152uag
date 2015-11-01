@@ -1,0 +1,17 @@
+<?php $__env->startSection('content'); ?>
+
+
+
+	<div class= "boasvindas">
+		<div class="col-lg-12 text-center">
+			<h1>Bem vindo ao modulo gestor AzulFácil</h1>
+			<p class="lead">iAUHEiaHeiA.<br>uAHeuAIEuAH.</p>
+
+		</div>
+		
+	</div>
+
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.inicial', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

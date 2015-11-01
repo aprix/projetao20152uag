@@ -17,9 +17,9 @@ class CreateInstitutionTable extends Migration
              $table -> string('name', 100);
              $table -> string('razao_social', 200);
             $table -> integer('state_registration');
-            $table -> string('adress', 100);
-            $table -> integer('adress_num');
-            $table -> string('adress_neighborhood', 50);
+            $table -> string('address', 100);
+            $table -> integer('address_num');
+            $table -> string('address_neighborhood', 50);
             $table -> string('city', 50);
             $table -> string('state', 50);
             $table -> integer('cep');
