@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS institution(
 CREATE TABLE IF NOT EXISTS prices(
 	id INT AUTO_INCREMENT NOT NULL,
 	min_time INT NOT NULL,
-	un_price NUMERIC NOT NULL,
+	un_price DECIMAL(8,2) NOT NULL,
 	un_time INT NOT NULL,
 	discount_sellers NUMERIC NOT NULL,
 	max_price NUMERIC NOT NULL,
