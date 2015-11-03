@@ -112,7 +112,7 @@ object FormMain: TFormMain
             Size.Height = 43.000000000000000000
             Size.PlatformDefault = False
             TabOrder = 0
-            OnClick = PanelDataUserClick
+            OnClick = ButtonDataUserClick
             object LabelNickname: TLabel
               Align = MostTop
               StyledSettings = [Family, FontColor]
@@ -126,7 +126,7 @@ object FormMain: TFormMain
               Size.PlatformDefault = False
               TextSettings.Font.Size = 14.000000000000000000
               Text = 'Apelido do Usu'#225'rio'
-              OnClick = PanelDataUserClick
+              OnClick = ButtonDataUserClick
             end
             object LabelEmail: TLabel
               Align = Top
@@ -139,7 +139,7 @@ object FormMain: TFormMain
               Size.Height = 18.000000000000000000
               Size.PlatformDefault = False
               Text = 'Email do usu'#225'rio'
-              OnClick = PanelDataUserClick
+              OnClick = ButtonDataUserClick
             end
             object Line1: TLine
               Align = Bottom
@@ -159,6 +159,15 @@ object FormMain: TFormMain
           Size.PlatformDefault = False
           Text = 'Desconectar'
           OnClick = ButtonExitClick
+        end
+        object ButtonDataUser: TSpeedButton
+          Align = Top
+          Position.Y = 219.000000000000000000
+          Size.Width = 249.000000000000000000
+          Size.Height = 44.000000000000000000
+          Size.PlatformDefault = False
+          Text = 'Configura'#231#245'es da Conta'
+          OnClick = ButtonDataUserClick
         end
       end
     end
