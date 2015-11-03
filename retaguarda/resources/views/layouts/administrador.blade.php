@@ -14,7 +14,7 @@
     <!-- Latest compiled and minified CSS -->
 
     {!!Html::style('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')!!}
-    {!!Html::style('assets/css/sticky-footer-navbar.css')!!}
+    {!!Html::style('assets/css/layouts.css')!!}
    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">-->
 
     <!-- Custom styles for this template -->
@@ -45,8 +45,7 @@
 
             </button>
 
-             
-             {!!Link_to('paineladmin', $title='AzulFácil Admin', ['class'=>'navbar-brand'])!!}
+             <a href="#"layout class="navbar-brand">AzulFácil Admin</a>
       </div>
        
        <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -55,8 +54,9 @@
                 <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Instituições <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li>{!!Link_to_route('instituicao.create', $title='Cadastrar Instituição')!!}</li>
-                <!--<li><a href="instituicao.search">Editar Instituição</a></li>-->
+                <li><a href="instituicao/create">Cadastrar Instituição</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
               </ul>
             </li>
             </ul>
@@ -81,12 +81,6 @@
             @yield('content')
           
         </div>
-
-        <footer class="footer">
-      <div class="container">
-        <p class="text-muted">Desenvolvido por: .</p>
-      </div>
-    </footer>
 
 
 

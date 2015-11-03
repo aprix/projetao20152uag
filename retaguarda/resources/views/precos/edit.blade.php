@@ -20,7 +20,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-2">
-    {!!Form::label('Tempo mínimo(min)')!!}  
+    {!!Form::label('Tempo mínimo')!!}  
   
    {!!Form::text('min_time', $price->min_time, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}   
  
@@ -28,14 +28,14 @@
 
 <!-- Text input-->
 <div class="form-group col-md-5">
-  {!!Form::label('Preço unitário(R$)')!!}
+  {!!Form::label('Preço unitário')!!}
  
     {!!Form::text('un_price', $price->un_price, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}
   
 </div>
 
 <div class="form-group col-md-3">
-  {!!Form::label('Tempo unitário(min)')!!}  
+  {!!Form::label('Tempo unitário')!!}  
   
   {!!Form::text('un_time',  $price->un_time, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}    
   
@@ -44,7 +44,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-2">
-  {!!Form::label('Desconto p/ vendedor(%)')!!}
+  {!!Form::label('Desconto p/ vendedores')!!}
   
   {!!Form::selectRange('discount_sellers', 0, 100, $price->discount_sellers)!!}
   
@@ -52,7 +52,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-3">
-  {!!Form::label('Tempo máximo(min)')!!}  
+  {!!Form::label('max_price')!!}  
   
   {!!Form::text('max_price',  $price->max_price, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}    
   
@@ -62,8 +62,7 @@
 
 <!-- Button (Double) -->
 <div class="form-group col-md-10">
-   {!!Form::submit('&nbsp;&nbsp;&nbsp;&nbsp;Salvar&nbsp;&nbsp;&nbsp;&nbsp;', ['class'=>'btn btn-primary'])!!}
-   {!!Link_to('tabela', $title='Cancelar',['class'=>'btn btn-danger'])!!}
+   {!!Form::submit('Salvar', ['class'=>'btn btn-primary'])!!}
 </div>
 
 </fieldset>
