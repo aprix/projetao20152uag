@@ -15,10 +15,10 @@ class CreatePricesTable extends Migration
         Schema::create('prices', function (Blueprint $table) {
             $table->increments('id');
             $table -> integer('min_time');
-             $table -> integer('un_price');
+             $table -> decimal('un_price');
              $table -> integer('un_time');
             $table -> integer('discount_sellers');
-            $table -> integer('max_price');
+            $table -> decimal('max_price');
         });
     }
 

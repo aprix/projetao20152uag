@@ -15,7 +15,7 @@
     <!-- Latest compiled and minified CSS -->
    <?php echo Html::style('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'); ?>
 
-    <?php echo Html::style('assets/css/layouts.css'); ?>
+    <?php echo Html::style('assets/css/sticky-footer-navbar.css'); ?>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -40,13 +40,17 @@
 
             </button>
 
-             <a href="painel"layout class="navbar-brand">AzulFácil</a>
+             <!--<a href="painel"layout class="navbar-brand">AzulFácil</a>-->
+             <?php echo Link_to('painel', $title='AzulFácil', ['class'=>'navbar-brand']); ?>
+
+
       </div>
        
        <div id="navbarCollapse" class="collapse navbar-collapse">
 
             <ul class="nav navbar-nav">
                 <li><a href="#">Cadastrar Vendedor</a></li>
+                <li><a href="#">Cadastrar Fiscal</a></li>
                 <li><?php echo Link_to_route('tabela.index', $title='Tabela de preços'); ?></li>
                 <li><a href="#">Perfil</a></li>
             </ul>
@@ -62,6 +66,12 @@
             <?php echo $__env->yieldContent('content'); ?>
            
         </div>
+
+        <footer class="footer">
+      <div class="container">
+        <p class="text-muted">Desenvolvido por:</p>
+      </div>
+    </footer>
 
 
 

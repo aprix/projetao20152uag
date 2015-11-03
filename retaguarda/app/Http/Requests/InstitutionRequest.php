@@ -26,16 +26,16 @@ class InstitutionRequest extends Request
         return [
             
             'cnpj' => 'required|numeric|digits:14',
-            'name' => 'required|between:1,100',
-            'razao_social' => 'required|between:1,200',
-            'state_registration' => 'integer',
+            'name' => 'required|alpha|between:1,100',
+            'razao_social' => 'required|alpha|between:1,200',
+            'state_registration' => 'digits_between:0,200',
             'address' => 'required|between:1,100',
-            'address_num' => 'required|integer',
-            'address_neighborhood' => 'required|between:1,50',
-            'city' => 'required|between:1,50',
-            'state' => 'required|between:1,50',
+            'address_num' => 'required|alpha_num',
+            'address_neighborhood' => 'required|alpha|between:1,50',
+            'city' => 'required|alpha|between:1,50',
+            'state' => 'required|alpha|between:1,50',
             'cep' => 'required|integer|digits:8',
-
+            
 
         ];
     }
