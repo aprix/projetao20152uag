@@ -20,7 +20,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-2">
-    {!!Form::label('Tempo mínimo(min)')!!}  
+    {!!Form::label('Tempo mínimo')!!}  
   
    {!!Form::text('min_time', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}   
  
@@ -28,14 +28,14 @@
 
 <!-- Text input-->
 <div class="form-group col-md-5">
-  {!!Form::label('Preço unitário(R$)')!!}
+  {!!Form::label('Preço unitário')!!}
  
     {!!Form::text('un_price', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}
   
 </div>
 
 <div class="form-group col-md-3">
-  {!!Form::label('Tempo unitário(min)')!!}  
+  {!!Form::label('Tempo unitário')!!}  
   
   {!!Form::text('un_time', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}    
   
@@ -44,7 +44,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-2">
-  {!!Form::label('Desconto p/ vendedor(%)')!!}
+  {!!Form::label('Desconto p/ vendedores')!!}
   
   {!!Form::selectRange('discount_sellers', 0, 100)!!}
   
@@ -52,7 +52,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-3">
-  {!!Form::label('Tempo máximo(min)')!!}  
+  {!!Form::label('max_price')!!}  
   
   {!!Form::text('max_price', null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>''])!!}    
   

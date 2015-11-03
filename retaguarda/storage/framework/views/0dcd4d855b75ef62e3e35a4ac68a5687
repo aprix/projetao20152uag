@@ -19,7 +19,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-2">
-    <?php echo Form::label('Tempo mínimo(min)'); ?>  
+    <?php echo Form::label('Tempo mínimo'); ?>  
   
    <?php echo Form::text('min_time', $price->min_time, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>   
  
@@ -27,7 +27,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-5">
-  <?php echo Form::label('Preço unitário(R$)'); ?>
+  <?php echo Form::label('Preço unitário'); ?>
 
  
     <?php echo Form::text('un_price', $price->un_price, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>
@@ -36,7 +36,7 @@
 </div>
 
 <div class="form-group col-md-3">
-  <?php echo Form::label('Tempo unitário(min)'); ?>  
+  <?php echo Form::label('Tempo unitário'); ?>  
   
   <?php echo Form::text('un_time',  $price->un_time, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>    
   
@@ -45,7 +45,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-2">
-  <?php echo Form::label('Desconto p/ vendedor(%)'); ?>
+  <?php echo Form::label('Desconto p/ vendedores'); ?>
 
   
   <?php echo Form::selectRange('discount_sellers', 0, 100, $price->discount_sellers); ?>
@@ -55,7 +55,7 @@
 
 <!-- Text input-->
 <div class="form-group col-md-3">
-  <?php echo Form::label('Tempo máximo(min)'); ?>  
+  <?php echo Form::label('max_price'); ?>  
   
   <?php echo Form::text('max_price',  $price->max_price, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>    
   
@@ -65,9 +65,7 @@
 
 <!-- Button (Double) -->
 <div class="form-group col-md-10">
-   <?php echo Form::submit('&nbsp;&nbsp;&nbsp;&nbsp;Salvar&nbsp;&nbsp;&nbsp;&nbsp;', ['class'=>'btn btn-primary']); ?>
-
-   <?php echo Link_to('tabela', $title='Cancelar',['class'=>'btn btn-danger']); ?>
+   <?php echo Form::submit('Salvar', ['class'=>'btn btn-primary']); ?>
 
 </div>
 
