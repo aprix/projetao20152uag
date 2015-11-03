@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS institution(
 	cnpj CHAR(14) NOT NULL,
 	state_registration VARCHAR(20) NOT NULL,
 	address VARCHAR (100) NOT NULL,
-	address_num INT NOT NULL,
+	address_num VARCHAR(10) NOT NULL,
 	address_neighborhood VARCHAR(50) NOT NULL,
 	city VARCHAR(50) NOT NULL,
 	state VARCHAR(50) NOT NULL,
