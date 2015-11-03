@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS institution(
 	razao_social VARCHAR (200) NOT NULL,
 	name VARCHAR (100) NOT NULL,
 	cnpj CHAR(14) NOT NULL,
-	state_registration INT NOT NULL,
+	state_registration VARCHAR(20) NOT NULL,
 	address VARCHAR (100) NOT NULL,
 	address_num INT NOT NULL,
 	address_neighborhood VARCHAR(50) NOT NULL,
