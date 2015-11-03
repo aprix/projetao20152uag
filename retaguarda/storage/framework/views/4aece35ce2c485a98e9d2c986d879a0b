@@ -109,9 +109,13 @@
 
 <!-- Button (Double) -->
 <div class="form-group col-md-10">
-   <?php echo Form::submit('cadastrar', ['class'=>'btn btn-primary']); ?>
+   <?php echo Form::submit('&nbsp;Cadastrar&nbsp;', ['class'=>'btn btn-primary']); ?>
+
+   <?php echo Link_to('paineladmin', $title='Cancelar',['class'=>'btn btn-danger']); ?>
 
 </div>
+
+
 
 </fieldset>
 

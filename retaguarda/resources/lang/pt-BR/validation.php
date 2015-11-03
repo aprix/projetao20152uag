@@ -78,7 +78,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Custom Validation Language Lines
+    | Custom Validation Language Linesome
     |--------------------------------------------------------------------------
     |
     | Here you may specify custom validation messages for attributes using the
@@ -88,9 +88,70 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'name' => [
+            'alpha' => 'O campo Nome deve conter apenas letras',
+            'between' => 'O campo Nome deverá ter no máximo 100 caracteres',
         ],
+        'razao_social' => [
+            'alpha' => 'O campo Razão Social deve conter apenas letras',
+            'between' => 'O campo Nome deverá ter no máximo 200 caracteres',
+        ],
+       'state_registration' => [
+           'digits_between' => 'O campo Inscrição Estadual deve conter apenas números',
+        ],
+
+        'address' => [
+            'between' => 'O campo Endereço deverá ter no máximo 100 caracteres',
+        ],
+
+ 'address_num' => [
+            'alpha_num' => 'O campo Número não pode conter caracteres especiais',
+        ],
+
+        'address_neighborhood' => [
+            'alpha' => 'O campo Bairro deve conter apenas letras',
+            'between' => 'O campo Bairro deverá ter no máximo 50 caracteres',
+        ],
+
+        'city' => [
+            'alpha' => 'O campo Cidade deve conter apenas letras',
+            'between' => 'O campo Cidade deverá ter no máximo 50 caracteres',
+        ],
+        'state' => [
+            'alpha' => 'O campo Estado deve conter apenas letras',
+            'between' => 'O campo Estado deverá ter no máximo 50 caracteres',
+        ],
+        'cep' => [
+            'integer' => 'O campo CEP deve conter apenas números',
+            'digits' => 'O campo CEP deverá ter no máximo 8 dígitos',
+        ],
+
+         'min_time' => [
+            'integer' => 'O campo Tempo Mínimo deve conter apenas números',
+            'min' => 'O campo Tempo Mínimo deve ter valor mínimo de 1 minuto',
+        ],
+
+         'un_price' => [
+            'numeric' => 'O campo Preço Unitário deve conter apenas números',
+            'min' => 'O campo Preço Unitário deve ter valor mínimo de R$ 0.1',
+        ],
+
+        'un_time' => [
+            'integer' => 'O campo Tempo Unitário deve conter apenas números',
+            'min' => 'O campo Tempo Unitário deve ter valor mínimo de 1 minuto',
+        ],
+
+        'discount_sellers' => [
+            'integer' => 'O campo Desconto para vendedor deve conter apenas números',
+            'max' => 'Desconto para vendedor não pode ser maior que 100%',
+        ],
+
+        'max_price' => [
+            'integer' => 'O campo Tempo Máximo deve conter apenas números',
+            'min' => 'O campo Tempo Máximo deve ter valor mínimo de 1 minuto'
+        ],
+
+
     ],
 
     /*
