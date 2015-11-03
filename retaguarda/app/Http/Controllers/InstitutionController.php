@@ -41,7 +41,7 @@ class InstitutionController extends Controller
 
         $input = $request->all();
         Institution::create($input);
-
+        
        
        return redirect('paineladmin')->with('message','store');
     }
@@ -65,7 +65,9 @@ class InstitutionController extends Controller
      */
     public function edit($id)
     {
-        //
+        
+        $institution = Institution::find($id);
+        return view('instituicao.edit', compact('institution'));
     }
 
     /**
@@ -88,6 +90,12 @@ class InstitutionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
+    }
+
+    public function search(){
+
+        return view('instituicao.search');
+
     }
 }
