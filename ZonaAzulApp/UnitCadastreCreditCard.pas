@@ -143,7 +143,7 @@ begin
   {$ELSE}
   Index := 0;
   {$ENDIF}
-  if (EditNumber.Text[Index] = '4') then
+  if (EditNumber.Text.Length > 0) and (EditNumber.Text[Index] = '4') then
   begin
     ImageFlag.Bitmap := IconsGenericList.Bitmap(TSizeF.Create(32,32), 0);
     Flag := 'VISA';
