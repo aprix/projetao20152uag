@@ -16,11 +16,11 @@
 
   <table class="table">
     <thead>
-      <th>Tempo mínimo</th>
-      <th>Tempo unitário</th>
-      <th>Preço unitário</th>
-      <th>Desconto p/ vendedores</th>
-      <th>Max Price</th>
+      <th>Tempo mínimo(min)</th>
+      <th>Tempo unitário(min)</th>
+      <th>Preço unitário(R$)</th>
+      <th>Desconto p/ vendedor(%)</th>
+      <th>Tempo máximo(min)</th>
     </thead>
     @foreach($prices as $price)
     <tbody>

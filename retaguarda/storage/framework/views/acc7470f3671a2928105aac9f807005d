@@ -1,0 +1,41 @@
+<?php $__env->startSection('content'); ?>
+
+<?php if($errors->any()): ?>
+<ul class="alert alert-warning">
+<?php foreach($errors->all() as $error): ?>
+<li><?php echo e($error); ?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+
+  <?php echo Form::open(); ?>
+
+
+<fieldset>
+
+<!-- Form Name -->
+<legend>Procurar Instituição</legend>
+
+<div class="form-group col-md-2">
+
+    <?php echo Form::label('CNPJ'); ?>  
+  
+   <?php echo Form::text('cnpj', 'cnpj',['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>   
+ 
+</div class="form-group col-md-4">
+
+<?php echo Link_to_route('tabela.edit', $title='Editar', $parameters='12345678901234', $attributes= ['class'=>'btn btn-primary']); ?>
+
+ 
+</div>
+
+
+</fieldset>
+
+<?php echo Form::close(); ?>
+
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.administrador', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
