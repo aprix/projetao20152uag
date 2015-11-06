@@ -73,6 +73,12 @@ function select_credit_card($id_user){
 		ORDER BY credit_card.id";
 }
 
+function select_user($cpf, $password){
+	return "SELECT user.id, user.nickname, user.email
+			FROM user
+			WHERE user.cpf = $cpf AND user.senha = $password";
+}
+
 /**
  * método que simula o pagamento utilizando cartão de crédito
  * @param type $name
@@ -85,5 +91,7 @@ function select_credit_card($id_user){
 function payment($name, $creditCardFlag, $creditCardNumber, $creditCardDate, $creditCardCSC){
     return "Sucess!";
 }
+
+
 
 
