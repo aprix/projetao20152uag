@@ -35,6 +35,7 @@ type
     procedure EditNameKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure EditNumberChange(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
     var
@@ -153,6 +154,14 @@ begin
     ImageFlag.Bitmap := IconsGenericList.Bitmap(TSizeF.Create(32,32), 1);
     Flag := 'MASTERCARD';
   end;
+end;
+
+procedure TFormCadastreCreditCard.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  CanClose    := True;
+  Hide;
+  ModalResult := mrCancel;
 end;
 
 function TFormCadastreCreditCard.GetFlag: String;
