@@ -248,7 +248,7 @@ class API extends REST {
 	}
 
 	private function post_credit_card(){
-		if ($this->get_request_method() != 'POST') {
+		if ($this->get_request_method() != 'GET') {
             $this->response($this->get_request_method(), 406);
         }
         //Recebe um Json como argumento para o parâmetro 'json'.
@@ -365,6 +365,41 @@ class API extends REST {
 		
 		// e enviado para aplicação...
 		$this->response($response_json, 200);
+	}
+	
+	private function login(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		// pega as variaveis
+		$cpf = $vector['Cpf'];
+		$password = $vector['Password'];
+		// este sql é uma consulta que retorna a data de inicio da locação
+		// e a data de fim da locação...
+		$sql = select_user($cpf, $password);
+		
+		$response = array();
+
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				$response['Id']       = $row['id'];
+				$response['Nickname'] = $row['nickname'];
+				$response['Email']    = $row['email'];
+			} else {
+				$response['Error'] = 'CPF ou senha inválidos';
+			}
+		}
+		
+		$this->response(json_encode($response), 200);
 	}
 
 	private function get_vacancy_location_date(){
