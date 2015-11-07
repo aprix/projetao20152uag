@@ -76,7 +76,7 @@ function select_credit_card($id_user){
 function select_user($cpf, $password){
 	return "SELECT user.id, user.nickname, user.email
 			FROM user
-			WHERE user.cpf = $cpf AND user.senha = $password";
+			WHERE user.cpf = '$cpf' AND user.senha = '$password'";
 }
 
 /**
