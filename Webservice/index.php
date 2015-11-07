@@ -248,7 +248,7 @@ class API extends REST {
 	}
 
 	private function post_credit_card(){
-		if ($this->get_request_method() != 'GET') {
+		if ($this->get_request_method() != 'POST') {
             $this->response($this->get_request_method(), 406);
         }
         //Recebe um Json como argumento para o parâmetro 'json'.
@@ -379,7 +379,7 @@ class API extends REST {
         $vector = json_decode($json, TRUE);
 		
 		// pega as variaveis
-		$cpf = $vector['Cpf'];
+		$cpf = $vector['CPF'];
 		$password = $vector['Password'];
 		// este sql é uma consulta que retorna a data de inicio da locação
 		// e a data de fim da locação...
@@ -397,6 +397,8 @@ class API extends REST {
 			} else {
 				$response['Error'] = 'CPF ou senha inválidos';
 			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
 		}
 		
 		$this->response(json_encode($response), 200);
