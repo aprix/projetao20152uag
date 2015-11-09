@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS payment(
 	date_payment TIMESTAMP NOT NULL,
 	status INT(1) NOT NULL,
 
-	PRIMARY KEY (id_user, id_credit_card),
+	PRIMARY KEY (id),
 	FOREIGN KEY (id_user) REFERENCES user(id),
 	FOREIGN KEY (id_credit_card) REFERENCES credit_card(id),
 	UNIQUE  KEY (id)

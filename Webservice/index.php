@@ -332,7 +332,7 @@ class API extends REST {
 		
 		// este sql é uma consulta que retorna a data de inicio da locação
 		// e a data de fim da locação...
-		$sql = select_credit_card($id_user);
+		$sql = select_credit_card_for_user($id_user);
 
 		$response = array();
 
@@ -396,6 +396,70 @@ class API extends REST {
 				$response['Email']    = $row['email'];
 			} else {
 				$response['Error'] = 'CPF ou senha inválidos';
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+		
+		$this->response(json_encode($response), 200);
+	}
+	
+	private function post_ticket(){
+		if ($this->get_request_method() != 'POST') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		// variaveis
+		$id_user = $vector['IdUser'];
+		$id_credit_card = $vector['IdCreditCard'];
+		$csc = $vector['CSC'];
+		$value = $vector['Value'];
+		
+		$sql = select_credit_card($id_user, $id_credit_card);
+		
+		$response = array();
+
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				// pega o unico registro da consulta e armazena em $row
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				$pay = payment($row['name'], $row['flag'], $row['num'], $row['validate_month'], $row['validate_year'], $csc);
+				
+				if($pay){
+					
+					$sql_insert_payment = insert_payment($id_user, $id_credit_card, $value, 1);
+					
+					//inserindo na tabela payment
+					if($query_insert_payment = mysqli_query($this->db, $sql_insert_payment)){
+					
+						// atualizando o saldo do user
+						$sql_update_saldo = update_user_saldo($id_user, $value);						
+						if($query_update_saldo = mysqli_query($this->db, $sql_update_saldo)){
+							
+							$response['Sucess'] = 'Sucesso';
+							
+						} else {
+							
+							$response['Error'] = mysqli_error($this->db);
+							
+						}
+						
+					} else {
+						
+						$response['Error'] = mysqli_error($this->db);
+						
+					}
+				}
+				
+			} else {
+				$response['Error'] = 'Cartão de crédito não cadastrado';
 			}
 		} else {
 			$response['Error'] = mysqli_error($this->db);
