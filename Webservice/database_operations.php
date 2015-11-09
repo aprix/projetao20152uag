@@ -64,7 +64,7 @@ function update_credit_card($id, $id_user, $name, $number, $flag, $month, $year,
 		WHERE credit_card.id = $id;";
 }
 
-function select_credit_card($id_user){
+function select_credit_card_for_user($id_user){
 	return "SELECT credit_card.id, credit_card.name, credit_card.num, credit_card.flag, credit_card.validate_month, credit_card.validate_year
 
 		FROM credit_card
@@ -73,10 +73,31 @@ function select_credit_card($id_user){
 		ORDER BY credit_card.id";
 }
 
+function select_credit_card($id_user, $id_credit_card){
+	return "SELECT credit_card.name, credit_card.num
+		, credit_card.flag, credit_card.validate_month, credit_card.validate_year
+
+		FROM credit_card
+		WHERE credit_card.id_user = $id_user 
+		AND credit_card.id = $id_credit_card 
+		AND credit_card.status = 1";
+}
+
 function select_user($cpf, $password){
 	return "SELECT user.id, user.nickname, user.email
 			FROM user
 			WHERE user.cpf = '$cpf' AND user.senha = '$password'";
+}
+
+function insert_payment($id_user, $id_credit_card, $value, $status){
+	return "INSERT INTO payment(id_user, id_credit_card, val, date_payment, status)
+			VALUES ($id_user, $id_credit_card, $value, correct_timestamp(), $status)";
+}
+
+function update_user_saldo($id_user, $value){
+	return "UPDATE user
+			SET saldo = saldo + $value
+			WHERE user.id = $id_user";
 }
 
 /**
@@ -88,8 +109,8 @@ function select_user($cpf, $password){
  * @param type $creditCardCSC
  * @return string
  */
-function payment($name, $creditCardFlag, $creditCardNumber, $creditCardDate, $creditCardCSC){
-    return "Sucess!";
+function payment($name, $creditCardFlag, $creditCardNumber, $creditCardMonth, $creditCardYear, $creditCardCSC){
+    return TRUE;
 }
 
 
