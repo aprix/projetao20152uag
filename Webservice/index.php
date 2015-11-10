@@ -500,8 +500,6 @@ class API extends REST {
 					$response[$i] = $response_row;
 					$i++;
 				}
-			} else {
-				$response['Error'] = 'Não existem locações para este usuário';
 			}
 		} else {
 			$response['Error'] = mysqli_error($this->db);
