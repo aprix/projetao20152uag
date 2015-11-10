@@ -404,7 +404,7 @@ class API extends REST {
 		$this->response(json_encode($response), 200);
 	}
 	
-	private function post_ticket(){
+	private function post_credits(){
 		if ($this->get_request_method() != 'POST') {
             $this->response($this->get_request_method(), 406);
         }
