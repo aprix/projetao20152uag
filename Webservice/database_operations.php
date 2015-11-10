@@ -24,10 +24,15 @@ function insert_vacancy_location($plate, $time){
 		, correct_timestamp(), $time, (SELECT prices.un_price * $time from prices) );";
 }
 
-function select_vacancy_location_date($plate){
-	return "SELECT vacancy_location.date_location as initialDate, (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE) as finalDate
+function select_vacancy_location_user($id_user){
+	return "SELECT vacancy_location.date_location
+		, vacancy_location.time_location
+		, vehicle.plate
+			
 		FROM vacancy_location
-		INNER JOIN vehicle ON vacancy_location.id_vehicle = vehicle.id AND vehicle.plate = '$plate'
+		INNER JOIN vehicle ON vacancy_location.id_vehicle = vehicle.id AND vehicle.status = 1
+		WHERE vacancy_location.id_user = $id_user
+		ORDER BY vacancy_location.date_location DESC
 		LIMIT 10";
 }
 
@@ -112,7 +117,3 @@ function update_user_saldo($id_user, $value){
 function payment($name, $creditCardFlag, $creditCardNumber, $creditCardMonth, $creditCardYear, $creditCardCSC){
     return TRUE;
 }
-
-
-
-
