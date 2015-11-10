@@ -468,7 +468,7 @@ class API extends REST {
 		$this->response(json_encode($response), 200);
 	}
 
-	private function get_vacancy_location_date(){
+	private function get_vacancy_location_user(){
 		if ($this->get_request_method() != 'GET') {
             $this->response($this->get_request_method(), 406);
         }
@@ -479,12 +479,12 @@ class API extends REST {
         //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
         $vector = json_decode($json, TRUE);
 		
-		// pega a variavel Plate(placa do carro)
-		$plate = $vector['Plate'];
+		// pega a variavel id do user
+		$id_user = $vector['IdUser'];
 		
 		// este sql é uma consulta que retorna a data de inicio da locação
 		// e a data de fim da locação...
-		$sql = select_vacancy_location_date($plate);
+		$sql = select_vacancy_location_user($id_user);
 
 		$response = array();
 
@@ -494,12 +494,17 @@ class API extends REST {
 				$i = 0;
 				// este laço varre as linhas da consulta e vai as armazenando em $response...
 				while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
-					$response_row['InitialDate'] = $row['initialDate'];
-					$response_row[ 'FinalDate' ] = $row[ 'finalDate' ];
+					$response_row[ 'Plate' ] = $row[ 'plate' ];
+					$response_row['StartTime'] = $row['date_location'];
+					$response_row[ 'Time' ] = $row[ 'time_location' ];
 					$response[$i] = $response_row;
 					$i++;
 				}
+			} else {
+				$response['Error'] = 'Não existem locações para este usuário';
 			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
 		}
 		// por fim response é convertido para o formato json...
 		$response_json = json_encode($response);
