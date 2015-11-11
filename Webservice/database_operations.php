@@ -10,17 +10,17 @@ function select_vacancy_location($plate){
 function select_vehicle($plate, $id_user){
 	return "SELECT vehicle.id 
 		FROM vehicle 
-		WHERE vehicle.plate = '$plate' AND vehicle.id_user = $id_user";
+		WHERE vehicle.plate = '$plate' AND vehicle.id_user = $id_user AND vehicle.status = 1";
 }
 
-function insert_vehicle($plate){
+function insert_vehicle($id_user, $plate){
 	return "INSERT INTO vehicle (plate, id_user, status) 
-		VALUES ('$plate', 1, 1);";
+		VALUES ('$plate', $id_user, 1);";
 }
 
-function insert_vacancy_location($plate, $time){
+function insert_vacancy_location($id_user, $plate, $time){
 	return "INSERT INTO vacancy_location (id_user, id_vehicle, date_location, time_location, total_payment)
-		VALUES (1, (SELECT vehicle.id from vehicle where id_user = 1 and plate = '$plate')
+		VALUES ($id_user, (SELECT vehicle.id from vehicle where id_user = $id_user and plate = '$plate')
 		, correct_timestamp(), $time, (SELECT prices.un_price * $time from prices) );";
 }
 
@@ -103,6 +103,17 @@ function update_user_saldo($id_user, $value){
 	return "UPDATE user
 			SET saldo = saldo + $value
 			WHERE user.id = $id_user";
+}
+
+function select_user_saldo($id_user){
+	return "SELECT user.saldo
+			FROM user
+			WHERE user.id = $id_user";
+}
+
+function select_un_price(){
+	return "SELECT prices.un_price
+			FROM prices";
 }
 
 /**
