@@ -12,7 +12,6 @@ type
   TFormParking = class(TForm, IPaymentListener)
     Label1: TLabel;
     Layout1: TLayout;
-    MasterToolBar: TToolBar;
     Layout2: TLayout;
     Layout3: TLayout;
     Label4: TLabel;
@@ -22,8 +21,6 @@ type
     LayoutCreditsAvailable: TLayout;
     Label8: TLabel;
     lblCreditsAvailable: TLabel;
-    Rectangle1: TRectangle;
-    Label3: TLabel;
     Layout6: TLayout;
     Label5: TLabel;
     lblCreditsPay: TLabel;
@@ -33,7 +30,7 @@ type
     editPlateLetters: TEdit;
     Label2: TLabel;
     editPlateNumbers: TEdit;
-    buttonActiveTickets: TSpeedButton;
+    ButtonActiveTickets: TSpeedButton;
     buttonRemoveTime: TSpeedButton;
     buttonAddTime: TSpeedButton;
     TimerUpdateValues: TTimer;
@@ -44,12 +41,12 @@ type
     procedure buttonAddTimeClick(Sender: TObject);
     procedure buttonRemoveTimeClick(Sender: TObject);
     procedure editTimeChange(Sender: TObject);
-    procedure buttonActiveTicketsClick(Sender: TObject);
+    procedure ButtonActiveTicketsClick(Sender: TObject);
     procedure editPlateNumbersChange(Sender: TObject);
     procedure TimerUpdateValuesTimer(Sender: TObject);
   private
     { Private declarations }
-    procedure UpdateValuesComponents;
+    procedure UpdateValuesLabels;
     procedure ValidateValuesComponents;
     procedure OnSucess;
     procedure OnError(Msg: String);
@@ -68,15 +65,23 @@ implementation
 
 uses UnitRoutines;
 
-procedure TFormParking.buttonActiveTicketsClick(Sender: TObject);
+procedure TFormParking.ButtonActiveTicketsClick(Sender: TObject);
 begin
-  //Valida os valores dos componentes.
-  ValidateValuesComponents;
+  try
+    //Valida os valores dos componentes.
+    ValidateValuesComponents;
 
-  //Envia o pagamento para o Webservice.
-  DataModuleGeral.sendPayment(Format('%s%s',[editPlateLetters.Text, editPlateNumbers.Text])
-                             ,Time
-                             ,Self);
+    //Envia o pagamento para o Webservice.
+    DataModuleGeral.SendPayment(Format('%s%s',[editPlateLetters.Text, editPlateNumbers.Text])
+                               ,Time
+                               ,Self);
+  except
+    on Error: Exception do
+    begin
+      //Exibe a mensagem do erro para o usuário.
+      ShowMessage(Error.Message);
+    end;
+  end;
 end;
 
 procedure TFormParking.buttonAddTimeClick(Sender: TObject);
@@ -131,7 +136,7 @@ begin
   editTime.Text := IntToStr(Time);
 
   //Atualiza os valores dos componentes referente a créditos.
-  UpdateValuesComponents;
+  UpdateValuesLabels;
 end;
 
 procedure TFormParking.FormShow(Sender: TObject);
@@ -145,8 +150,23 @@ begin
   editPlateLetters.Text    := Copy(DataModuleGeral.GetLastPlate(), 1, 3);
   editPlateNumbers.Text    := Copy(DataModuleGeral.GetLastPlate(), 4, 4);
 
+  //Verifica se existe um usuário logado.
+  if (DataModuleGeral.IsUserLogged) then
+  begin
+    try
+      //Atualiza a consulta de créditos do usuário logado.
+      DataModuleGeral.OpenQueryCreditsUser;
+    except
+      on Error: Exception do
+      begin
+        //Exibe a mensagem do erro para o usuário.
+        ShowMessage(Error.Message);
+      end;
+    end;
+  end;
+
   //Atualiza os valores dos campos.
-  UpdateValuesComponents();
+  UpdateValuesLabels();
 end;
 
 procedure TFormParking.OnSucess;
@@ -167,10 +187,10 @@ end;
 procedure TFormParking.TimerUpdateValuesTimer(Sender: TObject);
 begin
   //Atualiza os valores dos componentes.
-  UpdateValuesComponents;
+  UpdateValuesLabels;
 end;
 
-procedure TFormParking.UpdateValuesComponents;
+procedure TFormParking.UpdateValuesLabels;
 begin
   //Atualiza os valores dos campos do formulário.
   lblCreditsAvailable.Text := 'R$ '+FormatValue(DataModuleGeral.GetCreditsUser());
@@ -181,6 +201,7 @@ end;
 procedure TFormParking.ValidateValuesComponents;
 begin
   //Valida se foi informado todos os valores dos componentes.
+  Focused := nil;
   editPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
   ValidateValueComponent(editPlateLetters, editPlateLetters.Text, 'Informe as letras da placa.', 3);
   ValidateValueComponent(editPlateNumbers, editPlateNumbers.Text, 'Informe os números da placa.', 4);

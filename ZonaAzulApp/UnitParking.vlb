@@ -2,11 +2,8 @@
 Coordinates=70,0,46,51
 
 []
-Coordinates=213,140,53,51
-Visible=True
-
-[MasterToolBar]
 Coordinates=457,1,86,33
+Visible=True
 
 [Label4]
 Coordinates=164,159,46,51
