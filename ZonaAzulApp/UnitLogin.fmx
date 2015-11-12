@@ -1,0 +1,110 @@
+object FrameLogin: TFrameLogin
+  Align = Client
+  Size.Width = 320.000000000000000000
+  Size.Height = 427.000000000000000000
+  Size.PlatformDefault = False
+  object Layout1: TLayout
+    Align = Client
+    Size.Width = 320.000000000000000000
+    Size.Height = 427.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object Layout3: TLayout
+      Align = VertCenter
+      Margins.Left = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Right = 10.000000000000000000
+      Position.X = 10.000000000000000000
+      Position.Y = 140.000000000000000000
+      Size.Width = 300.000000000000000000
+      Size.Height = 108.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object VertScrollBox1: TVertScrollBox
+        Align = Client
+        Size.Width = 300.000000000000000000
+        Size.Height = 108.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Viewport.Width = 300.000000000000000000
+        Viewport.Height = 108.000000000000000000
+        object Layout5: TLayout
+          Align = MostTop
+          Size.Width = 300.000000000000000000
+          Size.Height = 51.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object EditCPF: TEdit
+            Hint = 'CPF'
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Bottom
+            TabOrder = 0
+            KeyboardType = NumberPad
+            TextSettings.Font.Size = 14.000000000000000000
+            Position.Y = 23.000000000000000000
+            Size.Width = 300.000000000000000000
+            Size.Height = 28.000000000000000000
+            Size.PlatformDefault = False
+            StyledSettings = [Family, Style, FontColor]
+            ParentShowHint = False
+            ShowHint = True
+            OnChange = EditCPFChange
+          end
+          object Label3: TLabel
+            Align = Top
+            StyledSettings = [Family, FontColor]
+            Size.Width = 300.000000000000000000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.Font.Style = [fsBold]
+            Text = 'CPF'
+          end
+        end
+        object LayoutPassword: TLayout
+          Align = Top
+          Position.Y = 51.000000000000000000
+          Size.Width = 300.000000000000000000
+          Size.Height = 53.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          object EditPassword: TEdit
+            Hint = 'SENHA'
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Bottom
+            TabOrder = 0
+            Password = True
+            TextSettings.Font.Size = 14.000000000000000000
+            Position.Y = 25.000000000000000000
+            Size.Width = 300.000000000000000000
+            Size.Height = 28.000000000000000000
+            Size.PlatformDefault = False
+            StyledSettings = [Family, Style, FontColor]
+            ParentShowHint = False
+            ShowHint = True
+          end
+          object Label4: TLabel
+            StyledSettings = [Family, FontColor]
+            Size.Width = 81.000000000000000000
+            Size.Height = 20.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Size = 14.000000000000000000
+            TextSettings.Font.Style = [fsBold]
+            Text = 'Senha'
+          end
+        end
+      end
+    end
+    object ButtonLogin: TSpeedButton
+      Align = Bottom
+      StyledSettings = [Family, Style, FontColor]
+      Position.Y = 379.000000000000000000
+      Size.Width = 320.000000000000000000
+      Size.Height = 48.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Confirmar'
+      TextSettings.Font.Size = 20.000000000000000000
+      OnClick = ButtonLoginClick
+    end
+  end
+end
