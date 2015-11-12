@@ -1,23 +1,14 @@
 ﻿[Label1]
 Coordinates=238,10,46,51
 
-[Rectangle1]
-Coordinates=10,212,69,33
-
-[Label3]
-Coordinates=301,10,46,51
-
 [Layout2]
 Coordinates=280,166,53,33
 
 [Layout1]
 Coordinates=119,166,53,33
 
-[MasterToolBar]
-Coordinates=10,166,86,33
-
 []
-Coordinates=100,212,53,33
+Coordinates=66,124,97,33
 Visible=True
 
 [EditName]
@@ -90,6 +81,21 @@ Coordinates=565,1,216,285
 Coordinates=0,303,53,33
 
 [ImageFlag]
-Coordinates=526,305,49,51
+Coordinates=526,305,65,51
 Visible=True
+
+[Layout3]
+Coordinates=165,124,53,33
+
+[DataModuleGeral.ResponsePostBuyCredits]
+Coordinates=491,120,228,285
+
+[DataModuleGeral.ResponseGetUser]
+Coordinates=262,157,191,285
+
+[DataModuleGeral.RequestGetUser]
+Coordinates=0,0,182,105
+
+[DataModuleGeral.RequestPostBuyCredits]
+Coordinates=833,694,219,105
 

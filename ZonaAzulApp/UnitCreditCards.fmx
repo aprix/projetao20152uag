@@ -15,7 +15,7 @@ object FrameCreditCards: TFrameCreditCards
       HeaderAppearanceClassName = 'TListHeaderObjects'
       FooterAppearanceClassName = 'TListHeaderObjects'
       Transparent = True
-      Images = DataModuleLocal.IconsTicketsList
+      Images = DataModuleGeral.IconsGenericList
       Align = Client
       Size.Width = 320.000000000000000000
       Size.Height = 446.000000000000000000
@@ -23,7 +23,6 @@ object FrameCreditCards: TFrameCreditCards
       TabOrder = 0
       ItemAppearanceObjects.ItemObjects.Detail.Font.Size = 16.000000000000000000
       ItemAppearanceObjects.ItemObjects.Detail.TextColor = claBlack
-      ItemAppearanceObjects.ItemObjects.Image.Visible = False
       ItemAppearanceObjects.ItemObjects.TextButton.Visible = False
       ItemAppearanceObjects.ItemEditObjects.TextButton.Visible = False
       ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
@@ -75,9 +74,13 @@ object FrameCreditCards: TFrameCreditCards
       Control = ListViewCreditCards
       Track = True
       FillDataSource = BindSourceDB1
-      FillDisplayFieldName = 'Flag'
+      FillDisplayFieldName = 'Name'
       AutoFill = True
       FillExpressions = <
+        item
+          SourceMemberName = 'IconIndex'
+          ControlMemberName = 'ImageIndex'
+        end
         item
           SourceMemberName = 'Number'
           ControlMemberName = 'Detail'

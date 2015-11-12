@@ -20,7 +20,8 @@ uses
   UnitCadastreUser in 'UnitCadastreUser.pas' {FrameCadastreUser: TFrame},
   UnitWelcome in 'UnitWelcome.pas' {FormWelcome},
   UnitCreditCards in 'UnitCreditCards.pas' {FrameCreditCards: TFrame},
-  UnitDialogOptions in 'UnitDialogOptions.pas' {FrameDialogOptions: TFrame};
+  UnitDialogOptions in 'UnitDialogOptions.pas' {FrameDialogOptions: TFrame},
+  UnitLogin in 'UnitLogin.pas' {FrameLogin: TFrame};
 
 {$R *.res}
 

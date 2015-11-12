@@ -11,9 +11,6 @@ uses
 type
   TFormCadastreCreditCard = class(TForm)
     Layout1: TLayout;
-    MasterToolBar: TToolBar;
-    Rectangle1: TRectangle;
-    Label3: TLabel;
     Layout2: TLayout;
     Label1: TLabel;
     EditName: TEdit;
@@ -28,7 +25,6 @@ type
     EditNumber: TEdit;
     Layout6: TLayout;
     ImageFlag: TImage;
-    IconsGenericList: TImageList;
     Layout3: TLayout;
     procedure EditNameChange(Sender: TObject);
     procedure buttonSaveClick(Sender: TObject);
@@ -146,12 +142,12 @@ begin
   {$ENDIF}
   if (EditNumber.Text.Length > 0) and (EditNumber.Text[Index] = '4') then
   begin
-    ImageFlag.Bitmap := IconsGenericList.Bitmap(TSizeF.Create(32,32), 0);
+    ImageFlag.Bitmap := DataModuleGeral.IconsGenericList.Bitmap(TSizeF.Create(32,32), 0);
     Flag := 'VISA';
   end
   else
   begin
-    ImageFlag.Bitmap := IconsGenericList.Bitmap(TSizeF.Create(32,32), 1);
+    ImageFlag.Bitmap := DataModuleGeral.IconsGenericList.Bitmap(TSizeF.Create(32,32), 1);
     Flag := 'MASTERCARD';
   end;
 end;
