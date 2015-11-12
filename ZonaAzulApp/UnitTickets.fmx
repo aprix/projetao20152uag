@@ -27,11 +27,10 @@ object FrameTickets: TFrameTickets
       ItemAppearanceObjects.ItemEditObjects.TextButton.Visible = False
       ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
       CanSwipeDelete = False
-      OnItemsChange = ListViewTicketsItemsChange
       OnFilter = ListViewTicketsFilter
       ShowSelection = False
       PullToRefresh = True
-      object buttonNew: TSpeedButton
+      object ButtonNew: TSpeedButton
         Anchors = [akRight, akBottom]
         Position.X = 263.000000000000000000
         Position.Y = 406.000000000000000000
@@ -40,7 +39,7 @@ object FrameTickets: TFrameTickets
         Size.PlatformDefault = False
         StyleLookup = 'SpeedButton1Style1'
         Text = 'Novo'
-        OnClick = buttonNewClick
+        OnClick = ButtonNewClick
       end
       object lblMessage: TLabel
         Align = Center
@@ -86,6 +85,6 @@ object FrameTickets: TFrameTickets
     DataSet = DataModuleLocal.DataSetTickets
     ScopeMappings = <>
     Left = 152
-    Top = 216
+    Top = 88
   end
 end
