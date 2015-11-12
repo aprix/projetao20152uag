@@ -619,6 +619,41 @@ class API extends REST {
 		
 	}
 	
+	private function get_credits_user(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+		
+		//Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		//Variaveis
+		$id_user = $vector['IdUser'];
+		
+		$sql = select_user_saldo($id_user);
+		
+		$response = array();
+		
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				$response['Value'] = $row['saldo'];
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+		
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);
+	}
+	
 	// funcao especifica da validacao do numero do cartao
 	private function validate_credit_card($numeroCartao, $response){
 		// faz as validações de pagamento...
