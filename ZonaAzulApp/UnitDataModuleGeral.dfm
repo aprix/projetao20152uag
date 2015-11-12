@@ -1,7 +1,8 @@
 object DataModuleGeral: TDataModuleGeral
   OldCreateOrder = False
-  Height = 490
-  Width = 757
+  OnCreate = DataModuleCreate
+  Height = 546
+  Width = 1467
   object CustomStyleBook: TStyleBook
     Styles = <
       item
@@ -3978,17 +3979,365 @@ object DataModuleGeral: TDataModuleGeral
     Top = 216
   end
   object AdapterCreditCards: TRESTResponseDataSetAdapter
-    Dataset = DataSetCreditCards
+    Dataset = DataSetGetCreditCards
     FieldDefs = <>
     Response = ResponseGetCreditCards
     Left = 568
     Top = 272
   end
-  object DataSetCreditCards: TClientDataSet
+  object DataSetGetCreditCards: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 568
     Top = 328
+    object DataSetGetCreditCardsFlag: TStringField
+      FieldName = 'Flag'
+      Size = 50
+    end
+    object DataSetGetCreditCardsName: TStringField
+      FieldName = 'Name'
+      Size = 100
+    end
+    object DataSetGetCreditCardsNumber: TStringField
+      FieldName = 'Number'
+      Size = 16
+    end
+    object DataSetGetCreditCardsMonthValidate: TIntegerField
+      FieldName = 'MonthValidate'
+    end
+    object DataSetGetCreditCardsYearValidate: TIntegerField
+      FieldName = 'YearValidate'
+    end
+    object DataSetGetCreditCardsStatus: TBooleanField
+      FieldName = 'Status'
+    end
+    object DataSetGetCreditCardsId: TIntegerField
+      FieldName = 'Id'
+    end
+  end
+  object RequestGetUser: TRESTRequest
+    Client = ClientWebService
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/login'
+    Response = ResponseGetUser
+    SynchronizedEvents = False
+    Left = 680
+    Top = 152
+  end
+  object ResponseGetUser: TRESTResponse
+    Left = 680
+    Top = 216
+  end
+  object RequestPostBuyCredits: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_credits'
+    Response = ResponsePostBuyCredits
+    SynchronizedEvents = False
+    Left = 784
+    Top = 152
+  end
+  object ResponsePostBuyCredits: TRESTResponse
+    Left = 784
+    Top = 216
+  end
+  object IconsGenericList: TImageList
+    Source = <
+      item
+        MultiResBitmap.Height = 32
+        MultiResBitmap.Width = 51
+        MultiResBitmap.LoadSize = 2
+        MultiResBitmap = <
+          item
+            Width = 51
+            Height = 32
+            PNG = {
+              89504E470D0A1A0A0000000D4948445200000033000000200806000000BFE340
+              1F000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              04DF494441545847ED997B4CD35714C7BFFD418151102B0C290E71B53C2BCC58
+              E3E68653EA1E2C245BA6194B58B67FC4FD674C24EA96B9650FF7CA966CFB6399
+              2366CB620246B7E9425436D9E68C1095165156CAA396F76308B430904769BB7B
+              6E7FFD1559C19A3063C93EC9E1DE73EEEDE5777ACE3DF7FE5219182693E96DB9
+              5C5EE072B996921E4C08826077381CA55AADF6A0CC6030BCA65028DE4F4F4F17
+              C4F1A0A3BEBEDEED743A8B65AC63605EE9447BD062369B6B58948418510F7694
+              3CB5DC6E77D00B11B4FBC41F8B2B32ACACF91D0C36213FFE4FB37B512467EE26
+              2EF68F3B0646D1D4330CDBE8A4685D18647575752D1919191A5197106CA7210C
+              9D60ED19163A07B7B9C357613AED186B93B94EBC5166C4E1DF9A79FF95CD1A1C
+              D8F6105277FFC0F598C830347FB19DF7FB8727F0E1C96BF8A9A61D6393D3DC46
+              A4A896E0C2BBF9A2068C4F39F1E267BFE392E506D7D72429F1EB5B79BC3F1FEC
+              D0B4CC9966CEA5CFC0A12EC154B6013D727A2001B2C936C86CA7A439530E277E
+              BCDC4E4B708AF4A968E91D1135409310CDE7FD353C8EBC0F7E46E985EBB73842
+              44C843A4F5488E9CB7488E108DDD764C4C4DDF32C79F10B74D33B77C398EF5EF
+              C2DEDABD700B0A08A3467104A8B8DA8D2131551E4D8B472AFB969B7B87B94EA4
+              277AEEAD5F5698D13D7493F773B52A54BEF934AADECB47D9EECDD8B9358DDB89
+              69971B87CE368A9A07B2D5B50F89DAFC045400F4EC010E1B54D871BE18EE9B66
+              C9FEDD1F16BE08B1736B2AB75D6BB7891660ED2A25B799BAECA205888B0E475A
+              620CD4F151D8929980171E4996D6FBA5AE4B72FAB9F52B794BD45A07A5397309
+              115001A06F5CA58CC48986653862C9836C7A009D8363A86EEAE7E3C97151782A
+              3B91F7CD2C2DBC681296F0F6892C156F89E317DB90FB4E05CA8D9DA2C5C75767
+              9B787B5F58085E7F3E8BF7898B2DBEB49B8F802243B2293D9E7FA0B84283D6BE
+              0196FF565E99881DFA14D08B11CD6B9EB16752C43D53C4C65FDEB45AB40296BE
+              11BC5A528DA2435570BA5C7C8EC13A809AEB037CFC595D1256C62A90C484B8D2
+              7A0791F137385B9ECCF27CF32EB70CC76B1D28AB6AE5BA223C14051B3DA932F8
+              F784B487289D948A306E27473F2A5C87F27D7A6C4CB99F8F13A7AE74E1644D07
+              9F5352E9A98844618E9ADBD6AB63B9DE3F32811E967E649B4B8880D28CC86191
+              0915F88B29BE3967E1158AD8FE7032A223E4BCDFD4E38B0AED8BD9AC7B3016DF
+              EFD902FD1A5FDA5D6D1B42AF6D1C6798635E8ABEAEC6DAFDE5BCC078B92C466D
+              3E028E4C744428B29395FC43F6B129DE12457A8D34A7911D845E689F91EDD372
+              133E3FDD0023DBC40DAC109C33F5F103D30B39F82D2B2454B5BCDC609120A133
+              C74BED6D528D08E57F0324579BC016F595C9C7583956C7478B1AF067A7AF9269
+              1FF094E5CAFA1ED477DAF109736A361B56C7E1F1CCE5D85FEA29F714F98F5FD2
+              491940EC2BADC5243BCF2E055004028E0C899E39339399512199B9F9D3549ECD
+              BF625924C2D9C13813DAD87BF23351BA2B87DD083A3032EEB96150A92E60A57A
+              DB86959264ACF0A46B235B7BBEC393E0D719B55AFDAFEBCC426363A949121B15
+              CEAE399E3DB69058AD56CF75E66E40958D0ECAFFC2112F779466F7B248CE2C16
+              047F5E06AB2C2E67C4082D0A0497CB65F3E765B009F941697694BD72FAEE1241
+              083D3FF9C1EF0D46A3F140484848213304DD4F1A3299CCEE743A4B753ADDC17F
+              00A178C8C64E407B940000000049454E44AE426082}
+            FileName = 
+              'C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\'#205'co' +
+              'nes\visa.png'
+          end>
+        Name = 'Visa'
+      end
+      item
+        MultiResBitmap.Height = 32
+        MultiResBitmap.Width = 51
+        MultiResBitmap.LoadSize = 2
+        MultiResBitmap = <
+          item
+            Width = 51
+            Height = 32
+            PNG = {
+              89504E470D0A1A0A0000000D4948445200000033000000200806000000BFE340
+              1F000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+              07F8494441545847DD98797013F715C7BFAB5DC99625F942B2B0647CE30B8307
+              6CE2A3C12E35218516A6B6D3A6C04C26C7649826ED30996999A6471AD230ED4C
+              A7C384264D8642C3048678080463A040302160126A8A0D36870F6C19D7876CD9
+              966D1DD6B5477F92370D58F221913F423EE327EFEFFD767FFBDEBEDFFBFDDE2E
+              25FFFE4E01DF0E582A62ED9B42625C94D87E34E17801FD231696523CF18610A3
+              928BEA47135E10306173B29472CD0E41CA4844F5A38B87E5594AF5BDD783CE99
+              7C4B3FD68DB4A374EC1E129DE360041E3C28F48647E1F398249CD064A351A507
+              4F51E2155FC1487814EB8C5897D28D155A131294569FDEC3D3E89E88427DBF0E
+              A7BA52D13116E3D307017166F51FE6EDCC6AB3016F18EA9067358A9A99695368
+              B023B51CA7D499BEB6841250957117BF2EBC8604D59403B351DFA7C79B570A71
+              C3A41135736162A9C8EFBE36A733329EC35B1D27B179B059D4CC9F5A12A55797
+              3F89DD3FB88412FD80A89D3FEF34E561E795C7485EF847F941883351A5BF9FD5
+              1915E7424DCB41E45B8337C48BB090866D8706CC02511102A7BB92B1F54C393C
+              DC2CB96D32B124FA0266129AE4C2BED68F437604E4DE42340DC5DFCD90BD3D41
+              1AA23E48D6A5DDC39FCA3E0F68E3FD2201F999497ED5538FB5E64E71C810E089
+              3F6D6E489ADDA03F7380A9B18B1DC1B325B70D4F65DD0D68E79742C594FC861C
+              F913E7B1A3B1E95D2838B7A8090E3E530AD7CE87985B0130D9E528DAF713B858
+              5AD4DC0799667444C2E3AF7B536BBA6CEFBD8CC72D3DE4283478BD14740B89C8
+              55D703428D93653C5D2A9E151C0A190BF36438AE1B357EF652763B3F63CE548C
+              DE21A7840EDD428CBFE8F013E6231B9912E24921F0C38C7B01EDF5C982C7B6FB
+              0D9DED1841FDCD7F4E352A2B81D45460FF7EA0A404C8C820EB6D2DD0D131D53F
+              1D8601B7261E9E1F7B88D1246902204449C02916C3B5701394B24908DDFB21B8
+              46C4DEC04822B340C52E87A7BB1A4B773F0D8B4B26F68878A7994257E237CD0A
+              6C03A834B7E19A7C21AC476BA0FE69156E1F390BA1BA1ACA8A0DC0F1E3406929
+              B06A1560241B28CB029B37935D75354E2FCA4746CD2790EC3D0549931DB4EE69
+              30B75848EA0C60D41B41B75268665640FBD4110CB329B050A988E66E81D69642
+              129D0BC1DE43FE2F011591002A5C0D2A6C01249A22BCDFFE3CD2730B21337E88
+              4FBBF418B0281EB0D93BCD186F78A6A3754FAD3A9D111A54246A60335BD059B6
+              0EB11CE7D3EF4E2BC7924D1B90141F8D84675F4093D18E948225B0B677C150DF
+              8AC94917CC8A5550EEABC59DB67E14FD2C0DB5E59B51F1DA07B08F8C61F46A3B
+              86FA0CF05CFC1126EC0C6AF957919BB70CCB9725805194E0A6291DC585D968BD
+              7C08D9655B601E19C10B2BD4B07554FBEEAF8E70F8A6D5742414299FA78B449C
+              1E8399CB209332B87BBD1D8995EBD1D6D80EDBC010D65CFA1899D7EB31366685
+              53AD214F558B28E37F11FDF28B5067A660B8B11E27E353209733A0479BE1707B
+              C03DF3846FCC4B7BB661715632E22C07911C6B41AE7E0CE5DA134857DDC2A0C9
+              062B1F0F9D5E8BDB0D6760095F89CEC6D3F8E32B5BC1723C229C2DBE3128629E
+              9FDD441F709F313111BE8BDC593930F70EC2E8149091A947FFB813D68E6EC49C
+              3F8B1BA4901C9FF480EDE8C27BAFEC428B530A65ED3124276BA1B9D1404A8704
+              F4F58FE18B360AB57B0FC3342A857DD48CC97337C81304C29471BE7B5C1BC840
+              66D5015CB8CEFB6E3F6A322225490377EF29E8750B90266F445E3A057938C911
+              1BD96708A3F6303F9BBD048C4C1F13E9EB54E666C1DDDA0E37A98B4C273E4142
+              92163DDD8388232F7305111EACCC4F033768C45BCF157ADF906025A913A75181
+              5EB50186B61E24E962F1BC6202EBB54A84A97570B5B422E7CA008EFFAB09D4E2
+              97309E5B0DFBA26D082786162F95233B5387C1212B685A02C76827DAEF0E824F
+              FB05D6BEF8AECF1E38487E520C7A46957E367B2343ABB4457E0BC0282347E558
+              3B8E6BF35078FE286A7A3D483F7610757C2C726B0EE0AFCD165227093876E23F
+              18B8DD89565D262C861ED0BFFD1DF6F402311383881CDE8B0F2EBA608A4F06C7
+              DDC485161B8A234F4257D4890612CDB38D34261C61900D1DC1E13A2B2C161BEA
+              2F5E456FB7019CA503058AA3F8DBE1110C8DD3447F059289468C9BBA60B2D0D8
+              F745DA03F6FAC4E5E4A9F8A5DBA662348D3FF77F8A67CC37C556F0702BC85450
+              F91786DCCA307045E1622B78FE727E19DEBB9C2DB6EEC332CE4A486DED7DEFF4
+              9377D4F9F05001CA8679423705D8342F3BC0A784B6FB7B1977C870E86A5A407B
+              BDCC5801F4312A1C88C9F59D142AEEEDD170EE8DFB4AFE1107411BFA037AFBB3
+              1C581D4C407B7D534D9FFDF329B702201538D4F41C459EC3246A8284A1C06790
+              48903F3E550ACF1695D8113C75AD3ABCFC61310982D7EC004C5ABDEF33E4ED7D
+              066189BFCFE9D7A34B162D5E11242CD9B3EE90AADB44C6DAA81095C1D3D21783
+              5F7E5440AA236F1402DBEA7591EC33E4771619A623B031A90AF58A4544113CDE
+              92686362150CAED0BECDD5362FC2A63D6598743101EDFBBF10A884CC97C4C3D9
+              F17A5D4196CCEDC30DD0B1A4F29D83115A8E5DEA95381495039692208CE1F0EC
+              773AB1B5AC03CA305284CE41A72912BBCEE5E0DC1D9DA89903A79D9DB7335F12
+              46F268352906D7DABA91EF18421C6B8792F7C0216130C428D01C1E8733CA545C
+              5024C22EF15FB922C33D28CF19C09A6C23B2E327A051397D8E5A4905316491A3
+              A15B8D3AE2C0BF0D1AB20FCF901F8108C59940C88883EE8758C6A5343FFBC78A
+              F9409CF95A3E653E8C235E1EDA1191AF67946F08DF226780FF016231F7EFE64C
+              F1D40000000049454E44AE426082}
+            FileName = 
+              'C:\Users\Diogo\Documents\GitHub\projetao20152uag\ZonaAzulApp\'#205'co' +
+              'nes\mastercard.png'
+          end>
+        Name = 'Mastercard'
+      end>
+    Destination = <
+      item
+        Layers = <
+          item
+            Name = 'Visa'
+            SourceRect.Right = 51.000000000000000000
+            SourceRect.Bottom = 32.000000000000000000
+          end>
+      end
+      item
+        Layers = <
+          item
+            Name = 'Mastercard'
+            SourceRect.Right = 51.000000000000000000
+            SourceRect.Bottom = 32.000000000000000000
+          end>
+      end>
+    Left = 144
+    Top = 16
+  end
+  object RequestGetCreditsUser: TRESTRequest
+    Client = ClientWebService
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/get_credits_user'
+    Response = ResponseGetCreditsUser
+    SynchronizedEvents = False
+    Left = 904
+    Top = 152
+  end
+  object ResponseGetCreditsUser: TRESTResponse
+    Left = 904
+    Top = 216
+  end
+  object RequestGetTickets: TRESTRequest
+    Client = ClientWebService
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/get_vacancy_location_user'
+    Response = ResponseGetTickets
+    SynchronizedEvents = False
+    Left = 1024
+    Top = 152
+  end
+  object ResponseGetTickets: TRESTResponse
+    Left = 1024
+    Top = 216
+  end
+  object AdapterTickets: TRESTResponseDataSetAdapter
+    Dataset = DataSetGetTickets
+    FieldDefs = <>
+    Response = ResponseGetTickets
+    Left = 1024
+    Top = 272
+  end
+  object DataSetGetTickets: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 1024
+    Top = 328
+    object DataSetGetTicketsPlate: TStringField
+      FieldName = 'Plate'
+      Size = 10
+    end
+    object DataSetGetTicketsTime: TIntegerField
+      FieldName = 'Time'
+    end
+    object DataSetGetTicketsStartTime: TStringField
+      FieldName = 'StartTime'
+    end
+  end
+  object DataSetProviderTickets: TDataSetProvider
+    DataSet = DataSetGetTickets
+    Left = 1024
+    Top = 384
+  end
+  object DataSetTickets: TClientDataSet
+    Aggregates = <>
+    FieldDefs = <>
+    IndexDefs = <
+      item
+        Name = 'DataSetTicketsIndexDeadlineTime'
+        Fields = 'DeadlineTime'
+        Options = [ixDescending]
+      end>
+    IndexName = 'DataSetTicketsIndexDeadlineTime'
+    Params = <>
+    ProviderName = 'DataSetProviderTickets'
+    StoreDefs = True
+    OnCalcFields = DataSetTicketsCalcFields
+    Left = 1024
+    Top = 440
+    object DataSetTicketsPlate: TStringField
+      FieldName = 'Plate'
+      Size = 10
+    end
+    object DataSetTicketsTime: TIntegerField
+      FieldName = 'Time'
+    end
+    object DataSetTicketsStartTime: TStringField
+      FieldName = 'StartTime'
+    end
+    object DataSetTicketsDeadlineTime: TDateTimeField
+      FieldKind = fkInternalCalc
+      FieldName = 'DeadlineTime'
+    end
+    object DataSetTicketsIconIndex: TIntegerField
+      FieldKind = fkInternalCalc
+      FieldName = 'IconIndex'
+    end
+  end
+  object RequestPostPaymentByCredits: TRESTRequest
+    Client = ClientWebService
+    Method = rmPOST
+    Params = <
+      item
+        name = 'json'
+        Options = [poAutoCreated]
+      end>
+    Resource = 'webservice/post_vacancy_location_user'
+    Response = ResponsePostPaymentByCredits
+    SynchronizedEvents = False
+    Left = 1160
+    Top = 152
+  end
+  object ResponsePostPaymentByCredits: TRESTResponse
+    Left = 1160
+    Top = 216
+  end
+  object DataSetProviderCreditCards: TDataSetProvider
+    DataSet = DataSetGetCreditCards
+    Left = 568
+    Top = 376
+  end
+  object DataSetCreditCards: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'DataSetProviderCreditCards'
+    OnCalcFields = DataSetCreditCardsCalcFields
+    Left = 568
+    Top = 432
     object DataSetCreditCardsFlag: TStringField
       FieldName = 'Flag'
       Size = 50
@@ -4012,6 +4361,10 @@ object DataModuleGeral: TDataModuleGeral
     end
     object DataSetCreditCardsId: TIntegerField
       FieldName = 'Id'
+    end
+    object DataSetCreditCardsIconIndex: TIntegerField
+      FieldKind = fkInternalCalc
+      FieldName = 'IconIndex'
     end
   end
 end
