@@ -38,6 +38,7 @@ type
     procedure MultiViewMenuStartShowing(Sender: TObject);
     procedure ButtonCreditCardsClick(Sender: TObject);
     procedure ButtonDataUserClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     procedure Show(Frame: TFrame; Parent: TFmxObject; Title: String);
@@ -75,6 +76,12 @@ begin
   //Exibe a tela de tíquetes do usuário logado ou avulso.
   FrameTickets.UpdateQueryTickets;
   Show( FrameTickets, LayoutFrame, 'Tíquetes' );
+end;
+
+procedure TFormMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  //Fecha toda a aplicação.
+  Application.Terminate;
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);

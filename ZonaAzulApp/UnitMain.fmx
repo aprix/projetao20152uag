@@ -9,6 +9,7 @@ object FormMain: TFormMain
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
+  OnClose = FormClose
   DesignerMasterStyle = 0
   object ToolBar1: TToolBar
     Size.Width = 315.000000000000000000
