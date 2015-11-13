@@ -20,9 +20,12 @@ type
     BindingsList1: TBindingsList;
     LinkFillControlToField1: TLinkFillControlToField;
     BindSourceDB1: TBindSourceDB;
+    TimerUpdateListTickets: TTimer;
     procedure ListViewTicketsFilter(Sender: TObject; const AFilter,
       AValue: string; var Accept: Boolean);
     procedure ButtonNewClick(Sender: TObject);
+    procedure ListViewTicketsItemsChange(Sender: TObject);
+    procedure TimerUpdateListTicketsTimer(Sender: TObject);
   private
     { Private declarations }
   public
@@ -53,6 +56,31 @@ begin
   Accept := (AFilter = EmptyStr) or (Pos(AFilter, AValue) > 0);
 end;
 
+procedure TFrameTickets.ListViewTicketsItemsChange(Sender: TObject);
+begin
+  //Exibe o label de mensagem se não existir nenhum tíquete adquirido.
+  lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty)
+                      and ((DataModuleGeral.DataSetTickets.IsEmpty) or not(DataModuleGeral.IsUserLogged));
+  lblMessage.Text    := 'Nenhum tíquete comprado'+#13+#13+'Clique no botão Novo para comprar um novo tíquete';
+end;
+
+procedure TFrameTickets.TimerUpdateListTicketsTimer(Sender: TObject);
+begin
+  //Verifica se existe um usuário logado.
+  if (DataModuleGeral.IsUserLogged) then
+  begin
+    //Atualiza a consulta de tíquetes do usuário logado.
+    DataModuleGeral.DataSetTickets.Close;
+    DataModuleGeral.DataSetTickets.Open;
+  end
+  else
+  begin
+    //Atualiza a consulta de tíquetes(avulsos) na base local.
+    DataModuleLocal.DataSetTickets.Close;
+    DataModuleLocal.DataSetTickets.Open();
+  end;
+end;
+
 procedure TFrameTickets.UpdateQueryTickets;
 begin
   try
@@ -72,9 +100,9 @@ begin
     end;
 
     //Exibe o label de mensagem se não existir nenhum tíquete adquirido.
-    lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty) and (DataModuleGeral.DataSetTickets.IsEmpty);
+    lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty)
+                      and ((DataModuleGeral.DataSetTickets.IsEmpty) or not(DataModuleGeral.IsUserLogged));
     lblMessage.Text    := 'Nenhum tíquete comprado'+#13+#13+'Clique no botão Novo para comprar um novo tíquete';
-
   except
     on Error: Exception do
     begin

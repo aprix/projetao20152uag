@@ -27,6 +27,7 @@ object FrameTickets: TFrameTickets
       ItemAppearanceObjects.ItemEditObjects.TextButton.Visible = False
       ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
       CanSwipeDelete = False
+      OnItemsChange = ListViewTicketsItemsChange
       OnFilter = ListViewTicketsFilter
       ShowSelection = False
       PullToRefresh = True
@@ -55,6 +56,12 @@ object FrameTickets: TFrameTickets
           #237'quete.'
       end
     end
+  end
+  object TimerUpdateListTickets: TTimer
+    Interval = 30000
+    OnTimer = TimerUpdateListTicketsTimer
+    Left = 56
+    Top = 312
   end
   object BindingsList1: TBindingsList
     Methods = <>
