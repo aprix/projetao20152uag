@@ -65,11 +65,15 @@ uses UnitRoutines, UnitDataModuleGeral;
 
 procedure TFormMain.ButtonBuyCreditsClick(Sender: TObject);
 begin
+  //Exibe a tela de compra de créditos.
+  FrameBuyCredits.ClearComponents;
   Show( FrameBuyCredits,  LayoutFrame, 'Compra de Créditos');
 end;
 
 procedure TFormMain.ButtonTicketsClick(Sender: TObject);
 begin
+  //Exibe a tela de tíquetes do usuário logado ou avulso.
+  FrameTickets.UpdateQueryTickets;
   Show( FrameTickets, LayoutFrame, 'Tíquetes' );
 end;
 
@@ -141,7 +145,7 @@ begin
   if (DataModuleGeral.IsUserLogged) then
   begin
     //Exibe o frame de cartões de crédito.
-    FrameCreditCards.UpdateCreditCardsList;
+    DataModuleGeral.OpenQueryCreditCards;
     Show(FrameCreditCards, LayoutFrame, 'Cartões de Crédito');
   end
   else

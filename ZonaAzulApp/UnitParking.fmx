@@ -16,45 +16,17 @@ object FormParking: TFormParking
     Size.Height = 480.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
-    object MasterToolBar: TToolBar
-      Size.Width = 315.000000000000000000
-      Size.Height = 46.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 0
-      object Rectangle1: TRectangle
-        Align = Client
-        Fill.Color = claSlategray
-        Size.Width = 315.000000000000000000
-        Size.Height = 46.000000000000000000
-        Size.PlatformDefault = False
-      end
-      object Label3: TLabel
-        Align = Client
-        StyledSettings = [Family, Size]
-        Margins.Left = 10.000000000000000000
-        Margins.Top = 10.000000000000000000
-        Margins.Right = 10.000000000000000000
-        Margins.Bottom = 10.000000000000000000
-        Size.Width = 295.000000000000000000
-        Size.Height = 26.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Style = [fsBold]
-        TextSettings.FontColor = claWhite
-        TextSettings.HorzAlign = Center
-        Text = 'Estacionamento'
-      end
-    end
     object Layout2: TLayout
       Align = Top
       Margins.Left = 5.000000000000000000
       Margins.Top = 10.000000000000000000
       Margins.Right = 5.000000000000000000
       Position.X = 5.000000000000000000
-      Position.Y = 104.000000000000000000
+      Position.Y = 58.000000000000000000
       Size.Width = 305.000000000000000000
       Size.Height = 67.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 1
+      TabOrder = 0
       object Label1: TLabel
         Align = Top
         StyledSettings = [Family, Size, FontColor]
@@ -118,11 +90,11 @@ object FormParking: TFormParking
       Margins.Top = 10.000000000000000000
       Margins.Right = 5.000000000000000000
       Position.X = 5.000000000000000000
-      Position.Y = 181.000000000000000000
+      Position.Y = 135.000000000000000000
       Size.Width = 305.000000000000000000
       Size.Height = 67.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 2
+      TabOrder = 1
       object Label4: TLabel
         Align = MostTop
         StyledSettings = [Family, Size, FontColor]
@@ -181,11 +153,11 @@ object FormParking: TFormParking
       Margins.Top = 10.000000000000000000
       Margins.Right = 5.000000000000000000
       Position.X = 5.000000000000000000
-      Position.Y = 311.000000000000000000
+      Position.Y = 265.000000000000000000
       Size.Width = 305.000000000000000000
       Size.Height = 46.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 3
+      TabOrder = 2
       object Label9: TLabel
         Align = Top
         StyledSettings = [Family, Size, FontColor]
@@ -217,11 +189,11 @@ object FormParking: TFormParking
       Margins.Top = 10.000000000000000000
       Margins.Right = 5.000000000000000000
       Position.X = 5.000000000000000000
-      Position.Y = 56.000000000000000000
+      Position.Y = 10.000000000000000000
       Size.Width = 305.000000000000000000
       Size.Height = 38.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 4
+      TabOrder = 3
       object Label8: TLabel
         Align = Left
         StyledSettings = [Family]
@@ -254,11 +226,11 @@ object FormParking: TFormParking
       Margins.Top = 10.000000000000000000
       Margins.Right = 5.000000000000000000
       Position.X = 5.000000000000000000
-      Position.Y = 258.000000000000000000
+      Position.Y = 212.000000000000000000
       Size.Width = 305.000000000000000000
       Size.Height = 43.000000000000000000
       Size.PlatformDefault = False
-      TabOrder = 5
+      TabOrder = 4
       object Label5: TLabel
         Align = MostLeft
         StyledSettings = [Family]
@@ -285,7 +257,7 @@ object FormParking: TFormParking
         Text = 'R$ 120,00'
       end
     end
-    object buttonActiveTickets: TSpeedButton
+    object ButtonActiveTickets: TSpeedButton
       Align = MostBottom
       StyledSettings = [Family, Style, FontColor]
       Margins.Top = 10.000000000000000000
@@ -295,7 +267,7 @@ object FormParking: TFormParking
       Size.PlatformDefault = False
       Text = 'Ativar T'#237'quetes'
       TextSettings.Font.Size = 28.000000000000000000
-      OnClick = buttonActiveTicketsClick
+      OnClick = ButtonActiveTicketsClick
     end
   end
   object TimerUpdateValues: TTimer

@@ -15,10 +15,10 @@ type
     ListViewCreditCards: TListView;
     buttonNew: TSpeedButton;
     lblMessage: TLabel;
+    LayoutPrincipal: TLayout;
     BindSourceDB1: TBindSourceDB;
     BindingsList1: TBindingsList;
     LinkFillControlToField1: TLinkFillControlToField;
-    LayoutPrincipal: TLayout;
     procedure ListViewCreditCardsItemsChange(Sender: TObject);
     procedure ListViewCreditCardsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
@@ -28,7 +28,6 @@ type
     procedure InactivateCreditCard(Number: String);
   public
     { Public declarations }
-    procedure UpdateCreditCardsList;
   end;
 
 implementation
@@ -123,16 +122,6 @@ procedure TFrameCreditCards.ListViewCreditCardsItemsChange(Sender: TObject);
 begin
   lblMessage.Visible := (DataModuleGeral.DataSetCreditCards.IsEmpty);
   lblMessage.Text    := 'Nenhum cartão cadastrado.'+#13+#13+'Clique no botão Novo para cadastrar um cartão.'
-end;
-
-procedure TFrameCreditCards.UpdateCreditCardsList;
-begin
-  //Verifica se a consulta de cartões de crédito está fechada.
-  if not(DataModuleGeral.DataSetCreditCards.Active) then
-  begin
-    //Abre a consulta de cartões de crédito.
-    DataModuleGeral.OpenQueryCreditCards;
-  end;
 end;
 
 end.

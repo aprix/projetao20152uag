@@ -20,46 +20,66 @@ object FrameBuyCredits: TFrameBuyCredits
       Size.Height = 48.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
-      object Label1: TLabel
-        Align = Top
-        StyledSettings = [Family, FontColor]
-        Size.Width = 323.000000000000000000
-        Size.Height = 20.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Size = 14.000000000000000000
-        TextSettings.Font.Style = [fsBold]
-        Text = 'Selecione o Cart'#227'o de Cr'#233'dito:'
-      end
       object Layout7: TLayout
-        Align = Bottom
+        Align = Client
         Margins.Left = 2.000000000000000000
         Margins.Top = 2.000000000000000000
         Margins.Right = 2.000000000000000000
-        Position.X = 2.000000000000000000
-        Position.Y = 20.000000000000000000
-        Size.Width = 319.000000000000000000
-        Size.Height = 28.000000000000000000
+        Size.Width = 269.000000000000000000
+        Size.Height = 46.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 1
-        object comboBoxCreditCard: TComboBox
+        object ComboBoxCreditCard: TComboBox
           Align = Client
-          Items.Strings = (
-            'MasterCard XXXX-XXXX-XXXX-XXXX')
-          ItemIndex = 0
+          Images = DataModuleGeral.IconsGenericList
           Size.Width = 269.000000000000000000
-          Size.Height = 28.000000000000000000
+          Size.Height = 26.000000000000000000
           Size.PlatformDefault = False
           TabOrder = 0
+          OnClick = ComboBoxCreditCardClick
         end
-        object buttonCadastreCreditCard: TSpeedButton
-          Align = MostRight
-          Margins.Left = 5.000000000000000000
-          Position.X = 274.000000000000000000
-          Size.Width = 45.000000000000000000
+        object Label1: TLabel
+          Align = Top
+          StyledSettings = [Family, FontColor]
+          Size.Width = 269.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          Text = 'Selecione o Cart'#227'o de Cr'#233'dito:'
+        end
+      end
+      object Layout8: TLayout
+        Align = MostRight
+        Position.X = 273.000000000000000000
+        Size.Width = 50.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object Label3: TLabel
+          Align = Top
+          StyledSettings = [Family, FontColor]
+          Size.Width = 50.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 14.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          Text = 'CSC:'
+        end
+        object EditCSC: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Bottom
+          TabOrder = 0
+          KeyboardType = NumberPad
+          MaxLength = 3
+          TextSettings.Font.Size = 18.000000000000000000
+          TextSettings.HorzAlign = Center
+          Position.Y = 20.000000000000000000
+          Size.Width = 50.000000000000000000
           Size.Height = 28.000000000000000000
           Size.PlatformDefault = False
-          Text = 'Add'
-          OnClick = buttonCadastreCreditCardClick
+          StyledSettings = [Family, Style, FontColor]
+          OnChange = EditCSCChange
         end
       end
     end
@@ -90,7 +110,7 @@ object FrameBuyCredits: TFrameBuyCredits
         Size.Height = 45.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
-        object Label6: TLabel
+        object LabelValue: TLabel
           Align = Client
           StyledSettings = [Family]
           Size.Width = 114.000000000000000000
@@ -99,9 +119,9 @@ object FrameBuyCredits: TFrameBuyCredits
           TextSettings.Font.Size = 20.000000000000000000
           TextSettings.Font.Style = [fsBold]
           TextSettings.HorzAlign = Center
-          Text = 'R$ 10,00'
+          Text = 'R$ 1,00'
         end
-        object buttonAddCredits: TSpeedButton
+        object ButtonAddCredits: TSpeedButton
           Align = MostRight
           StyledSettings = [Family, Style, FontColor]
           Position.X = 159.000000000000000000
@@ -110,8 +130,9 @@ object FrameBuyCredits: TFrameBuyCredits
           Size.PlatformDefault = False
           Text = '+'
           TextSettings.Font.Size = 28.000000000000000000
+          OnClick = ButtonAddCreditsClick
         end
-        object buttonRemoveCredits: TSpeedButton
+        object ButtonRemoveCredits: TSpeedButton
           Align = MostLeft
           StyledSettings = [Family, Style, FontColor]
           Size.Width = 45.000000000000000000
@@ -119,6 +140,7 @@ object FrameBuyCredits: TFrameBuyCredits
           Size.PlatformDefault = False
           Text = '-'
           TextSettings.Font.Size = 28.000000000000000000
+          OnClick = ButtonRemoveCreditsClick
         end
       end
     end
@@ -145,7 +167,7 @@ object FrameBuyCredits: TFrameBuyCredits
         TextSettings.HorzAlign = Trailing
         Text = 'Saldo:'
       end
-      object lblCreditsAvailable: TLabel
+      object LabelCreditsAvailable: TLabel
         Align = Client
         StyledSettings = [Family]
         Margins.Left = 10.000000000000000000
@@ -182,7 +204,7 @@ object FrameBuyCredits: TFrameBuyCredits
         TextSettings.HorzAlign = Trailing
         Text = 'Saldo Final:'
       end
-      object Label5: TLabel
+      object LabelTotal: TLabel
         Align = Client
         StyledSettings = [Family]
         Margins.Left = 10.000000000000000000
@@ -196,19 +218,41 @@ object FrameBuyCredits: TFrameBuyCredits
         Text = 'R$ 130,00'
       end
     end
-    object buttonBuy: TSpeedButton
-      Align = Top
+    object ButtonBuy: TSpeedButton
+      Align = Bottom
       StyledSettings = [Family, Style, FontColor]
-      Margins.Left = 20.000000000000000000
-      Margins.Top = 10.000000000000000000
-      Margins.Right = 20.000000000000000000
-      Position.X = 20.000000000000000000
-      Position.Y = 241.000000000000000000
-      Size.Width = 293.000000000000000000
-      Size.Height = 44.000000000000000000
+      Position.Y = 431.000000000000000000
+      Size.Width = 333.000000000000000000
+      Size.Height = 48.000000000000000000
       Size.PlatformDefault = False
       Text = 'Comprar'
       TextSettings.Font.Size = 28.000000000000000000
+      OnClick = ButtonBuyClick
+    end
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = DataModuleGeral.DataSetCreditCards
+    ScopeMappings = <>
+    Left = 152
+    Top = 224
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    Left = 20
+    Top = 5
+    object LinkListControlToField1: TLinkListControlToField
+      Category = 'Quick Bindings'
+      DataSource = BindSourceDB1
+      FieldName = 'Number'
+      Control = ComboBoxCreditCard
+      FillExpressions = <
+        item
+          SourceMemberName = 'IconIndex'
+          ControlMemberName = 'ImageIndex'
+        end>
+      FillHeaderExpressions = <>
+      FillBreakGroups = <>
     end
   end
 end

@@ -1,7 +1,4 @@
-﻿[buttonNew]
-Coordinates=109,10,67,51
-
-[MasterToolBar]
+﻿[MasterToolBar]
 Coordinates=310,10,86,33
 
 [Layout1]
@@ -49,4 +46,7 @@ Visible=False
 
 [BindSourceDB1]
 Coordinates=270,90,159,159
+
+[ButtonNew]
+Coordinates=109,10,67,51
 

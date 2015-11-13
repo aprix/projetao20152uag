@@ -8,7 +8,7 @@ Coordinates=10,10,211,285
 Coordinates=10,852,188,69
 
 [DataModuleGeral.DataSetCreditCards]
-Coordinates=500,390,199,33
+Coordinates=440,370,199,33
 Visible=False
 
 [DataModuleGeral.RequestPostPayment]
@@ -27,7 +27,7 @@ Coordinates=819,10,196,285
 Coordinates=543,10,227,285
 
 [DataModuleGeral.RequestGetCreditCards]
-Coordinates=776,718,218,87
+Coordinates=776,718,218,105
 
 [buttonNew]
 Coordinates=241,852,67,51
@@ -46,11 +46,53 @@ Coordinates=10,364,216,285
 Coordinates=268,10,226,285
 
 []
-Coordinates=240,314,82,33
+Coordinates=808,670,82,33
+
+[DataModuleGeral.ResponsePostBuyCredits]
+Coordinates=808,314,228,285
+
+[DataModuleGeral.RequestGetCreditsUser]
+Coordinates=589,861,218,105
+
+[DataModuleGeral.DataSetTickets]
+Coordinates=808,842,175,141
+
+[DataModuleGeral.DataSetGetTickets]
+Coordinates=222,125,192,105
+
+[DataModuleGeral.ResponseGetTickets]
+Coordinates=0,0,203,285
+
+[DataModuleGeral.RequestGetUser]
+Coordinates=516,618,182,105
+
+[DataModuleGeral.ResponseGetUser]
+Coordinates=43,314,191,285
+
+[DataModuleGeral.RequestPostPaymentByCredits]
+Coordinates=222,1,256,105
+
+[DataModuleGeral.DataSetGetCreditCards]
+Coordinates=240,249,216,177
+
+[LayoutPrincipal]
+Coordinates=808,618,91,33
+
+[DataModuleGeral.RequestPostBuyCredits]
+Coordinates=287,637,219,105
+
+[DataModuleGeral.ResponseGetCreditsUser]
+Coordinates=690,350,226,285
+
+[DataModuleGeral.RequestGetTickets]
+Coordinates=88,687,195,105
+
+[DataModuleGeral.ResponsePostPaymentByCredits]
+Coordinates=808,1,265,285
 
 [BindSourceDB1]
-Coordinates=500,390,182,177
+Coordinates=440,370,182,213
 
 [BindingsList1]
-Coordinates=240,314,82,33
+Coordinates=532,314,82,33
 

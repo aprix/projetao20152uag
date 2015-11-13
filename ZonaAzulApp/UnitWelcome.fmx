@@ -67,6 +67,7 @@ object FormWelcome: TFormWelcome
           Size.PlatformDefault = False
           Text = 'ENTRAR'
           TextSettings.Font.Size = 20.000000000000000000
+          OnClick = ButtonLoginClick
         end
         object ButtonCadastreUser: TSpeedButton
           StyledSettings = [Family, Style, FontColor]
