@@ -46,8 +46,8 @@
        <div id="navbarCollapse" class="collapse navbar-collapse">
 
             <ul class="nav navbar-nav">
-                <li><a href="#">Cadastrar Vendedor</a></li>
-                <li><a href="#">Cadastrar Fiscal</a></li>
+                <li>{!!Link_to_route('vendedor.index', $title='Cadastrar vendedor')!!}</li>
+                <li>{!!Link_to_route('fiscal.index', $title='Cadastrar fiscal')!!}</li>
                 <li>{!!Link_to_route('tabela.index', $title='Tabela de preços')!!}</li>
                 <li><a href="#">Perfil</a></li>
             </ul>
@@ -60,6 +60,53 @@
 
        <div class="container-fluid">
           
+          <?php $message=Session::get('message')?>
+
+            @if($message=='store')
+              <div class="alert alert-success alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Vendedor cadastrado com sucesso!
+              </div>
+             @endif 
+
+             @if($message=='destroy')
+              <div class="alert alert-success alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Vendedor excluído com sucesso!
+              </div>
+             @endif 
+
+             @if($message=='fail')
+              <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              A busca não retornou resultados!
+              </div>
+             @endif 
+
+              @if($message=='primaryseller')
+              <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Vendedor já cadastrado!
+              </div>
+             @endif 
+
+             @if($message=='sellerreativar')
+              <div class="alert alert-success alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Cadastro de vendedor reativado com sucesso!
+              </div>
+             @endif 
+
+              @if($message=='fiscalreativar')
+              <div class="alert alert-success alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Cadastro de fiscal reativado com sucesso!
+              </div>
+             @endif 
+
+
+            
+
             @yield('content')
            
         </div>

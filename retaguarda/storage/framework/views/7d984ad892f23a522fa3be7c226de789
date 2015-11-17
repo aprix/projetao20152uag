@@ -1,0 +1,49 @@
+<?php $__env->startSection('content'); ?>
+
+<?php if($errors->any()): ?>
+<ul class="alert alert-warning">
+<?php foreach($errors->all() as $error): ?>
+<li><?php echo e($error); ?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+
+  
+
+<fieldset>
+
+<!-- Form Name -->
+<legend>Cadastro de Fiscal</legend>
+
+<div>
+	<h1>Esse usuário possui cadastro de fiscal desativado.<br>Deseja reativá-lo?</h1>
+</div>
+
+
+ 
+     
+  
+   <?php foreach($supervisors as $supervisor): ?>
+
+   <?php endforeach; ?>
+        
+      
+        
+   
+   </fieldset>
+<!-- Button (Double) -->
+<div class="col-md-10">
+   <?php echo Link_to("fiscal/$supervisor->id/reativar", $title='&nbsp;&nbsp;&nbsp;&nbsp;Sim&nbsp;&nbsp;&nbsp;&nbsp;',['class'=>'btn btn-primary']); ?>
+
+   <?php echo Link_to('fiscal', $title='&nbsp;&nbsp;&nbsp;&nbsp;Não&nbsp;&nbsp;&nbsp;&nbsp;',['class'=>'btn btn-danger']); ?>
+
+</div>
+
+</fieldset>
+
+
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
