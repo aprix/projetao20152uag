@@ -29,14 +29,15 @@ type
     LabelEmail: TLabel;
     PanelDataUser: TPanel;
     ButtonExit: TSpeedButton;
+    ButtonDataUser: TSpeedButton;
     procedure ButtonBuyCreditsClick(Sender: TObject);
     procedure ButtonTicketsClick(Sender: TObject);
     procedure ButtonConsultPaymentClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure PanelDataUserClick(Sender: TObject);
     procedure ButtonExitClick(Sender: TObject);
     procedure MultiViewMenuStartShowing(Sender: TObject);
     procedure ButtonCreditCardsClick(Sender: TObject);
+    procedure ButtonDataUserClick(Sender: TObject);
   private
     { Private declarations }
     procedure Show(Frame: TFrame; Parent: TFmxObject; Title: String);
@@ -97,15 +98,6 @@ begin
   Show(FrameTickets, LayoutFrame, 'Tíquetes');
 end;
 
-procedure TFormMain.PanelDataUserClick(Sender: TObject);
-begin
-  //Atualiza os valores dos campos do frame de cadastro do usuário.
-  FrameCadastreUser.UpdateValuesComponents;
-
-  //Exibe o frame com as informações do usuário.
-  Show(FrameCadastreUser, LayoutFrame, 'Informações Pessoais');
-end;
-
 procedure TFormMain.Show(Frame: TFrame; Parent: TFmxObject; Title: String);
 begin
   //Verifica se existe um outro frame sendo exibido no layout de frame.
@@ -158,6 +150,15 @@ begin
     //só é permitido para usuário logado
     raise Exception.Create('Necessário cadastrar o usuário para prosseguir!');
   end;
+end;
+
+procedure TFormMain.ButtonDataUserClick(Sender: TObject);
+begin
+  //Atualiza os valores dos campos do frame de cadastro do usuário.
+  FrameCadastreUser.UpdateValuesComponents;
+
+  //Exibe o frame com as informações do usuário.
+  Show(FrameCadastreUser, LayoutFrame, 'Informações Pessoais');
 end;
 
 procedure TFormMain.ButtonExitClick(Sender: TObject);
