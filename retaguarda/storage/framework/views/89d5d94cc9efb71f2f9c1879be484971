@@ -1,0 +1,61 @@
+<?php $__env->startSection('content'); ?>
+
+<?php if($errors->any()): ?>
+<ul class="alert alert-warning">
+<?php foreach($errors->all() as $error): ?>
+<li><?php echo e($error); ?></li>
+<?php endforeach; ?>
+</ul>
+<?php endif; ?>
+
+
+  <?php echo Form::open(['url'=>'fiscal/store']); ?>
+
+
+<fieldset>
+
+<!-- Form Name -->
+<legend>Cadastrar vendedor</legend>
+
+<!-- Text input-->
+<div class="form-group col-md-2">
+    <?php echo Form::label('ID de usuário'); ?>  
+  
+   <?php echo Form::text('id_user', $user->id, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'','readonly']); ?>   
+ 
+</div>
+
+<!-- Text input-->
+<div class="form-group col-md-5">
+  <?php echo Form::label('Nome'); ?>
+
+ 
+    <?php echo Form::text('name',null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>
+
+  
+</div>
+
+<div class="form-group col-md-3">
+  <?php echo Form::label('RG'); ?>  
+  
+  <?php echo Form::text('rg',  null, ['class'=>'form-control', 'placeholder'=>'', 'required'=>'']); ?>    
+  
+</div>
+
+
+<!-- Button (Double) -->
+<div class="form-group col-md-10">
+   <?php echo Form::submit('&nbsp;&nbsp;&nbsp;&nbsp;Salvar&nbsp;&nbsp;&nbsp;&nbsp;', ['class'=>'btn btn-primary']); ?>
+
+   <?php echo Link_to('fiscal', $title='Cancelar',['class'=>'btn btn-danger']); ?>
+
+</div>
+
+</fieldset>
+
+<?php echo Form::close(); ?>
+
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

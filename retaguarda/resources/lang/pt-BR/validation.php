@@ -123,7 +123,7 @@ return [
         ],
         'cep' => [
             'integer' => 'O campo CEP deve conter apenas números',
-            'digits' => 'O campo CEP deverá ter no máximo 8 dígitos',
+            'digits' => 'O campo CEP deverá ter exatamente 8 dígitos',
         ],
 
          'min_time' => [
@@ -149,6 +149,11 @@ return [
         'max_price' => [
             'integer' => 'O campo Tempo Máximo deve conter apenas números',
             'min' => 'O campo Tempo Máximo deve ter valor mínimo de 1 minuto'
+        ],
+
+         'cpf' => [
+            'numeric' => 'O campo CPF deve conter apenas números',
+            'digits' => 'O campo CPF deve ter exatamente 11 dígitos'
         ],
 
 
