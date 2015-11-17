@@ -169,6 +169,6 @@ class FiscalController extends Controller
         ->where('id', $id)
         ->update(['status'=> 0]);
 
-        return redirect('fiscal')->with('message','destroy');
+        return redirect('fiscal')->with('message','destroysupervisor');
     }
 }
