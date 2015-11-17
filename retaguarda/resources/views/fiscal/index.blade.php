@@ -49,6 +49,7 @@
         <td>{!!$user->id!!}</td>
         <td>{!!$user->name!!}</td>
         <td>{!!$user->rg!!}</td>
+        <td>{!!Link_to_route('fiscal.edit', $title='&nbsp;&nbsp;&nbsp;&nbsp;Editar&nbsp;&nbsp;&nbsp;&nbsp;', $parameters=$user->id, $attributes= ['class'=>'btn btn-primary'])!!}</td>
         <td>{!!Link_to("fiscal/$user->id/destroy", $title='Remover',['class'=>'btn btn-danger'])!!}</td>
 
    @endforeach

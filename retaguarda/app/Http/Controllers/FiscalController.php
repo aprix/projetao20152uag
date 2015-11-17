@@ -129,7 +129,14 @@ class FiscalController extends Controller
      */
     public function edit($id)
     {
-        //
+         $users = DB::table('supervisor')
+                ->where('id','=',$id)
+                ->select('supervisor.*')
+                ->get();
+         //return $user;
+
+        return view('fiscal.edit', compact('users'));
+
     }
 
     /**
@@ -139,9 +146,13 @@ class FiscalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(FiscalRequest $request, $id)
     {
-        //
+        $user = Supervisor::find($id);
+       $user->fill($request->all());
+       $user->save();
+
+      return redirect('fiscal')->with('message','fiscaledited');
     }
 
     /**

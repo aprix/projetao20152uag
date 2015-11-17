@@ -25,7 +25,7 @@ class FiscalRequest extends Request
     {
         return [
 
-            'name' => 'required|alpha|between:1,100',
+            'name' => 'required|alpha_spaces|between:1,100',
             'rg' => 'required|numeric',
         ];
     }

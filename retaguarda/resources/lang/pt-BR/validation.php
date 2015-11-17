@@ -12,7 +12,7 @@ return [
     | such as the size rules. Feel free to tweak each of these messages.
     |
     */
-
+    "alpha_spaces"     => "Só são permitidas letras",
     "accepted"         => "O campo :attribute deve ser aceito.",
     "active_url"       => "O campo :attribute não contém um URL válido.",
     "after"            => "O campo :attribute deverá conter uma data posterior a :date.",
@@ -89,11 +89,11 @@ return [
 
     'custom' => [
         'name' => [
-            'alpha' => 'O campo Nome deve conter apenas letras',
+            'alpha_spaces' => 'O campo Nome deve conter apenas letras',
             'between' => 'O campo Nome deverá ter no máximo 100 caracteres',
         ],
         'razao_social' => [
-            'alpha' => 'O campo Razão Social deve conter apenas letras',
+            'alpha_spaces' => 'O campo Razão Social deve conter apenas letras',
             'between' => 'O campo Nome deverá ter no máximo 200 caracteres',
         ],
        'state_registration' => [
@@ -109,16 +109,16 @@ return [
         ],
 
         'address_neighborhood' => [
-            'alpha' => 'O campo Bairro deve conter apenas letras',
+            'alpha_spaces' => 'O campo Bairro deve conter apenas letras',
             'between' => 'O campo Bairro deverá ter no máximo 50 caracteres',
         ],
 
         'city' => [
-            'alpha' => 'O campo Cidade deve conter apenas letras',
+            'alpha_spaces' => 'O campo Cidade deve conter apenas letras',
             'between' => 'O campo Cidade deverá ter no máximo 50 caracteres',
         ],
         'state' => [
-            'alpha' => 'O campo Estado deve conter apenas letras',
+            'alpha_spaces' => 'O campo Estado deve conter apenas letras',
             'between' => 'O campo Estado deverá ter no máximo 50 caracteres',
         ],
         'cep' => [

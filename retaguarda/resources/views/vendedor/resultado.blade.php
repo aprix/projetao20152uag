@@ -19,7 +19,7 @@
       <th>ID</th>
       <th>CPF</th>
       <th>Apelido</th>
-      <th>Email)</th>
+      <th>Email</th>
       <th>Saldo(R$)</th>
     </thead>
    
