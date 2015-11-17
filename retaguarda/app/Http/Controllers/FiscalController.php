@@ -66,7 +66,7 @@ class FiscalController extends Controller
 
             ){
             
-            return redirect('fiscal')->with('message','primaryseller');
+            return redirect('fiscal')->with('message','primarysupervisor');
         }
 
         if($existence = DB::table('user')

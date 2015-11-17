@@ -90,6 +90,13 @@
               </div>
              @endif 
 
+              @if($message=='primarysupervisor')
+              <div class="alert alert-warning alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Fiscal já cadastrado!
+              </div>
+             @endif
+
              @if($message=='sellerreativar')
               <div class="alert alert-success alert-dismissible" role="alert">
               <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
