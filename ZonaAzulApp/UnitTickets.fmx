@@ -31,7 +31,7 @@ object FrameTickets: TFrameTickets
       OnFilter = ListViewTicketsFilter
       ShowSelection = False
       PullToRefresh = True
-      object buttonNew: TSpeedButton
+      object ButtonNew: TSpeedButton
         Anchors = [akRight, akBottom]
         Position.X = 263.000000000000000000
         Position.Y = 406.000000000000000000
@@ -40,7 +40,7 @@ object FrameTickets: TFrameTickets
         Size.PlatformDefault = False
         StyleLookup = 'SpeedButton1Style1'
         Text = 'Novo'
-        OnClick = buttonNewClick
+        OnClick = ButtonNewClick
       end
       object lblMessage: TLabel
         Align = Center
@@ -56,6 +56,12 @@ object FrameTickets: TFrameTickets
           #237'quete.'
       end
     end
+  end
+  object TimerUpdateListTickets: TTimer
+    Interval = 30000
+    OnTimer = TimerUpdateListTicketsTimer
+    Left = 56
+    Top = 312
   end
   object BindingsList1: TBindingsList
     Methods = <>
@@ -86,6 +92,6 @@ object FrameTickets: TFrameTickets
     DataSet = DataModuleLocal.DataSetTickets
     ScopeMappings = <>
     Left = 152
-    Top = 216
+    Top = 88
   end
 end

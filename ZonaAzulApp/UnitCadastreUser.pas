@@ -35,8 +35,6 @@ type
     Label5: TLabel;
     ButtonAlterPassword: TSpeedButton;
     procedure ButtonConfirmClick(Sender: TObject);
-    procedure EditPasswordKeyDown(Sender: TObject; var Key: Word;
-      var KeyChar: Char; Shift: TShiftState);
     procedure ButtonAlterPasswordClick(Sender: TObject);
     procedure EditNicknameChange(Sender: TObject);
     procedure EditNicknameKeyDown(Sender: TObject; var Key: Word;
@@ -73,6 +71,13 @@ begin
     //Exibe os campos de senha e oculta o botão de alterar senha.
     LayoutPassword.Visible      := True;
     ButtonAlterPassword.Visible := False;
+
+    //Limpa a senha criptografada dos campos de senha e confirmação.
+    EditPassword.Text := '';
+    EditConfirmPassword.Text := '';
+
+    //Atualiza o atributo isPasswordChanged.
+    IsPasswordChanged := True;
   end
   else
   begin
@@ -84,8 +89,12 @@ end;
 procedure TFrameCadastreUser.ButtonConfirmClick(Sender: TObject);
 var
 PasswordMD5: String;
+IsNewUser: Boolean;
 begin
   try
+    //Atribui True à variável IsNewUser caso seja um novo cadastro de usuário.
+    IsNewUser := not(DataModuleGeral.IsUserLogged);
+
     //Valida os valores dos campos.
     ValidateValuesComponents;
 
@@ -108,8 +117,18 @@ begin
                             ,EditCPF.Text
                             ,PasswordMD5);
 
-    //Exibe o cadastro de cartão.
-    ShowCadastreCreditCard;
+    //Verifica se é um novo cadastro.
+    if (IsNewUser) then
+    begin
+      //Exibe o cadastro de cartão.
+      ShowCadastreCreditCard;
+    end
+    else
+    begin
+      //Neste caso, executa o procedimento de sucesso do objeto ouvinte de eventos.
+      CadastreListener.OnSucess;
+    end;
+
   except
     on Error: Exception do
     begin
@@ -149,22 +168,6 @@ procedure TFrameCadastreUser.EditNicknameKeyDown(Sender: TObject; var Key: Word;
 begin
   //Permite apenas a digitação de letras no campo de apelido.
   AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
-end;
-
-procedure TFrameCadastreUser.EditPasswordKeyDown(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
-begin
-  //Verifica se a senha está criptografada.
-  if not(IsPasswordChanged)
-  and (DataModuleGeral.IsUserLogged) then
-  begin
-    //Limpa a senha criptografada dos campos de senha e confirmação.
-    EditPassword.Text := '';
-    EditConfirmPassword.Text := '';
-
-    //Atualiza o atributo isPasswordChanged.
-    IsPasswordChanged := True;
-  end;
 end;
 
 procedure TFrameCadastreUser.ShowCadastreCreditCard;

@@ -6,10 +6,10 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FMX.Layouts
   , UnitCadastreUser, FMX.Controls.Presentation,
-  FMX.StdCtrls;
+  FMX.StdCtrls, UnitLogin;
 
 type
-  TFormWelcome = class(TForm, ICadastreListener)
+  TFormWelcome = class(TForm, ICadastreListener, ILoginListener)
     LayoutFrame: TLayout;
     LayoutButtons: TLayout;
     Layout3: TLayout;
@@ -24,9 +24,11 @@ type
     procedure ButtonCadastreUserClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ButtonStartClick(Sender: TObject);
+    procedure ButtonLoginClick(Sender: TObject);
   private
     { Private declarations }
     FrameCadastreNewUser : TFrameCadastreUser;
+    FrameLogin : TFrameLogin;
     DisplayedFrame: TFrame;
   public
     { Public declarations }
@@ -62,6 +64,7 @@ procedure TFormWelcome.FormCreate(Sender: TObject);
 begin
   //Instancia os frames de login e cadastro de usuário.
   FrameCadastreNewUser := TFrameCadastreUser.Create(Self, Self);
+  FrameLogin           := TFrameLogin.Create(Self, Self);
 end;
 
 procedure TFormWelcome.HideDisplayedFrame;
@@ -98,6 +101,12 @@ begin
   Show(FrameCadastreNewUser, LayoutFrame);
 end;
 
+procedure TFormWelcome.ButtonLoginClick(Sender: TObject);
+begin
+  //Exibe o frame de login.
+  Show(FrameLogin, LayoutFrame);
+end;
+
 procedure TFormWelcome.ButtonStartClick(Sender: TObject);
 begin
   //Inicia o formulário principal.
@@ -116,7 +125,7 @@ begin
   UnitRoutines.Show(FormMain);
 
   //Fecha o formulário de boas vindas.
-  Close;
+  //Close;
 end;
 
 end.

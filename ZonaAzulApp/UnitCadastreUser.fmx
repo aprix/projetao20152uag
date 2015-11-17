@@ -170,7 +170,6 @@ object FrameCadastreUser: TFrameCadastreUser
               StyledSettings = [Family, Style, FontColor]
               ParentShowHint = False
               ShowHint = True
-              OnKeyDown = EditPasswordKeyDown
             end
             object EditConfirmPassword: TEdit
               Hint = 'SENHA'
@@ -187,7 +186,6 @@ object FrameCadastreUser: TFrameCadastreUser
               StyledSettings = [Family, Style, FontColor]
               ParentShowHint = False
               ShowHint = True
-              OnKeyDown = EditPasswordKeyDown
             end
             object Label4: TLabel
               StyledSettings = [Family, FontColor]

@@ -8,6 +8,7 @@ uses
   FMX.ImgList, Data.FMTBcd, Data.SqlExpr, System.iOUtils, Data.DbxSqlite,
   Datasnap.Provider, IPPeerClient, REST.Client, Data.Bind.Components,
   Data.Bind.ObjectScope, DBXJSON, System.JSON, REST.Response.Adapter
+  , FMX.Platform, System.Notification
 {$IFDEF Win32 or Win64}
 , MidasLib;
 {$ELSE}
@@ -34,16 +35,56 @@ type
     RequestGetCreditCards: TRESTRequest;
     ResponseGetCreditCards: TRESTResponse;
     AdapterCreditCards: TRESTResponseDataSetAdapter;
+    DataSetGetCreditCards: TClientDataSet;
+    DataSetGetCreditCardsNumber: TStringField;
+    DataSetGetCreditCardsMonthValidate: TIntegerField;
+    DataSetGetCreditCardsYearValidate: TIntegerField;
+    DataSetGetCreditCardsName: TStringField;
+    DataSetGetCreditCardsFlag: TStringField;
+    DataSetGetCreditCardsId: TIntegerField;
+    DataSetGetCreditCardsStatus: TBooleanField;
+    RequestGetUser: TRESTRequest;
+    ResponseGetUser: TRESTResponse;
+    RequestPostBuyCredits: TRESTRequest;
+    ResponsePostBuyCredits: TRESTResponse;
+    IconsGenericList: TImageList;
+    RequestGetCreditsUser: TRESTRequest;
+    ResponseGetCreditsUser: TRESTResponse;
+    RequestGetTickets: TRESTRequest;
+    ResponseGetTickets: TRESTResponse;
+    AdapterTickets: TRESTResponseDataSetAdapter;
+    DataSetGetTickets: TClientDataSet;
+    DataSetProviderTickets: TDataSetProvider;
+    DataSetTickets: TClientDataSet;
+    DataSetGetTicketsPlate: TStringField;
+    DataSetGetTicketsTime: TIntegerField;
+    DataSetTicketsPlate: TStringField;
+    DataSetTicketsTime: TIntegerField;
+    DataSetTicketsDeadlineTime: TDateTimeField;
+    DataSetTicketsIconIndex: TIntegerField;
+    RequestPostPaymentByCredits: TRESTRequest;
+    ResponsePostPaymentByCredits: TRESTResponse;
+    DataSetProviderCreditCards: TDataSetProvider;
     DataSetCreditCards: TClientDataSet;
+    DataSetCreditCardsFlag: TStringField;
+    DataSetCreditCardsName: TStringField;
     DataSetCreditCardsNumber: TStringField;
     DataSetCreditCardsMonthValidate: TIntegerField;
     DataSetCreditCardsYearValidate: TIntegerField;
-    DataSetCreditCardsName: TStringField;
-    DataSetCreditCardsFlag: TStringField;
-    DataSetCreditCardsId: TIntegerField;
     DataSetCreditCardsStatus: TBooleanField;
+    DataSetCreditCardsId: TIntegerField;
+    DataSetCreditCardsIconIndex: TIntegerField;
+    DataSetGetTicketsStartTime: TStringField;
+    DataSetTicketsStartTime: TStringField;
+    procedure DataSetTicketsCalcFields(DataSet: TDataSet);
+    procedure DataSetCreditCardsCalcFields(DataSet: TDataSet);
+    procedure DataModuleCreate(Sender: TObject);
   private
     { Private declarations }
+    var
+    CreditsAvailableUser: Double;
+    NotificationCenter: TNotificationCenter;
+    
     function PostPayment(Plate: String;
                           Time: Integer;
                           FlagCreditCard: String;
@@ -53,9 +94,21 @@ type
                           YearCreditCard: Integer;
                           CSCCredCard: Integer): TDateTime;
 
+    function PostPaymentByCredits(IdUser: Integer;
+                                  Plate: String;
+                                  Time: Integer): TDateTime;
+
     function PostUser(Id: Integer; Nickname, Email, CPF, Password: String): Integer;
 
     function PostCreditCard(IdUser,Id: Integer; Flag, Name, Number: String; MonthValidate, YearValidate: Integer; Status: Boolean): Integer;
+
+    function GetUser(CPF, Password: String): TJSONObject;
+
+    procedure PostBuyCredits(IdUser, IdCreditCard, CSCCreditCard: Integer; Value: Double);
+
+    procedure CreateNotification(Name, AlertBody: String; DateTime: TDateTime);
+
+    procedure CreateTicketNotification(Plate: String; StartTime: TDateTime; Time: Integer);
   public
     { Public declarations }
 
@@ -65,13 +118,21 @@ type
 
     procedure SendPaymentSeparate(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
 
-    procedure SendPaymentByCredit(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
+    procedure SendPaymentByCredits(Plate: String; Time: Integer; PaymentListener: IPaymentListener);
 
     procedure SendUser(Nickname, Email, CPF, Password: String);
 
     procedure SendCreditCard(Id: Integer; Flag, Name, Number: String; MonthValidate, YearValidate: Integer; Status: Boolean);
 
+    procedure Login(CPF, Password: String);
+
+    procedure SendBuyCredits(IdCreditCard, CSCCreditCard: Integer; Value: Double);
+
     procedure OpenQueryCreditCards;
+
+    procedure OpenQueryCreditsUser;
+
+    procedure OpenQueryTicketsUser;
 
     function IsUserLogged: Boolean;
 
@@ -169,10 +230,87 @@ begin
   end;
 end;
 
+procedure TDataModuleGeral.CreateNotification(Name, AlertBody: String; DateTime: TDateTime);
+var
+Notification: TNotification;
+begin
+  try
+    //Cria uma notificação para indicar ao usuário o término do tíquete adquirido.
+    Notification := NotificationCenter.CreateNotification;
+    Notification.Name := Name;
+    Notification.AlertBody := AlertBody;
+    Notification.FireDate  := DateTime;
+    NotificationCenter.ScheduleNotification(Notification);
+  finally
+    Notification.DisposeOf;
+  end;
+end;
+
+procedure TDataModuleGeral.CreateTicketNotification(Plate: String;
+  StartTime: TDateTime; Time: Integer);
+begin
+  //Cria duas notificações que serão exibidas antes de 10 e 5 minutos
+  //do tempo limite do tíquete.
+  CreateNotification(Plate+'10'
+                    ,'Faltam 10 minutos para seu tíquete acabar'
+                    ,IncMinute(StartTime, Time - 10));
+
+  CreateNotification(Plate+'5'
+                    ,'Faltam 5 minutos para seu tíquete acabar'
+                    ,IncMinute(StartTime, Time - 5));
+end;
+
+procedure TDataModuleGeral.DataModuleCreate(Sender: TObject);
+begin
+  //Instancia um objeto de gerenciamento de notificações.
+  NotificationCenter := TNotificationCenter.Create(Self);
+end;
+
+procedure TDataModuleGeral.DataSetCreditCardsCalcFields(DataSet: TDataSet);
+begin
+  //Verifica se o estado do DataSet de cartões é para calculo de atributos internos(locais).
+  if (DataSetCreditCards.State = dsInternalCalc) then
+  begin
+    //Verifica qual a bandeira do cartão de crédito.
+    if (DataSetCreditCardsFlag.AsString.Equals('VISA')) then
+    begin
+      //Se for Visa, então o indice do ícone é zero (0).
+      DataSetCreditCardsIconIndex.AsInteger := 0;
+    end
+    else
+    begin
+      //Nesse caso o cartão é da bandeira Mastercard, indice um (1).
+      DataSetCreditCardsIconIndex.AsInteger := 1;
+    end;
+  end;
+end;
+
+procedure TDataModuleGeral.DataSetTicketsCalcFields(DataSet: TDataSet);
+begin
+  //Verifica se o estado do DataSet de tickets é para cálculos de atributos(Fields) internos.
+  if (DataSetTickets.State = dsInternalCalc) then
+  begin
+    //Calcula o tempo de limite.
+    DataSetTicketsDeadlineTime.AsDateTime := IncMinute(StrToDateTimeFromWebService(DataSetTicketsStartTime.AsString), DataSetTicketsTime.AsInteger);
+
+    //Verifica se o tíquete ainda está ativo de acordo com o seu tempo de limite.
+    if (DataSetTicketsDeadlineTime.AsDateTime < now()) then
+    begin
+      //Atribui como estado do objeto o ícone Inativo.
+      DataSetTicketsIconIndex.AsInteger := 0;
+    end
+    else
+    begin
+      //Atribui como estado do objeto o ícone Ativo.
+      DataSetTicketsIconIndex.AsInteger := 1;
+    end;
+  end;
+end;
+
 function TDataModuleGeral.GetCreditsUser: Double;
 begin
-  //Retorna valor default para os testes. Não está implementado o cadastro do usuário.
-  Result := 0;
+  //Retorna o valor de créditos do usuário logado.
+  Result := CreditsAvailableUser;
 end;
 
 function TDataModuleGeral.IsUserLogged: Boolean;
@@ -181,12 +319,94 @@ begin
   Result := not (DataModuleLocal.DataSetUser.IsEmpty);
 end;
 
+procedure TDataModuleGeral.Login(CPF, Password: String);
+var
+JsonUser: TJSONObject;
+begin
+  //Envia a requisição GET do usuário para o webservice.
+  JsonUser := GetUser(CPF, Password);
+
+  //Salva as informações do usuário logando.
+  DataModuleLocal.InsertUser(StrToInt(JsonUser.GetValue('Id').Value)
+                            , JsonUser.GetValue('Nickname').Value
+                            , JsonUser.GetValue('Email').Value
+                            , CPF
+                            , Password);
+end;
+
 procedure TDataModuleGeral.OpenQueryCreditCards;
 begin
   //Envia a requisição GET de consulta de cartões de créditos.
   RequestGetCreditCards.ClearBody;
   RequestGetCreditCards.Params.ParameterByName('json').Value := '{"IdUser":'+IntToStr(DataModuleLocal.GetIdUser)+'}';
   RequestGetCreditCards.Execute;
+
+  //Abre a consulta do objeto DataSetCreditCards associado ao cojunto de cartões consultados.
+  DataSetCreditCards.Close;
+  DataSetCreditCards.Open;
+end;
+
+procedure TDataModuleGeral.OpenQueryCreditsUser;
+var
+JsonResponse: TJSONObject;
+begin
+  //Envia a requisição GET de consulta dos créditos do usuário logado.
+  RequestGetCreditsUser.ClearBody;
+  RequestGetCreditsUser.Params.ParameterByName('json').Value := '{"IdUser": '+IntToStr(DataModuleLocal.GetIdUser)+'}';
+  RequestGetCreditsUser.Execute;
+
+  //Pega o JSON retornado pela resposta.
+  JsonResponse := (TJSONObject.ParseJSONValue(ResponseGetCreditsUser.Content) as TJSONObject);
+
+  //Verifica se houve sucesso, ou seja, não houve erro.
+  if (JsonResponse.Values['Error'] = nil) then
+  begin
+    //Atualiza o atributo que guarda o valor de créditos do usuário logado.
+    CreditsAvailableUser := StrToFloat(JsonResponse.GetValue('Value').Value);
+  end
+  else
+  begin
+    //Zera o valor do atributo referente aos créditos.
+    CreditsAvailableUser := 0;
+
+    //Levanta uma exceção com a mensagem do erro.
+    raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
+end;
+
+procedure TDataModuleGeral.OpenQueryTicketsUser;
+var
+JsonResponse: TJSONObject;
+begin
+  //Remove a ligação do Adapter e do Response, pois somente serão ligados
+  //se ocorrer sucesso na consulta.
+  AdapterTickets.Response := Nil;
+
+  //Envia a requisição GET da consulta dos tíquetes do usuário logado.
+  RequestGetTickets.ClearBody;
+  RequestGetTickets.Params.ParameterByName('json').Value := '{"IdUser": '+IntToStr(DataModuleLocal.GetIdUser())+'}';
+  RequestGetTickets.Execute;
+
+  //Verifica se na resposta NÃO existe a palavra "Error", significando sucesso na consulta.
+  if not(ResponseGetTickets.Content.Contains('"Error"')) then
+  begin
+    //Realiza a ligação do AdapterTickets com o objeto ResponseGetTickets.
+    //Com isso, os tíquetes retornados no JSONArray pelo WebService estarão
+    //disponíveis no objeto DataSetTickets.
+    AdapterTickets.Response := ResponseGetTickets;
+  end
+  else
+  begin
+    //Pega o JSON com a resposta.
+    JsonResponse := (TJSONObject.ParseJSONValue(ResponseGetTickets.Content) as TJSONObject);
+
+    //Levanta uma exceção com o erro retornado na resposta.
+    raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
+
+  //Abre a consulta do objeto DataSetTickets relacionado ao conjunto de tíquetes consultados no WebService.
+  DataSetTickets.Close;
+  DataSetTickets.Open;
 end;
 
 function TDataModuleGeral.GetMaxTime: Integer;
@@ -196,7 +416,7 @@ end;
 
 function TDataModuleGeral.GetMinTime: Integer;
 begin
-  Result := 10;
+  Result := 1;
 end;
 
 function TDataModuleGeral.GetMonthCreditCardSelected: Integer;
@@ -217,6 +437,31 @@ end;
 function TDataModuleGeral.GetPriceTime: Double;
 begin
   Result := 1;
+end;
+
+procedure TDataModuleGeral.PostBuyCredits(IdUser, IdCreditCard,
+  CSCCreditCard: Integer; Value: Double);
+var
+Json, JsonResponse: TJSONObject;
+begin
+  //Envia a requisição do POST com a compra de créditos.
+  Json := TJSONObject.Create;
+  Json.AddPair('IdUser', TJSONNumber.Create(IdUser));
+  Json.AddPair('IdCreditCard', TJSONNumber.Create(IdCreditCard));
+  Json.AddPair('CSC', TJSONNumber.Create(CSCCreditCard));
+  Json.AddPair('Value', TJSONString.Create(FloatToStr(Value)));
+  RequestPostBuyCredits.Params.ParameterByName('json').Value := Json.ToString;
+  RequestPostBuyCredits.Execute;
+
+  //Pega o JSON retornado pela resposta.
+  JsonResponse := (TJSONObject.ParseJSONValue(ResponsePostBuyCredits.Content) as TJSONObject);
+
+  //Verifica se ocorreu algum erro na compra de crédito.
+  if (JsonResponse.Values['Error'] <> nil) then
+  begin
+    //Levanta uma exceção contendo a mensagem do erro.
+    raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
 end;
 
 function TDataModuleGeral.PostCreditCard(IdUser, Id: Integer; Flag, Name, Number: String;
@@ -294,6 +539,35 @@ begin
   end;
 end;
 
+function TDataModuleGeral.PostPaymentByCredits(IdUser: Integer; Plate: String;
+  Time: Integer): TDateTime;
+var
+Json, JsonResponse: TJSONObject;
+begin
+  //Envia a requisição POST do pagamento para o WebService.
+  Json := TJSONObject.Create;
+  Json.AddPair('IdUser', TJSONNumber.Create(IdUser));
+  Json.AddPair('Plate', TJSONString.Create(Plate));
+  Json.AddPair('Time', TJSONNumber.Create(Time));
+  RequestPostPaymentByCredits.Params.ParameterByName('json').Value := Json.ToString;
+  RequestPostPaymentByCredits.Execute;
+
+  //Pega o JSON retornado pela resposta.
+  JsonResponse := (TJSONObject.ParseJSONValue(ResponsePostPaymentByCredits.Content) as TJSONObject);
+
+  //Verifica se o pagamento foi realizado com sucesso.
+  if (JsonResponse.Values['Sucess'] <> nil) then
+  begin
+    //Retorna a data e hora de limite do estacionamento pago.
+    Result := StrToDateTimeFromWebService(JsonResponse.GetValue('Sucess').Value);
+  end
+  else
+  begin
+    //Levanta uma exceção com o erro retornado na resposta.
+    raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
+end;
+
 function TDataModuleGeral.PostUser(Id: Integer; Nickname, Email, CPF,
   Password: String): Integer;
 var
@@ -327,6 +601,13 @@ begin
   end;
 end;
 
+procedure TDataModuleGeral.SendBuyCredits(IdCreditCard, CSCCreditCard: Integer;
+  Value: Double);
+begin
+  //Envia a requisição POST da compra de créditos para o usuário logado.
+  PostBuyCredits(DataModuleLocal.GetIdUser, IdCreditCard, CSCCreditCard, Value);
+end;
+
 procedure TDataModuleGeral.SendCreditCard(Id: Integer; Flag, Name, Number: String;
   MonthValidate, YearValidate: Integer; Status: Boolean);
 begin
@@ -355,14 +636,36 @@ begin
   else
   begin
     //Chama o procedimento de pagamento que utiliza os créditos já adquiridos pelo usuário.
-    SendPaymentByCredit(Plate, Time, PaymentListener);
+    SendPaymentByCredits(Plate, Time, PaymentListener);
+
+    //Atualiza a consulta de tíquetes do usuário logado.
+    OpenQueryTicketsUser;
   end;
 end;
 
-procedure TDataModuleGeral.SendPaymentByCredit(Plate: String; Time: Integer;
+procedure TDataModuleGeral.SendPaymentByCredits(Plate: String; Time: Integer;
   PaymentListener: IPaymentListener);
+var
+DeadlineTime: TDateTime;
 begin
-  //Falta implementar.
+  try
+    //Envia a requisição POST de pagamento ao WebService.
+    DeadlineTime := PostPaymentByCredits(DataModuleLocal.GetIdUser
+                                        ,Plate
+                                        ,Time);
+
+    //Cria a notificação para indicar o término do tíquete adquirido pelo usuário logado.
+    CreateTicketNotification(Plate, IncMinute(DeadlineTime, -Time), Time);
+
+    //Executa o procedimento de sucesso do objeto ouvinte de eventos de pagamento.
+    PaymentListener.OnSucess;
+  except
+    on Error: Exception do
+    begin
+      //Executa o procedimento de erro do objeto ouvinte de eventos de pagamento.
+      PaymentListener.OnError(Error.Message);
+    end;
+  end;
 end;
 
 procedure TDataModuleGeral.SendPaymentSeparate(Plate: String; Time: Integer;
@@ -383,7 +686,7 @@ begin
                       begin
                         try
                           //Envia ao servidor a requisição HTTP Post do pagamento.
-                          StartTime:= postPayment(
+                          StartTime:= PostPayment(
                                           Plate
                                          ,Time
                                          ,FormCreditCardSeparate.GetFlag()
@@ -396,6 +699,9 @@ begin
 
                           //Insere o novo tíquete na base local.
                           DataModuleLocal.InsertTicket(Plate, StartTime, Time);
+
+                          //Cria a notificação para indicar o término do tíquete adquirido.
+                          CreateTicketNotification(Plate, StartTime, Time);
 
                           //Chama o procedimento do ouvinte de pagamento.
                           PaymentListener.OnSucess;
@@ -430,7 +736,34 @@ end;
 
 function TDataModuleGeral.GetUnitTime: Integer;
 begin
-  Result := 10;
+  Result := 1;
+end;
+
+function TDataModuleGeral.GetUser(CPF, Password: String): TJSONObject;
+var
+Json, JsonResponse: TJSONObject;
+begin
+  //Envia a requisição GET para consultar o usuário através do seu CPF e senha.
+  Json := TJSONObject.Create;
+  Json.AddPair('CPF', TJSONString.Create(CPF));
+  Json.AddPair('Password', TJSONString.Create(Password));
+  RequestGetUser.Params.ParameterByName('json').Value := Json.ToString;
+  RequestGetUser.Execute;
+
+  //Pega o JSON retornado pela resposta.
+  JsonResponse := (TJSONObject.ParseJSONValue(ResponseGetUser.Content) as TJSONObject);
+
+  //Verifica se ocorreu sucesso, ou seja, não ocorreu erro.
+  if (JsonResponse.Values['Error'] = nil) then
+  begin
+    //Retorna o JSON contendo o usuário consultado.
+    Result := JsonResponse;
+  end
+  else
+  begin
+    //Levanta uma exceção com a mensagem do erro.
+    raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
 end;
 
 function TDataModuleGeral.GetYearCreditCardSelected: Integer;

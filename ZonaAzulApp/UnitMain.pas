@@ -38,6 +38,7 @@ type
     procedure MultiViewMenuStartShowing(Sender: TObject);
     procedure ButtonCreditCardsClick(Sender: TObject);
     procedure ButtonDataUserClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     procedure Show(Frame: TFrame; Parent: TFmxObject; Title: String);
@@ -65,12 +66,22 @@ uses UnitRoutines, UnitDataModuleGeral;
 
 procedure TFormMain.ButtonBuyCreditsClick(Sender: TObject);
 begin
+  //Exibe a tela de compra de créditos.
+  FrameBuyCredits.ClearComponents;
   Show( FrameBuyCredits,  LayoutFrame, 'Compra de Créditos');
 end;
 
 procedure TFormMain.ButtonTicketsClick(Sender: TObject);
 begin
+  //Exibe a tela de tíquetes do usuário logado ou avulso.
+  FrameTickets.UpdateQueryTickets;
   Show( FrameTickets, LayoutFrame, 'Tíquetes' );
+end;
+
+procedure TFormMain.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  //Fecha toda a aplicação.
+  Application.Terminate;
 end;
 
 procedure TFormMain.FormCreate(Sender: TObject);
@@ -141,7 +152,7 @@ begin
   if (DataModuleGeral.IsUserLogged) then
   begin
     //Exibe o frame de cartões de crédito.
-    FrameCreditCards.UpdateCreditCardsList;
+    DataModuleGeral.OpenQueryCreditCards;
     Show(FrameCreditCards, LayoutFrame, 'Cartões de Crédito');
   end
   else

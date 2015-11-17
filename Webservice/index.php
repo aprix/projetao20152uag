@@ -101,7 +101,7 @@ class API extends REST {
 				if(mysqli_num_rows($select_vehicle) == 0){
 							
 					// é inserido um novo registro...
-					$sql_insert_vehicle = insert_vehicle($placaVeiculo);
+					$sql_insert_vehicle = insert_vehicle(1, $placaVeiculo);
 				    $insert_vehicle = mysqli_query($this->db, $sql_insert_vehicle );
 		
 					// em caso de erro será enviado para a aplicação...
@@ -114,7 +114,7 @@ class API extends REST {
 						
 				// como já foi verificado na consulta $query que não existe locação de vaga
 				// neste momento para o veiculo é realizada a locação de vaga...
-				$sql_insert_vacancy_location = insert_vacancy_location($placaVeiculo, $hora);
+				$sql_insert_vacancy_location = insert_vacancy_location(1, $placaVeiculo, $hora);
 		        $insert_vacancy_location = mysqli_query($this->db,  $sql_insert_vacancy_location);
 		
 				// em caso de erro será enviado para a aplicação...
@@ -332,7 +332,7 @@ class API extends REST {
 		
 		// este sql é uma consulta que retorna a data de inicio da locação
 		// e a data de fim da locação...
-		$sql = select_credit_card($id_user);
+		$sql = select_credit_card_for_user($id_user);
 
 		$response = array();
 
@@ -366,8 +366,8 @@ class API extends REST {
 		// e enviado para aplicação...
 		$this->response($response_json, 200);
 	}
-
-	private function get_vacancy_location_date(){
+	
+	private function login(){
 		if ($this->get_request_method() != 'GET') {
             $this->response($this->get_request_method(), 406);
         }
@@ -378,12 +378,113 @@ class API extends REST {
         //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
         $vector = json_decode($json, TRUE);
 		
-		// pega a variavel Plate(placa do carro)
-		$plate = $vector['Plate'];
+		// pega as variaveis
+		$cpf = $vector['CPF'];
+		$password = $vector['Password'];
+		// este sql é uma consulta que retorna a data de inicio da locação
+		// e a data de fim da locação...
+		$sql = select_user($cpf, $password);
+		
+		$response = array();
+
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				$response['Id']       = $row['id'];
+				$response['Nickname'] = $row['nickname'];
+				$response['Email']    = $row['email'];
+			} else {
+				$response['Error'] = 'CPF ou senha inválidos';
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+		
+		$this->response(json_encode($response), 200);
+	}
+	
+	private function post_credits(){
+		if ($this->get_request_method() != 'POST') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		// variaveis
+		$id_user = $vector['IdUser'];
+		$id_credit_card = $vector['IdCreditCard'];
+		$csc = $vector['CSC'];
+		$value = $vector['Value'];
+		
+		$sql = select_credit_card($id_user, $id_credit_card);
+		
+		$response = array();
+
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				// pega o unico registro da consulta e armazena em $row
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				$pay = payment($row['name'], $row['flag'], $row['num'], $row['validate_month'], $row['validate_year'], $csc);
+				
+				if($pay){
+					
+					$sql_insert_payment = insert_payment($id_user, $id_credit_card, $value, 1);
+					
+					//inserindo na tabela payment
+					if($query_insert_payment = mysqli_query($this->db, $sql_insert_payment)){
+					
+						// atualizando o saldo do user
+						$sql_update_saldo = update_user_saldo($id_user, $value);						
+						if($query_update_saldo = mysqli_query($this->db, $sql_update_saldo)){
+							
+							$response['Sucess'] = 'Sucesso';
+							
+						} else {
+							
+							$response['Error'] = mysqli_error($this->db);
+							
+						}
+						
+					} else {
+						
+						$response['Error'] = mysqli_error($this->db);
+						
+					}
+				}
+				
+			} else {
+				$response['Error'] = 'Cartão de crédito não cadastrado';
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+		
+		$this->response(json_encode($response), 200);
+	}
+
+	private function get_vacancy_location_user(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		// pega a variavel id do user
+		$id_user = $vector['IdUser'];
 		
 		// este sql é uma consulta que retorna a data de inicio da locação
 		// e a data de fim da locação...
-		$sql = select_vacancy_location_date($plate);
+		$sql = select_vacancy_location_user($id_user);
 
 		$response = array();
 
@@ -393,12 +494,15 @@ class API extends REST {
 				$i = 0;
 				// este laço varre as linhas da consulta e vai as armazenando em $response...
 				while ($row = mysqli_fetch_array($query, MYSQLI_ASSOC)){
-					$response_row['InitialDate'] = $row['initialDate'];
-					$response_row[ 'FinalDate' ] = $row[ 'finalDate' ];
+					$response_row[ 'Plate' ] = $row[ 'plate' ];
+					$response_row['StartTime'] = $row['date_location'];
+					$response_row[ 'Time' ] = $row[ 'time_location' ];
 					$response[$i] = $response_row;
 					$i++;
 				}
 			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
 		}
 		// por fim response é convertido para o formato json...
 		$response_json = json_encode($response);
@@ -406,6 +510,148 @@ class API extends REST {
 		// e enviado para aplicação...
 		$this->response($response_json, 200);
 
+	}
+	
+	private function post_vacancy_location_user(){
+		if ($this->get_request_method() != 'POST') {
+            $this->response($this->get_request_method(), 406);
+        }
+
+        //Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		//Variaveis
+		$id_user = $vector['IdUser'];
+		$plate = $vector['Plate'];
+		$time = $vector['Time'];
+		
+		$sql_select_vehicle = select_vehicle($plate, $id_user);
+		
+		$response = array();
+
+		if ($query = mysqli_query($this->db, $sql_select_vehicle)){
+			// se nao existe veiculo vinculado ao user
+			if (mysqli_num_rows($query) == 0){
+				
+				// é inserido um novo registro...
+				$sql_insert_vehicle = insert_vehicle($id_user, $plate);
+				
+				// caso dê algum erro...
+				if(! mysqli_query($this->db, $sql_insert_vehicle )){
+					// é enviado para aplicação...
+					$response['Error'] = mysqli_error($this->db);
+					echo $response['Error'];
+					$this->response(json_encode($response), 200);
+				}
+			}
+			
+			$sql_select_saldo = select_user_saldo($id_user);
+			
+			if($query_select_saldo = mysqli_query($this->db, $sql_select_saldo)){
+				$row_saldo = mysqli_fetch_array($query_select_saldo, MYSQLI_ASSOC);
+				
+				// armazena o saldo do user
+				$saldo = $row_saldo['saldo'];
+				
+				$sql_select_un_price = select_un_price();
+				
+				if($query_select_un_price = mysqli_query($this->db, $sql_select_un_price)){
+					$row_un_price = mysqli_fetch_array($query_select_un_price, MYSQLI_ASSOC);
+					
+					// armazena o un_price
+					$un_price = $row_un_price['un_price'];
+					
+					// armazena quanto será o total gasto
+					$value = $time * $un_price;
+					
+					// se existe saldo suficiente
+					if($value <= $saldo){							
+						$sql_insert_vacancy_location = insert_vacancy_location($id_user, $plate, $time);
+						
+						if(mysqli_query($this->db, $sql_insert_vacancy_location)){								
+							$sql_update_saldo = update_user_saldo($id_user, - $value);
+							
+							if(mysqli_query($this->db, $sql_update_saldo)){									
+								$sql_select_vacancy_location = select_vacancy_location($plate);
+								
+								if($query_vacancy_location = mysqli_query($this->db, $sql_select_vacancy_location)){
+									$row_query = mysqli_fetch_array($query_vacancy_location, MYSQLI_ASSOC);
+									// coloca no vetor de saida a data final
+									$response['Sucess'] = $row_query['finalDate'];
+								
+								// caso dê erro no select_vacancy_location
+								} else {
+									$response['Error'] = mysqli_error($this->db);
+								}
+							// caso dê erro no update_saldo
+							} else {
+								$response['Error'] = mysqli_error($this->db);
+							}
+						// caso dê erro no insert_vacancy_location
+						} else {
+							$response['Error'] = mysqli_error($this->db);
+						}
+					// caso o value seja maior que o saldo
+					} else {
+						$response['Error'] = 'Saldo insuficiente!';
+					}
+				// caso dê erro no select_un_price
+				}  else {
+					$response['Error'] = mysqli_error($this->db);
+				}
+			// caso dê erro no select_saldo
+			} else {
+				$response['Error'] = mysqli_error($this->db);
+			}
+			// caso não exista veiculo de placa plate associado ao user			
+		// caso dê erro no select_vehicle
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);
+		
+	}
+	
+	private function get_credits_user(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+		
+		//Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		//Variaveis
+		$id_user = $vector['IdUser'];
+		
+		$sql = select_user_saldo($id_user);
+		
+		$response = array();
+		
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				$response['Value'] = $row['saldo'];
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+		
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);
 	}
 	
 	// funcao especifica da validacao do numero do cartao
@@ -476,4 +722,5 @@ class API extends REST {
 $api = new API;
 $api->processApi();
 ?>
+
 
