@@ -1287,6 +1287,11 @@ class Validator implements ValidatorContract
      * @param  mixed   $value
      * @return bool
      */
+   protected function validateAlphaSpaces($attribute, $value){
+    
+    return is_string($value) && preg_match('/^[\pL\s]+$/u', $value);
+}
+    
     protected function validateAlpha($attribute, $value)
     {
         return is_string($value) && preg_match('/^[\pL\pM]+$/u', $value);

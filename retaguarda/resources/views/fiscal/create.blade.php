@@ -16,7 +16,7 @@
 <fieldset>
 
 <!-- Form Name -->
-<legend>Cadastrar vendedor</legend>
+<legend>Cadastrar fiscal</legend>
 
 <!-- Text input-->
 <div class="form-group col-md-2">

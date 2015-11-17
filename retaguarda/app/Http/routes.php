@@ -37,6 +37,8 @@ Route::post('fiscal/store','FiscalController@store');
 //Route::get('cadvendedor','FrontController@cadastrovendedor');
 //Route::get('tabela/{id}/edit','PriceController@edit');
 Route::put('tabela/{id}/update','PriceController@update');
+Route::put('fiscal/{id_user}/update','FiscalController@update');
+
 //Route::get('auth/login', 'Auth\AuthController@getLogin');
 //Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::controllers([
