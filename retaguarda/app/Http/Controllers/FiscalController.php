@@ -66,7 +66,7 @@ class FiscalController extends Controller
 
             ){
             
-            return redirect('fiscal')->with('message','primaryseller');
+            return redirect('fiscal')->with('message','primarysupervisor');
         }
 
         if($existence = DB::table('user')
@@ -169,6 +169,6 @@ class FiscalController extends Controller
         ->where('id', $id)
         ->update(['status'=> 0]);
 
-        return redirect('fiscal')->with('message','destroy');
+        return redirect('fiscal')->with('message','destroysupervisor');
     }
 }
