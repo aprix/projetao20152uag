@@ -35,7 +35,7 @@ class PostVacancyLocation extends PHPUnit_Framework_TestCase {
 		
 	}
 	
-	public function testPostVacanyLocationSucess(){
+	public function testPostVacancyLocationSucess(){
 		
 		/**
 		 * no banco localmente existe um user com id 1 e um vehicle com id 1

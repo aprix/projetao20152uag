@@ -543,7 +543,6 @@ class API extends REST {
 				if(! mysqli_query($this->db, $sql_insert_vehicle )){
 					// é enviado para aplicação...
 					$response['Error'] = mysqli_error($this->db);
-					echo $response['Error'];
 					$this->response(json_encode($response), 200);
 				}
 			}
@@ -561,39 +560,82 @@ class API extends REST {
 				if($query_select_un_price = mysqli_query($this->db, $sql_select_un_price)){
 					$row_un_price = mysqli_fetch_array($query_select_un_price, MYSQLI_ASSOC);
 					
-					// armazena o un_price
-					$un_price = $row_un_price['un_price'];
+					// armazena o un_price e o tempo maximo
+					$un_price = $row_un_price['un_price'];					
+					$max_time = $row_un_price['max_time'];
 					
 					// armazena quanto será o total gasto
 					$value = $time * $un_price;
 					
 					// se existe saldo suficiente
-					if($value <= $saldo){							
-						$sql_insert_vacancy_location = insert_vacancy_location($id_user, $plate, $time);
+					if($value <= $saldo){
+						$sql_select_vl = select_vacancy_location_time($plate);						
 						
-						if(mysqli_query($this->db, $sql_insert_vacancy_location)){								
-							$sql_update_saldo = update_user_saldo($id_user, - $value);
+						if($query_vl = mysqli_query($this->db, $sql_select_vl)){
 							
-							if(mysqli_query($this->db, $sql_update_saldo)){									
-								$sql_select_vacancy_location = select_vacancy_location($plate);
+							// dependendo da existencia da locacao de vaga será escolhido um update ou um insert
+							$sql_ = '';
+							
+							if (mysqli_num_rows($query_vl) == 0){
+								// se o tempo solicitado for menor que o tempo maximo permitido
+								if($time <= $max_time){
+									$sql_ = insert_vacancy_location($id_user, $plate, $time);
+									
+								} else {
+									$response['Error'] = 'Veículo não estacionado, tempo solicitado ultrapassa o tempo máximo permitido';
+									// por fim response é convertido para o formato json...
+									$response_json = json_encode($response);
+		
+									// e enviado para aplicação...
+									$this->response($response_json, 200);
+								}
+							// caso ja exista locacao de vaga...
+							} else {									
+								$row_vl = mysqli_fetch_array($query_vl, MYSQLI_ASSOC);
+								$id_vl = $row_vl['id'];
+								$previous_time = $row_vl['time_location'];
 								
-								if($query_vacancy_location = mysqli_query($this->db, $sql_select_vacancy_location)){
-									$row_query = mysqli_fetch_array($query_vacancy_location, MYSQLI_ASSOC);
-									// coloca no vetor de saida a data final
-									$response['Sucess'] = $row_query['finalDate'];
+								// se acrescentando o tempo não ultrapassar o tempo maximo permitido
+								if($previous_time + $time <= $max_time){
+									$sql_ = update_vacancy_location_time($id_vl, $time, $value);	
+																	
+								}  else {
+									$response['Error'] = 'Veículo já estacionado, tempo máximo permitido já adquirido';
+									// por fim response é convertido para o formato json...
+									$response_json = json_encode($response);
+		
+									// e enviado para aplicação...
+									$this->response($response_json, 200);
+								}
+							}
+							// realizando a atualizacao do saldo e preparando o retorno do json
+							if(mysqli_query($this->db, $sql_)){			
+								$sql_update_saldo = update_user_saldo($id_user, - $value);
+							
+								if(mysqli_query($this->db, $sql_update_saldo)){									
+									$sql_select_vacancy_location = select_vacancy_location($plate);
+									
+									if($query_vacancy_location = mysqli_query($this->db, $sql_select_vacancy_location)){
+										$row_query = mysqli_fetch_array($query_vacancy_location, MYSQLI_ASSOC);
+										// coloca no vetor de saida a data final										
+										$response['Sucess'] = $row_query['finalDate'];
 								
-								// caso dê erro no select_vacancy_location
+									// caso dê erro no select_vacancy_location
+									} else {
+										$response['Error'] = mysqli_error($this->db);
+									}
+								// caso dê erro no update_saldo
 								} else {
 									$response['Error'] = mysqli_error($this->db);
 								}
-							// caso dê erro no update_saldo
+							// caso dê erro no insert_vacancy_location
 							} else {
 								$response['Error'] = mysqli_error($this->db);
 							}
-						// caso dê erro no insert_vacancy_location
+						// caso dê erro no 	select_vl					
 						} else {
 							$response['Error'] = mysqli_error($this->db);
-						}
+						}			
 					// caso o value seja maior que o saldo
 					} else {
 						$response['Error'] = 'Saldo insuficiente!';
@@ -722,5 +764,4 @@ class API extends REST {
 $api = new API;
 $api->processApi();
 ?>
-
 

@@ -1,7 +1,8 @@
 <?php
 
 function select_vacancy_location($plate){
-	return "SELECT vacancy_location.date_location as initialDate, (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE) as finalDate
+	return "SELECT vacancy_location.date_location as initialDate, 
+		(vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE) as finalDate
 		FROM vacancy_location
 		INNER JOIN vehicle ON vacancy_location.id_vehicle = vehicle.id AND vehicle.plate = '$plate'
 		WHERE correct_timestamp() < (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE)";
@@ -112,8 +113,23 @@ function select_user_saldo($id_user){
 }
 
 function select_un_price(){
-	return "SELECT prices.un_price
+	return "SELECT prices.un_price, prices.max_price as max_time
 			FROM prices";
+}
+
+function select_vacancy_location_time($plate){
+	return "SELECT vacancy_location.id, vacancy_location.time_location
+		FROM vacancy_location
+		INNER JOIN vehicle ON vacancy_location.id_vehicle = vehicle.id AND vehicle.plate = '$plate'
+		WHERE correct_timestamp() < (vacancy_location.date_location + INTERVAL vacancy_location.time_location MINUTE)";
+}
+
+function update_vacancy_location_time($id_vl, $time, $value){
+	return "UPDATE vacancy_location SET
+			date_location = date_location,
+			time_location = time_location + $time,
+			total_payment = total_payment + $value
+			WHERE vacancy_location.id = $id_vl";
 }
 
 /**
