@@ -72,77 +72,160 @@ class API extends REST {
 		$anoValidadeCartao = $vetor['YearCreditCard'];
         $cscCartao = $vetor['CSCCredCard'];
 		
-		// sql que verifica se para esta placa já existe algum veiculo estacionado utilizando a data atual como referência.
-        $sql = select_vacancy_location($placaVeiculo);
-		
-		$response = array();
-
-        if ($query = mysqli_query($this->db, $sql)) {
-
-			// se a quantidade de linhas retornadas da query for > 0 indica que o veiculo desta placa já está estacionado
-            if (mysqli_num_rows($query) > 0) {
-
-				//lançada mensagem para a aplicação...
-                $response['Error'] = "Veiculo ja estacionado";
-				$this->response(json_encode($response), 200);
-
-            } else {
+		$sql_max_time = select_un_price();		
 				
-				$this->validate_credit_card($numeroCartao, $response);
-
-				// TODO verificar este método....
-		 		$pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
+		$response = array();
+				
+		if($query_max_time = mysqli_query($this->db, $sql_max_time)) {
+				$row_max_time = mysqli_fetch_array($query_max_time, MYSQLI_ASSOC);
+				$un_price = $row_max_time['un_price'];
+				$max_time = $row_max_time['max_time'];
+				
+				// sql que verifica se para esta placa já existe algum veiculo estacionado utilizando a data atual como referência.
+		        $sql = select_vacancy_location_time($placaVeiculo);
 		
-				// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
-				$sql_select_vehicle = select_vehicle($placaVeiculo, 1);
-				$select_vehicle = mysqli_query($this->db, $sql_select_vehicle);
+		        if ($query = mysqli_query($this->db, $sql)) {
+		
+					// se a quantidade de linhas retornadas da query for > 0 indica que o veiculo desta placa já está estacionado
+		            if (mysqli_num_rows($query) > 0) {
 						
-				// se não existe registro( == 0) então...
-				if(mysqli_num_rows($select_vehicle) == 0){
+						$row_vl = mysqli_fetch_array($query, MYSQLI_ASSOC);
+						$previous_time = $row_vl['time_location'];
+						$id_vl = $row_vl['id'];
+						
+						if($previous_time + $hora <= $max_time){
+							//$this->validate_credit_card($numeroCartao, $response);
+			
+							// TODO verificar este método....
+					 		$pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
+					
+							// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
+							$sql_select_vehicle = select_vehicle($placaVeiculo, 1);
+							$select_vehicle = mysqli_query($this->db, $sql_select_vehicle);
+									
+							// se não existe registro( == 0) então...
+							if(mysqli_num_rows($select_vehicle) == 0){
+										
+								// é inserido um novo registro...
+								$sql_insert_vehicle = insert_vehicle(1, $placaVeiculo);
+							    $insert_vehicle = mysqli_query($this->db, $sql_insert_vehicle );
+					
+								// em caso de erro será enviado para a aplicação...
+								if(! $insert_vehicle){
+									$response['Error'] = mysqli_error($this->db);
+									$this->response(json_encode($response), 200);
+								}
+					
+							}
+									
+							// como já foi verificado na consulta $query que não existe locação de vaga
+							// neste momento para o veiculo é realizada a locação de vaga...
+							$sql_update_vacancy_location = update_vacancy_location_time($id_vl, $hora, $hora * $un_price);
+							echo $sql_update_vacancy_location;
+							// em caso de erro será enviado para a aplicação...
+							if(mysqli_query($this->db,  $sql_update_vacancy_location)){
+								
+								$sql = select_vacancy_location($placaVeiculo);
+								// feito novamente a consulta para pegar a data salva
+								if($query = mysqli_query($this->db, $sql)){
+									$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+										
+									// caso ocorra tudo certo será retornada a aplicação uma mensagem de sucesso...
+									$response['Sucess'] = $row['initialDate'];					
+									$this->response(json_encode($response), 200);
+								} else {
+									//Para mensagens de erro.
+						            $response['Error'] = mysqli_error($this->db);
+									$this->response(json_encode($response), 200);
+								}
+								
+							} else {								
+								$response['Error'] = mysqli_error($this->db);					
+								$this->response(json_encode($response), 200);
+								
+							}
+					
 							
-					// é inserido um novo registro...
-					$sql_insert_vehicle = insert_vehicle(1, $placaVeiculo);
-				    $insert_vehicle = mysqli_query($this->db, $sql_insert_vehicle );
-		
-					// em caso de erro será enviado para a aplicação...
-					if(! $insert_vehicle){
-						$response['Error'] = mysqli_error($this->db);
-						$this->response(json_encode($response), 200);
+						} else {		
+							//lançada mensagem para a aplicação...
+		                	$response['Error'] = 'Veículo já estacionado, tempo máximo permitido já adquirido';
+							$this->response(json_encode($response), 200);
+							
+						}
+					// caso o veiculo ainda nao esteja estacionado
+		            } else {
+						
+						if($hora <= $max_time){
+						
+							//$this->validate_credit_card($numeroCartao, $response);
+			
+							// TODO verificar este método....
+					 		$pay = payment($nomeImpresso, $bandeiraCartao, $numeroCartao, $mesValidadeCartao, $anoValidadeCartao, $cscCartao);
+					
+							// realiza uma consulta verificando se já existe algum registro do veiculo desta placa com o usuario padrão(id = 1)				
+							$sql_select_vehicle = select_vehicle($placaVeiculo, 1);
+							$select_vehicle = mysqli_query($this->db, $sql_select_vehicle);
+									
+							// se não existe registro( == 0) então...
+							if(mysqli_num_rows($select_vehicle) == 0){
+										
+								// é inserido um novo registro...
+								$sql_insert_vehicle = insert_vehicle(1, $placaVeiculo);
+							    $insert_vehicle = mysqli_query($this->db, $sql_insert_vehicle );
+					
+								// em caso de erro será enviado para a aplicação...
+								if(! $insert_vehicle){
+									$response['Error'] = mysqli_error($this->db);
+									$this->response(json_encode($response), 200);
+								}
+					
+							}
+									
+							// como já foi verificado na consulta $query que não existe locação de vaga
+							// neste momento para o veiculo é realizada a locação de vaga...
+							$sql_insert_vacancy_location = insert_vacancy_location(1, $placaVeiculo, $hora);
+					        $insert_vacancy_location = mysqli_query($this->db,  $sql_insert_vacancy_location);
+					
+							// em caso de erro será enviado para a aplicação...
+							if(! $insert_vacancy_location){
+								$response['Error'] = mysqli_error($this->db);					
+								$this->response(json_encode($response), 200);
+							}
+					
+							// feito novamente a consulta para pegar a data salva
+							$sql = select_vacancy_location($placaVeiculo);							
+							if($query = mysqli_query($this->db, $sql)){
+									$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+									
+									// caso ocorra tudo certo será retornada a aplicação uma mensagem de sucesso...
+									$response['Sucess'] = $row['initialDate'];			
+									$this->response(json_encode($response), 200);
+							} else {
+								//Para mensagens de erro.
+					            $response['Error'] = mysqli_error($this->db);
+								$this->response(json_encode($response), 200);
+							}
+						// caso o valor solicitado for maior que o tempo maximo permitido
+						} else {		
+							//lançada mensagem para a aplicação...
+		                	$response['Error'] = 'Veículo não estacionado, tempo solicitado ultrapassa o tempo máximo permitido';
+							$this->response(json_encode($response), 200);
+							
+						}
+		 
 					}
-		
-				}
-						
-				// como já foi verificado na consulta $query que não existe locação de vaga
-				// neste momento para o veiculo é realizada a locação de vaga...
-				$sql_insert_vacancy_location = insert_vacancy_location(1, $placaVeiculo, $hora);
-		        $insert_vacancy_location = mysqli_query($this->db,  $sql_insert_vacancy_location);
-		
-				// em caso de erro será enviado para a aplicação...
-				if(! $insert_vacancy_location){
-					$response['Error'] = mysqli_error($this->db);					
-					$this->response(json_encode($response), 200);
-				}
-		
-				// feito novamente a consulta para pegar a data salva
-				$query = mysqli_query($this->db, $sql);
-				if(mysqli_num_rows($query) > 0){
-					$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
-						
-					// caso ocorra tudo certo será retornada a aplicação uma mensagem de sucesso...
-					$response['Sucess'] = $row['initialDate'];					
-					$this->response(json_encode($response), 200);
-				} else {
-					//Para mensagens de erro.
+		        } else {
+		            //Para mensagens de erro.
 		            $response['Error'] = mysqli_error($this->db);
 					$this->response(json_encode($response), 200);
-				}
- 
-			}
-        } else {
-            //Para mensagens de erro.
-            $response['Error'] = mysqli_error($this->db);
+		        }
+		} else {
+			//Para mensagens de erro.
+		    $response['Error'] = mysqli_error($this->db);
 			$this->response(json_encode($response), 200);
-        }
+		}
+		
+		
     }
 
 	private function get_vacancy_location(){
@@ -764,4 +847,5 @@ class API extends REST {
 $api = new API;
 $api->processApi();
 ?>
+
 
