@@ -121,7 +121,7 @@ class API extends REST {
 							// como já foi verificado na consulta $query que não existe locação de vaga
 							// neste momento para o veiculo é realizada a locação de vaga...
 							$sql_update_vacancy_location = update_vacancy_location_time($id_vl, $hora, $hora * $un_price);
-
+							echo $sql_update_vacancy_location;
 							// em caso de erro será enviado para a aplicação...
 							if(mysqli_query($this->db,  $sql_update_vacancy_location)){
 								
@@ -767,6 +767,45 @@ class API extends REST {
 				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
 				
 				$response['Value'] = $row['saldo'];
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+		
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);
+	}
+	
+	private function get_price(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+		
+		//Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		//Variaveis
+		$id_user = $vector['IdUser'];
+		
+		$sql = select_table_prices($id_user);
+		
+		$response = array();
+		
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				$response['PriceTime']     = $row['un_price'];
+				$response['MinTime']       = $row['min_time'];
+				$response['MaxTime']       = $row['max_price'];
+				$response['UnitTime']      = $row['un_time'];
+				$response['DiscountPrice'] = $row['discount'];
 			}
 		} else {
 			$response['Error'] = mysqli_error($this->db);
