@@ -132,6 +132,16 @@ function update_vacancy_location_time($id_vl, $time, $value){
 			WHERE vacancy_location.id = $id_vl";
 }
 
+function select_table_prices($id_user){
+	return "SELECT prices.un_price, prices.un_time, prices.min_time, prices.max_price, 
+	
+			CASE WHEN EXISTS(SELECT seller.id FROM seller WHERE seller.id_user = $id_user) THEN prices.discount_sellers 
+			ELSE 0
+			END as discount
+
+			FROM prices";
+}
+
 /**
  * método que simula o pagamento utilizando cartão de crédito
  * @param type $name
