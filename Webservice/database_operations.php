@@ -19,10 +19,10 @@ function insert_vehicle($id_user, $plate){
 		VALUES ('$plate', $id_user, 1);";
 }
 
-function insert_vacancy_location($id_user, $plate, $time){
+function insert_vacancy_location($id_user, $plate, $time, $value){
 	return "INSERT INTO vacancy_location (id_user, id_vehicle, date_location, time_location, total_payment)
 		VALUES ($id_user, (SELECT vehicle.id from vehicle where id_user = $id_user and plate = '$plate')
-		, correct_timestamp(), $time, (SELECT prices.un_price * $time from prices) );";
+		, correct_timestamp(), $time, $value );";
 }
 
 function select_vacancy_location_user($id_user){
