@@ -7,7 +7,7 @@ USE zona_azul;
 CREATE TABLE IF NOT EXISTS user(
 	id INT AUTO_INCREMENT NOT NULL,
 	cpf CHAR (11) NOT NULL,
-	saldo NUMERIC  NOT NULL,
+	saldo DECIMAL(10,2)  NOT NULL,
 	senha CHAR(32) NOT NULL,
 	email VARCHAR (200) NOT NULL,
 	nickname VARCHAR(200) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS vacancy_location(
 	id_vehicle INT NOT NULL,
 	date_location TIMESTAMP NOT NULL,
 	time_location INT NOT NULL,
-	total_payment NUMERIC NOT NULL,
+	total_payment DECIMAL(10,2) NOT NULL,
 	
 	PRIMARY KEY (id_user, id_vehicle, date_location),
 	FOREIGN KEY (id_user) REFERENCES user(id),
