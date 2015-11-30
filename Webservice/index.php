@@ -121,7 +121,7 @@ class API extends REST {
 							// como já foi verificado na consulta $query que não existe locação de vaga
 							// neste momento para o veiculo é realizada a locação de vaga...
 							$sql_update_vacancy_location = update_vacancy_location_time($id_vl, $hora, $hora * $un_price);
-							echo $sql_update_vacancy_location;
+							
 							// em caso de erro será enviado para a aplicação...
 							if(mysqli_query($this->db,  $sql_update_vacancy_location)){
 								
@@ -146,9 +146,10 @@ class API extends REST {
 							}
 					
 							
-						} else {		
+						} else {
+							$to_max = $max_time - $previous_time;
 							//lançada mensagem para a aplicação...
-		                	$response['Error'] = 'Veículo já estacionado, tempo máximo permitido já adquirido';
+		                	$response['Error'] = "Tempo máximo ultrapassado, só é possível colocar até $to_max minutos";
 							$this->response(json_encode($response), 200);
 							
 						}
@@ -206,9 +207,9 @@ class API extends REST {
 								$this->response(json_encode($response), 200);
 							}
 						// caso o valor solicitado for maior que o tempo maximo permitido
-						} else {		
+						} else {
 							//lançada mensagem para a aplicação...
-		                	$response['Error'] = 'Veículo não estacionado, tempo solicitado ultrapassa o tempo máximo permitido';
+		                	$response['Error'] = "Tempo máximo ultrapassado, só é possível colocar até $max_time minutos";
 							$this->response(json_encode($response), 200);
 							
 						}
@@ -672,7 +673,7 @@ class API extends REST {
 										$sql_ = insert_vacancy_location($id_user, $plate, $time, $value);
 										
 									} else {
-										$response['Error'] = 'Veículo não estacionado, tempo solicitado ultrapassa o tempo máximo permitido';
+										$response['Error'] = "Tempo máximo ultrapassado, só é possível colocar at $max_time minutos";
 										// por fim response é convertido para o formato json...
 										$response_json = json_encode($response);
 			
@@ -690,7 +691,8 @@ class API extends REST {
 										$sql_ = update_vacancy_location_time($id_vl, $time, $value);	
 																		
 									}  else {
-										$response['Error'] = 'Veículo já estacionado, tempo máximo permitido já adquirido';
+										$to_max = $max_time - $previous_time;
+										$response['Error'] = "Tempo máximo ultrapassado, só é possível colocar até $to_max minutos";
 										// por fim response é convertido para o formato json...
 										$response_json = json_encode($response);
 			
