@@ -43,6 +43,8 @@ type
     { Private declarations }
     procedure Show(Frame: TFrame; Parent: TFmxObject; Title: String);
     procedure UpdateValuesUserLabels;
+    procedure ValidateUserLogged;
+    procedure UpdateTextDataUserButton;
     var
     VisibleFrame: TFrame;
     FrameBuyCredits: TFrameBuyCredits;
@@ -66,6 +68,9 @@ uses UnitRoutines, UnitDataModuleGeral;
 
 procedure TFormMain.ButtonBuyCreditsClick(Sender: TObject);
 begin
+  //Valida se existe um usuário logado.
+  ValidateUserLogged;
+
   //Exibe a tela de compra de créditos.
   FrameBuyCredits.ClearComponents;
   Show( FrameBuyCredits,  LayoutFrame, 'Compra de Créditos');
@@ -101,6 +106,9 @@ procedure TFormMain.MultiViewMenuStartShowing(Sender: TObject);
 begin
   //Atualiza os labels de dados do usuário.
   UpdateValuesUserLabels;
+
+  //Atualiza o texto do botão dos dados do usuário.
+  UpdateTextDataUserButton;
 end;
 
 procedure TFormMain.OnSucess;
@@ -133,11 +141,32 @@ begin
   MultiViewMenu.HideMaster;
 end;
 
+procedure TFormMain.UpdateTextDataUserButton;
+begin
+  //Atualiza a descrição do botão de configurações da conta.
+  //Se não existir um usuário logado, mostra o texto "Criar Conta".
+  if not(DataModuleGeral.IsUserLogged) then
+    ButtonDataUser.Text := 'Criar Conta'
+  else
+    ButtonDataUser.Text := 'Configurações da Conta';
+end;
+
 procedure TFormMain.UpdateValuesUserLabels;
 begin
   //Pega os valores do usuário na base local e atualiza os labels relacionados.
   LabelNickname.Text := DataModuleLocal.GetNicknameUser();
   LabelEmail.Text    := DataModuleLocal.GetEmailUser();
+end;
+
+procedure TFormMain.ValidateUserLogged;
+begin
+  //Verifica se não existe um usuário logado.
+  if not(DataModuleGeral.IsUserLogged) then
+  begin
+    //Exibe uma mensagem ao usuário informando que o cadastro de cartão
+    //só é permitido para usuário logado
+    raise Exception.Create('Necessário cadastrar o usuário para prosseguir!');
+  end;
 end;
 
 procedure TFormMain.ButtonConsultPaymentClick(Sender: TObject);
@@ -148,19 +177,12 @@ end;
 
 procedure TFormMain.ButtonCreditCardsClick(Sender: TObject);
 begin
-  //Verifica se existe um usuário logado.
-  if (DataModuleGeral.IsUserLogged) then
-  begin
-    //Exibe o frame de cartões de crédito.
-    DataModuleGeral.OpenQueryCreditCards;
-    Show(FrameCreditCards, LayoutFrame, 'Cartões de Crédito');
-  end
-  else
-  begin
-    //Exibe uma mensagem ao usuário informando que o cadastro de cartão
-    //só é permitido para usuário logado
-    raise Exception.Create('Necessário cadastrar o usuário para prosseguir!');
-  end;
+  //Valida se existe um usuário logado.
+  ValidateUserLogged;
+
+  //Exibe o frame de cartões de crédito.
+  DataModuleGeral.OpenQueryCreditCards;
+  Show(FrameCreditCards, LayoutFrame, 'Cartões de Crédito');
 end;
 
 procedure TFormMain.ButtonDataUserClick(Sender: TObject);
