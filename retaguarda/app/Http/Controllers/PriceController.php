@@ -7,6 +7,7 @@ use Retaguarda\Http\Requests;
 use Retaguarda\Http\Controllers\Controller;
 use Retaguarda\Http\Requests\PriceRequest;
 use Retaguarda\Price;
+use DB;
 
 class PriceController extends Controller
 {
@@ -17,8 +18,19 @@ class PriceController extends Controller
      */
     public function index()
     {
-        $prices = Price::All();
-        return view('precos.index', compact('prices'));
+        $id = "1";
+        $price = Price::find($id);
+       
+
+        $precos =  DB::table('prices')
+             ->where('id', '!=', 1)
+             ->select('prices.*') 
+             ->get();
+
+             
+
+              return view('precos.index', compact('price'), compact('precos'));
+
     }
 
     /**
@@ -83,7 +95,7 @@ class PriceController extends Controller
        $price->fill($request->all());
        $price->save();
 
-      return redirect('tabela')->with('message','update');
+      return redirect('tabela')->with('message','editprecos');
     }
 
     /**
@@ -94,6 +106,9 @@ class PriceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Price::find($id)->delete();
+
+        return redirect('tabela');
+
     }
 }

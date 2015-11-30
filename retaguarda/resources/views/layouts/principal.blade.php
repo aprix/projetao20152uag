@@ -49,7 +49,14 @@
                 <li>{!!Link_to_route('vendedor.index', $title='Cadastrar vendedor')!!}</li>
                 <li>{!!Link_to_route('fiscal.index', $title='Cadastrar fiscal')!!}</li>
                 <li>{!!Link_to_route('tabela.index', $title='Tabela de preços')!!}</li>
-                <li><a href="#">Perfil</a></li>
+                <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Relatórios<span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li>{!!Link_to_route('vagas.index', $title='Relatório de consumo de vagas')!!}</li>
+                <li>{!!Link_to_route('pagamentos.index', $title='Relatório de pagamentos')!!}</li>
+                <!--<li><a href="instituicao.search">Editar Instituição</a></li>-->
+              </ul>
+            </li>
             </ul>
 
        </div>
@@ -118,6 +125,19 @@
               </div>
              @endif 
 
+             @if($message=='editfiscal')
+              <div class="alert alert-success alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Cadastro de fiscal editado com sucesso!
+              </div>
+             @endif 
+
+             @if($message=='editprecos')
+              <div class="alert alert-success alert-dismissible" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              Tabela de preços editada com sucesso!
+              </div>
+             @endif 
 
             
 
