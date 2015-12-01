@@ -76,6 +76,15 @@ type
     DataSetCreditCardsIconIndex: TIntegerField;
     DataSetGetTicketsStartTime: TStringField;
     DataSetTicketsStartTime: TStringField;
+    RequestGetPrice: TRESTRequest;
+    ResponseGetPrice: TRESTResponse;
+    AdapterPrice: TRESTResponseDataSetAdapter;
+    DataSetPrice: TClientDataSet;
+    DataSetPriceMinTime: TIntegerField;
+    DataSetPriceMaxTime: TIntegerField;
+    DataSetPriceUnitTime: TIntegerField;
+    DataSetPricePriceTime: TStringField;
+    DataSetPriceDiscountPrice: TStringField;
     procedure DataSetTicketsCalcFields(DataSet: TDataSet);
     procedure DataSetCreditCardsCalcFields(DataSet: TDataSet);
     procedure DataModuleCreate(Sender: TObject);
@@ -134,6 +143,8 @@ type
 
     procedure OpenQueryTicketsUser;
 
+    procedure OpenQueryPrice;
+
     function IsUserLogged: Boolean;
 
     function GetCreditsUser: Double;
@@ -172,7 +183,7 @@ uses UnitCreditCardSeparate, UnitBuyCredits, UnitTickets, UnitDataModuleLocal,
 
 function TDataModuleGeral.GetDiscountPrice: Double;
 begin
-  Result := 0;
+  Result := StrToFloat(DataSetPriceDiscountPrice.AsString.Replace('.',','));
 end;
 
 function TDataModuleGeral.GetFlagCreditCardSelected: String;
@@ -362,7 +373,7 @@ begin
   if (JsonResponse.Values['Error'] = nil) then
   begin
     //Atualiza o atributo que guarda o valor de créditos do usuário logado.
-    CreditsAvailableUser := StrToFloat(JsonResponse.GetValue('Value').Value);
+    CreditsAvailableUser := StrToFloat(JsonResponse.GetValue('Value').Value.Replace('.',','));
   end
   else
   begin
@@ -371,6 +382,34 @@ begin
 
     //Levanta uma exceção com a mensagem do erro.
     raise Exception.Create(JsonResponse.GetValue('Error').Value);
+  end;
+end;
+
+procedure TDataModuleGeral.OpenQueryPrice;
+var
+Json: TJSONObject;
+begin
+  //Remove a ligação do adapter e a o objeto ResponseGetPrice.
+  //Só serão ligados novamente se não ocorrer erros.
+  AdapterPrice.Response := nil;
+
+  //Envia a requisição Get para o webservice.
+  RequestGetPrice.Params.ParameterByName('json').Value := '{"IdUser": "'+IntToStr(DataModuleLocal.GetIdUser)+'"}';
+  RequestGetPrice.Execute;
+
+  //Pega o JSON retornado na resposta da requisição.
+  Json := (TJSONObject.ParseJSONValue(ResponseGetPrice.Content) as TJSONObject);
+
+  //Verifica se não ocorreu erro.
+  if (Json.Values['Error'] = nil) then
+  begin
+    //Faz a ligação do adapter com os dados retornado na resposta.
+    AdapterPrice.Response := ResponseGetPrice;
+  end
+  else
+  begin
+    //Levanta uma exceção com a mensagem do erro retornado pelo webservice.
+    raise Exception.Create(Json.GetValue('Error').Value);
   end;
 end;
 
@@ -411,12 +450,12 @@ end;
 
 function TDataModuleGeral.GetMaxTime: Integer;
 begin
-  Result := 120;
+  Result := DataSetPriceMaxTime.AsInteger;
 end;
 
 function TDataModuleGeral.GetMinTime: Integer;
 begin
-  Result := 1;
+  Result := DataSetPriceMinTime.AsInteger;
 end;
 
 function TDataModuleGeral.GetMonthCreditCardSelected: Integer;
@@ -436,7 +475,7 @@ end;
 
 function TDataModuleGeral.GetPriceTime: Double;
 begin
-  Result := 1;
+  Result := StrToFloat(DataSetPricePriceTime.AsString.Replace('.',','));
 end;
 
 procedure TDataModuleGeral.PostBuyCredits(IdUser, IdCreditCard,
@@ -736,7 +775,7 @@ end;
 
 function TDataModuleGeral.GetUnitTime: Integer;
 begin
-  Result := 1;
+  Result := DataSetPriceUnitTime.AsInteger;
 end;
 
 function TDataModuleGeral.GetUser(CPF, Password: String): TJSONObject;
