@@ -55,18 +55,27 @@ class VagasController extends Controller
         $id .=$request->dia;
 
 
-        $users = DB::table('vacancy_location')
+
+        $users = DB::table('vehicle')
+                ->join('vacancy_location', 'vehicle.id', '=','vacancy_location.id_vehicle')
+                ->where('vacancy_location.date_location', 'like', "%".$id."%")
+                ->select('vacancy_location.*', 'vehicle.plate')
+                ->orderBy('id','desc')
+                ->get();
+        
+        
+       /* $users = DB::table('vacancy_location')
              ->where('date_location', 'like', "%".$id."%")
              ->select('vacancy_location.*') 
-             ->get();
+             ->get();*/
 
          $total = DB::table('vacancy_location')
              ->where('date_location', 'like', "%".$id."%")
              ->select('vacancy_location.*') 
              ->count();
 
-             //return $total;
-                return view('vagas.resultado', compact('users'),  compact('total'));
+             //return $users;
+              return view('vagas.resultado', compact('users', 'total'),  compact('request'));
     }
 
     /**

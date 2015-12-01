@@ -19,7 +19,7 @@
 <div class="form-group col-md-2">
   {!!Form::label('Ano')!!}
   
-  {!!Form::selectRange('ano',2011, 2015)!!}
+  {!!Form::selectRange('ano',2015, 2011,$request->ano)!!}
   
 </div>
 
@@ -40,7 +40,7 @@
     '-10-' => 'Outubro',
     '-11-' => 'Novembro',
     '-12-' => 'Dezembro',
-))!!}
+),$request->mes)!!}
 
   <!--{!!Form::selectRange('mes', 1,12)!!}-->
   
@@ -83,7 +83,7 @@
     '30 '  => '30',
     '31 '  => '31',
 
-))!!}
+),$request->dia)!!}
   
   
 </div>
@@ -98,11 +98,11 @@
  
 <br><br>
 
-  <table class="table">
+  <table class="table table-bordered">
     <thead>
       
       <th>Id</th>
-      <th>Id do usuário</th>
+      <th>Apelido do usuário</th>
       <th>Data e Hora</th>
       <th>Valor</th>
       
@@ -110,9 +110,9 @@
     @foreach($users as $user)
     <tbody>
         <td>{!!$user->id!!}</td>
-        <td>{!!$user->id_user!!}</td>
+        <td>{!!$user->nickname!!}</td>
         <td>{!!$user->date_payment!!}</td>
-        <td>{!!$user->val!!}</td>
+        <td>{!!"R$ ".$user->val!!}</td>
         
         
     </tbody>
@@ -122,10 +122,10 @@
  </table>
 <table class="table">
   <thead>
-        <th>Total de dinheiro arrecadado no período(R$):</th>
+        <th>Total de dinheiro arrecadado no período:</th>
       </thead> 
       <tbody>
-        <td>{!!$total!!}</td>
+        <td>{!!"R$ ".$total!!}</td>
       </tbody>
 </table>
 

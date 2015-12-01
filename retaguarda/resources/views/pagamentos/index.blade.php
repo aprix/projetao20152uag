@@ -11,7 +11,7 @@
 <div class="form-group col-md-2">
   {!!Form::label('Ano')!!}
   
-  {!!Form::selectRange('ano',2011, 2015)!!}
+  {!!Form::selectRange('ano',2015, 2011)!!}
   
 </div>
 

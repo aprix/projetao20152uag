@@ -54,19 +54,24 @@ class PagamentosController extends Controller
         $id .=$request->mes;
         $id .=$request->dia;
 
-
-        $users = DB::table('payment')
+        $users = DB::table('user')
+                ->join('payment', 'user.id', '=','payment.id_user')
+                ->where('payment.date_payment', 'like', "%".$id."%")
+                ->select('payment.*', 'user.nickname')
+                ->orderBy('id','desc')
+                ->get();
+        /*$users = DB::table('payment')
              ->where('date_payment', 'like', "%".$id."%")
              ->select('payment.*') 
-             ->get();
+             ->get();*/
 
          $total = DB::table('payment')
              ->where('date_payment', 'like', "%".$id."%")
              ->select('payment.val') 
              ->sum('val');
 
-             //return $id;
-                return view('pagamentos.resultado', compact('users'),  compact('total'));
+             //return $result;
+               return view('pagamentos.resultado', compact('users', 'request'),  compact('total'));
     }
 
     /**

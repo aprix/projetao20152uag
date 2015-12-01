@@ -16,10 +16,11 @@
 {!!Form::open(['url'=>'vagas/show', 'class'=>'searchform'])!!}
 <legend>Relatório de consumo de vagas</legend>
 <fieldset>
+
 <div class="form-group col-md-2">
   {!!Form::label('Ano')!!}
   
-  {!!Form::selectRange('ano',2011, 2015)!!}
+  {!!Form::selectRange('ano',2015, 2011, $request->ano)!!}
   
 </div>
 
@@ -40,7 +41,7 @@
     '-10-' => 'Outubro',
     '-11-' => 'Novembro',
     '-12-' => 'Dezembro',
-))!!}
+),$request->mes)!!}
 
   <!--{!!Form::selectRange('mes', 1,12)!!}-->
   
@@ -83,9 +84,9 @@
     '30 '  => '30',
     '31 '  => '31',
 
-))!!}
+),$request->dia)!!}
   
-  
+ 
 </div>
 <div class="form-group col-md-2">
 
@@ -98,10 +99,11 @@
  
 <br><br>
 
-  <table class="table">
+  <table class="table table-bordered">
     <thead>
       <th>Id</th>
-      <th>Id do usuário</th>
+      
+      <th>Placa do veículo</th>
       <th>Data e Hora</th>
       <th>Tempo alocado</th>
       <th>Pagamento total</th>
@@ -109,10 +111,10 @@
     @foreach($users as $user)
     <tbody>
         <td>{!!$user->id!!}</td>
-        <td>{!!$user->id_user!!}</td>
+        <td>{!!$user->plate!!}</td>
         <td>{!!$user->date_location!!}</td>
         <td>{!!$user->time_location!!}</td>
-        <td>{!!$user->total_payment!!}</td>
+        <td>{!!"R$ ".$user->total_payment!!}</td>
         
     </tbody>
     @endforeach

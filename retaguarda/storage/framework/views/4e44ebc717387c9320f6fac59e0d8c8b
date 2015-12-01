@@ -19,7 +19,7 @@
   <?php echo Form::label('Ano'); ?>
 
   
-  <?php echo Form::selectRange('ano',2011, 2015); ?>
+  <?php echo Form::selectRange('ano',2015, 2011,$request->ano); ?>
 
   
 </div>
@@ -42,7 +42,7 @@
     '-10-' => 'Outubro',
     '-11-' => 'Novembro',
     '-12-' => 'Dezembro',
-)); ?>
+),$request->mes); ?>
 
 
   <!--<?php echo Form::selectRange('mes', 1,12); ?>-->
@@ -87,7 +87,7 @@
     '30 '  => '30',
     '31 '  => '31',
 
-)); ?>
+),$request->dia); ?>
 
   
   
@@ -104,11 +104,11 @@
  
 <br><br>
 
-  <table class="table">
+  <table class="table table-bordered">
     <thead>
       
       <th>Id</th>
-      <th>Id do usuário</th>
+      <th>Apelido do usuário</th>
       <th>Data e Hora</th>
       <th>Valor</th>
       
@@ -116,9 +116,9 @@
     <?php foreach($users as $user): ?>
     <tbody>
         <td><?php echo $user->id; ?></td>
-        <td><?php echo $user->id_user; ?></td>
+        <td><?php echo $user->nickname; ?></td>
         <td><?php echo $user->date_payment; ?></td>
-        <td><?php echo $user->val; ?></td>
+        <td><?php echo "R$ ".$user->val; ?></td>
         
         
     </tbody>
@@ -128,10 +128,10 @@
  </table>
 <table class="table">
   <thead>
-        <th>Total de dinheiro arrecadado no período(R$):</th>
+        <th>Total de dinheiro arrecadado no período:</th>
       </thead> 
       <tbody>
-        <td><?php echo $total; ?></td>
+        <td><?php echo "R$ ".$total; ?></td>
       </tbody>
 </table>
 

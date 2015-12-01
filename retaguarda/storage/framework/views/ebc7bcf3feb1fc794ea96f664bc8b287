@@ -11,7 +11,7 @@
   <?php echo Form::label('Ano'); ?>
 
   
-  <?php echo Form::selectRange('ano',2011, 2015); ?>
+  <?php echo Form::selectRange('ano',2015, 2011); ?>
 
   
 </div>

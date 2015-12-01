@@ -14,7 +14,7 @@
 
 <legend>Tabela de Preços</legend>
 
-<?php echo Link_to_route('tabela.create', $title='Cadastrar nova tabela de preços',$parameters='', $attributes=['class'=>'btn btn-primary']); ?>
+<?php echo Link_to_route('tabela.index', $title='Cadastrar nova tabela de preços',$parameters='', $attributes=['class'=>'btn btn-primary', 'disabled']); ?>
 
 <br><br>
 
