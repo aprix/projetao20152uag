@@ -127,12 +127,33 @@ procedure TDataModuleLocal.InsertTicket(Plate: String;
   StartTime: TDateTime; Time: Integer);
 var
 CommandSQL: String;
+KeyValues: array of string;
 begin
-  //Constroi o comando de INSERT para o novo tíquete.
-  CommandSQL := Format('INSERT INTO Tickets(Plate, StartTime, Time) VALUES(%s,%s, %d);'
-                      ,[ QuotedStr(Plate)
-                        ,QuotedStr(FormatDateTime('yyyy-MM-dd HH:mm:ss', StartTime))
-                        ,Time]);
+  SetLength(KeyValues, 2);
+  KeyValues[0] := Plate;
+  KeyValues[1] := '1';
+
+  //Verifica se já existe um tíquete aberto para a placa passada como argumento.
+  if (DataSetTickets.Locate('Plate;IconIndex', KeyValues, [])) then
+  begin
+    //Constroi o comando de UPDATE do tíquete aberto da placa em questão.
+    CommandSQL := Format('UPDATE Tickets SET'
+                         +' Time = Time + %d'
+                         +' WHERE Plate = %s AND StartTime = %s'
+                        ,[Time
+                         ,QuotedStr(Plate)
+                         ,QuotedStr(FormatDateTime('yyyy-MM-dd HH:mm:ss'
+                                   ,DataSetTickets.FieldByName('StartTime').AsDateTime))
+                         ]);
+  end
+  else
+  begin
+    //Constroi o comando de INSERT para o novo tíquete.
+    CommandSQL := Format('INSERT INTO Tickets(Plate, StartTime, Time) VALUES(%s,%s, %d);'
+                        ,[ QuotedStr(Plate)
+                          ,QuotedStr(FormatDateTime('yyyy-MM-dd HH:mm:ss', StartTime))
+                          ,Time]);
+  end;
 
   //Executa o comando SQL de Insert do tíquete na base local.
   FDConnectionLocal.ExecSQL(CommandSQL);
