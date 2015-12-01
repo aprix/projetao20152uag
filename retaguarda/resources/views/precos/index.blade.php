@@ -12,7 +12,12 @@
 
 @endif
 
+
+
 <legend>Tabela de Preços</legend>
+
+{!!Link_to_route('tabela.index', $title='Cadastrar nova tabela de preços',$parameters='', $attributes=['class'=>'btn btn-primary', 'disabled'])!!}
+<br><br>
 
   <table class="table">
     <thead>
@@ -22,7 +27,7 @@
       <th>Desconto p/ vendedor(%)</th>
       <th>Tempo máximo(min)</th>
     </thead>
-    @foreach($prices as $price)
+    
     <tbody>
         <td>{!!$price->min_time!!}</td>
         <td>{!!$price->un_time!!}</td>
@@ -31,9 +36,21 @@
         <td>{!!$price->max_price!!}</td>
         <td>{!!Link_to_route('tabela.edit', $title='Editar', $parameters=$price->id, $attributes= ['class'=>'btn btn-primary'])!!}</td>
     </tbody>
+    @foreach($precos as $preco)
+    <tbody>
+        <td>{!!$preco->min_time!!}</td>
+        <td>{!!$preco->un_time!!}</td>
+        <td>{!!$preco->un_price!!}</td>
+        <td>{!!$preco->discount_sellers!!}</td>
+        <td>{!!$preco->max_price!!}</td>
+        <td>{!!Link_to_route('tabela.edit', $title='Editar', $parameters=$preco->id, $attributes= ['class'=>'btn btn-primary'])!!}</td>
+      <td>{!!Link_to("tabela/$preco->id/destroy", $title='Remover',['class'=>'btn btn-danger'])!!}</td>    
+    </tbody>
     @endforeach
 
  </table>
+
+
 
 
 

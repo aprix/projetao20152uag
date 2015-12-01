@@ -22,7 +22,12 @@ Route::get('paineladmin','FrontController@paineladmin');
 Route::resource('front','FrontController');
 Route::resource('vendedor','SellerController');
 Route::resource('fiscal','FiscalController');
+Route::resource('vagas','VagasController');
+Route::resource('pagamentos','PagamentosController');
 Route::post('vendedor/search','SellerController@search');
+Route::post('vagas/show','VagasController@show');
+Route::post('pagamentos/show','PagamentosController@show');
+Route::get('tabela/{id}/destroy','PriceController@destroy');
 Route::get('vendedor/{id}/destroy','SellerController@destroy');
 Route::get('vendedor/{id}/reativar','SellerController@reativar');
 Route::get('fiscal/{id}/reativar','FiscalController@reativar');
@@ -38,6 +43,7 @@ Route::post('fiscal/store','FiscalController@store');
 //Route::get('tabela/{id}/edit','PriceController@edit');
 Route::put('tabela/{id}/update','PriceController@update');
 Route::put('fiscal/{id_user}/update','FiscalController@update');
+
 
 //Route::get('auth/login', 'Auth\AuthController@getLogin');
 //Route::post('auth/login', 'Auth\AuthController@postLogin');

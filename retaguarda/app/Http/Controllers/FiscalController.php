@@ -152,7 +152,7 @@ class FiscalController extends Controller
        $user->fill($request->all());
        $user->save();
 
-      return redirect('fiscal')->with('message','fiscaledited');
+      return redirect('fiscal')->with('message','editfiscal');
     }
 
     /**
