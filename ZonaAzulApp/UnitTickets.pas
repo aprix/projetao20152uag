@@ -13,7 +13,7 @@ uses
 
 type
   TFrameTickets = class(TFrame)
-    Layout1: TLayout;
+    LayoutPrincipal: TLayout;
     ListViewTickets: TListView;
     ButtonNew: TSpeedButton;
     lblMessage: TLabel;
@@ -26,8 +26,11 @@ type
     procedure ButtonNewClick(Sender: TObject);
     procedure ListViewTicketsItemsChange(Sender: TObject);
     procedure TimerUpdateListTicketsTimer(Sender: TObject);
+    procedure ListViewTicketsItemClick(const Sender: TObject;
+      const AItem: TListViewItem);
   private
     { Private declarations }
+    procedure ShowParkingForRenewTicket(Plate: String; DeadlineTime: TDateTime);
   public
     { Public declarations }
     procedure UpdateQueryTickets;
@@ -40,7 +43,8 @@ implementation
 
 {$R *.fmx}
 
-uses UnitDataModuleGeral, UnitParking, UnitRoutines, UnitDataModuleLocal;
+uses UnitDataModuleGeral, UnitParking, UnitRoutines, UnitDataModuleLocal,
+  UnitDialogOptions;
 
 procedure TFrameTickets.ButtonNewClick(Sender: TObject);
 begin
@@ -56,12 +60,54 @@ begin
   Accept := (AFilter = EmptyStr) or (Pos(AFilter, AValue) > 0);
 end;
 
+procedure TFrameTickets.ListViewTicketsItemClick(const Sender: TObject;
+  const AItem: TListViewItem);
+var
+DialogOptions: TFrameDialogOptions;
+begin
+  //Verifica se o tíquete pressionado está ATIVO (Em Aberto).
+  if (AItem.ImageIndex = 1) then
+  begin
+    //Abre um diálogo de opções para renovação da vaga.
+    DialogOptions := TFrameDialogOptions.Create(Self, LayoutPrincipal, ['Renovar Tíquete']
+                  , procedure (ModalResult: TModalResult; IndexSelected: Integer)
+                    begin
+                      try
+                        //Verifica se o resultado foi mrOk.
+                        if (ModalResult = mrOk) then
+                        begin
+                          //Verifica qual a opção selecionada.
+                          case IndexSelected of
+                            //Se for a opção de renovação.
+                            0: ShowParkingForRenewTicket(AItem.Text, StrToDateTime(AItem.Detail));
+                          end;
+                        end;
+                      finally
+                        //Desaloca da memória o diálogo de opções.
+                        DialogOptions.Release;
+                      end;
+                    end
+                  );
+  end;
+end;
+
 procedure TFrameTickets.ListViewTicketsItemsChange(Sender: TObject);
 begin
   //Exibe o label de mensagem se não existir nenhum tíquete adquirido.
   lblMessage.Visible := (DataModuleLocal.DataSetTickets.IsEmpty)
                       and ((DataModuleGeral.DataSetTickets.IsEmpty) or not(DataModuleGeral.IsUserLogged));
   lblMessage.Text    := 'Nenhum tíquete comprado'+#13+#13+'Clique no botão Novo para comprar um novo tíquete';
+end;
+
+procedure TFrameTickets.ShowParkingForRenewTicket(Plate: String;
+  DeadlineTime: TDateTime);
+var
+FormParking: TFormParking;
+begin
+  //Abre o formulário de estacionamento para a renovação do tíquete passado como argumento.
+  FormParking := TFormParking.Create(Self);
+  FormParking.RenewTicket(Plate, DeadlineTime);
+  UnitRoutines.Show(FormParking);
 end;
 
 procedure TFrameTickets.TimerUpdateListTicketsTimer(Sender: TObject);

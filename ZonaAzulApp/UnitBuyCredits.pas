@@ -73,6 +73,9 @@ end;
 procedure TFrameBuyCredits.ButtonBuyClick(Sender: TObject);
 begin
   try
+    //Valida os valores do campos.
+    ValidateValuesComponents;
+
     //Envia a compra de créditos ao WebService.
     DataModuleGeral.SendBuyCredits(DataModuleGeral.GetIdCreditCardSelected
                                   ,StrToInt(EditCSC.Text)
@@ -113,7 +116,7 @@ begin
     Value := 1;
 
     //Limpa o campo de CSC do cartão de crédito.
-    EditCSC.Text := '';
+    //EditCSC.Text := '';
 
     //Atualiza a consulta de cartões de créditos.
     DataModuleGeral.OpenQueryCreditCards;
