@@ -674,7 +674,7 @@ class API extends REST {
 										$sql_ = insert_vacancy_location($id_user, $plate, $time, $value);
 										
 									} else {
-										$response['Error'] = "Tempo máximo ultrapassado, só é possível colocar at $max_time minutos";
+										$response['Error'] = "Tempo máximo ultrapassado, só é possível colocar até $max_time minutos";
 										// por fim response é convertido para o formato json...
 										$response_json = json_encode($response);
 			
