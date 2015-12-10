@@ -122,7 +122,7 @@ class API extends REST {
 							// como já foi verificado na consulta $query que não existe locação de vaga
 							// neste momento para o veiculo é realizada a locação de vaga...
 							$sql_update_vacancy_location = update_vacancy_location_time($id_vl, $hora, $hora * $un_price);
-							echo $sql_update_vacancy_location;
+
 							// em caso de erro será enviado para a aplicação...
 							if(mysqli_query($this->db,  $sql_update_vacancy_location)){
 								
