@@ -142,6 +142,18 @@ function select_table_prices($id_user){
 			FROM prices";
 }
 
+function update_senha($cpf, $senha){
+	return "UPDATE user
+			SET user.senha = md5('$senha')
+			WHERE user.cpf = '$cpf'";
+}
+
+function select_email($cpf){
+	return "SELECT user.nickname, user.email
+			FROM user
+			WHERE user.cpf = '$cpf'";
+}
+
 /**
  * método que simula o pagamento utilizando cartão de crédito
  * @param type $name
