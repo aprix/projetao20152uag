@@ -8,271 +8,272 @@ object FormParking: TFormParking
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
-  OnShow = FormShow
+  OnCreate = FormCreate
   DesignerMasterStyle = 0
-  object Layout1: TLayout
-    Align = Client
-    Size.Width = 315.000000000000000000
-    Size.Height = 480.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 1
-    object Layout2: TLayout
-      Align = Top
-      Margins.Left = 5.000000000000000000
-      Margins.Top = 10.000000000000000000
-      Margins.Right = 5.000000000000000000
-      Position.X = 5.000000000000000000
-      Position.Y = 58.000000000000000000
-      Size.Width = 305.000000000000000000
-      Size.Height = 67.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 0
-      object Label1: TLabel
-        Align = Top
-        StyledSettings = [Family, Size, FontColor]
-        Size.Width = 305.000000000000000000
-        Size.Height = 20.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Style = [fsBold]
-        Text = 'Placa do Ve'#237'culo:'
-      end
-      object Layout8: TLayout
-        Align = Center
-        Size.Width = 152.000000000000000000
-        Size.Height = 45.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 0
-        object editPlateLetters: TEdit
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
-          Align = MostLeft
-          TabOrder = 0
-          KeyboardType = Alphabet
-          MaxLength = 3
-          TextSettings.Font.Size = 24.000000000000000000
-          TextSettings.HorzAlign = Center
-          Size.Width = 58.000000000000000000
-          Size.Height = 45.000000000000000000
-          Size.PlatformDefault = False
-          StyledSettings = [Family, Style, FontColor]
-          OnChange = editPlateLettersChange
-          OnKeyDown = editPlateLettersKeyDown
-        end
-        object Label2: TLabel
-          Align = Left
-          StyledSettings = [Family, Size, FontColor]
-          Position.X = 58.000000000000000000
-          Size.Width = 18.000000000000000000
-          Size.Height = 45.000000000000000000
-          Size.PlatformDefault = False
-          TextSettings.Font.Style = [fsBold]
-          TextSettings.HorzAlign = Center
-          Text = '-'
-        end
-        object editPlateNumbers: TEdit
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
-          Align = Client
-          TabOrder = 1
-          KeyboardType = NumberPad
-          MaxLength = 4
-          TextSettings.Font.Size = 24.000000000000000000
-          TextSettings.HorzAlign = Center
-          Size.Width = 76.000000000000000000
-          Size.Height = 45.000000000000000000
-          Size.PlatformDefault = False
-          StyledSettings = [Family, Style, FontColor]
-          OnChange = editPlateNumbersChange
-        end
-      end
-    end
-    object Layout3: TLayout
-      Align = Top
-      Margins.Left = 5.000000000000000000
-      Margins.Top = 10.000000000000000000
-      Margins.Right = 5.000000000000000000
-      Position.X = 5.000000000000000000
-      Position.Y = 135.000000000000000000
-      Size.Width = 305.000000000000000000
-      Size.Height = 67.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 1
-      object Label4: TLabel
-        Align = MostTop
-        StyledSettings = [Family, Size, FontColor]
-        Size.Width = 305.000000000000000000
-        Size.Height = 20.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Style = [fsBold]
-        Text = 'Tempo (em minutos) de estacionamento:'
-      end
-      object Layout7: TLayout
-        Align = Center
-        Size.Width = 174.000000000000000000
-        Size.Height = 45.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 0
-        object editTime: TEdit
-          Touch.InteractiveGestures = [LongTap, DoubleTap]
-          Align = Client
-          TabOrder = 0
-          KeyboardType = NumberPad
-          Text = '120'
-          TextSettings.Font.Size = 24.000000000000000000
-          TextSettings.HorzAlign = Center
-          Size.Width = 84.000000000000000000
-          Size.Height = 45.000000000000000000
-          Size.PlatformDefault = False
-          StyledSettings = [Family, FontColor]
-          OnChange = editTimeChange
-        end
-        object buttonRemoveTime: TSpeedButton
-          Align = MostLeft
-          StyledSettings = [Family, Style, FontColor]
-          Size.Width = 45.000000000000000000
-          Size.Height = 45.000000000000000000
-          Size.PlatformDefault = False
-          Text = '-'
-          TextSettings.Font.Size = 28.000000000000000000
-          OnClick = buttonRemoveTimeClick
-        end
-        object buttonAddTime: TSpeedButton
-          Align = MostRight
-          StyledSettings = [Family, Style, FontColor]
-          Position.X = 129.000000000000000000
-          Size.Width = 45.000000000000000000
-          Size.Height = 45.000000000000000000
-          Size.PlatformDefault = False
-          Text = '+'
-          TextSettings.Font.Size = 28.000000000000000000
-          OnClick = buttonAddTimeClick
-        end
-      end
-    end
-    object Layout4: TLayout
-      Align = Top
-      Margins.Left = 5.000000000000000000
-      Margins.Top = 10.000000000000000000
-      Margins.Right = 5.000000000000000000
-      Position.X = 5.000000000000000000
-      Position.Y = 265.000000000000000000
-      Size.Width = 305.000000000000000000
-      Size.Height = 46.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 2
-      object Label9: TLabel
-        Align = Top
-        StyledSettings = [Family, Size, FontColor]
-        Size.Width = 305.000000000000000000
-        Size.Height = 20.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Style = [fsBold]
-        Text = 'Tempo Limite:'
-      end
-      object lblDeadline: TLabel
-        Align = Client
-        StyledSettings = [Family, FontColor]
-        Margins.Left = 5.000000000000000000
-        Margins.Top = 1.000000000000000000
-        Margins.Right = 5.000000000000000000
-        Margins.Bottom = 1.000000000000000000
-        Size.Width = 295.000000000000000000
-        Size.Height = 24.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Size = 20.000000000000000000
-        TextSettings.Font.Style = [fsBold]
-        TextSettings.HorzAlign = Center
-        Text = '17/09/2015 16:55'
-      end
-    end
-    object LayoutCreditsAvailable: TLayout
-      Align = Top
-      Margins.Left = 5.000000000000000000
-      Margins.Top = 10.000000000000000000
-      Margins.Right = 5.000000000000000000
-      Position.X = 5.000000000000000000
-      Position.Y = 10.000000000000000000
-      Size.Width = 305.000000000000000000
-      Size.Height = 38.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 3
-      object Label8: TLabel
-        Align = Left
-        StyledSettings = [Family]
-        Size.Width = 113.000000000000000000
-        Size.Height = 38.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Size = 20.000000000000000000
-        TextSettings.Font.Style = [fsBold]
-        TextSettings.FontColor = claGreen
-        TextSettings.HorzAlign = Trailing
-        Text = 'Saldo:'
-      end
-      object lblCreditsAvailable: TLabel
-        Align = Client
-        StyledSettings = [Family]
-        Margins.Left = 10.000000000000000000
-        Size.Width = 182.000000000000000000
-        Size.Height = 38.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Size = 20.000000000000000000
-        TextSettings.Font.Style = [fsBold]
-        TextSettings.FontColor = claGreen
-        TextSettings.HorzAlign = Center
-        Text = 'R$ 0,00'
-      end
-    end
-    object Layout6: TLayout
-      Align = Top
-      Margins.Left = 5.000000000000000000
-      Margins.Top = 10.000000000000000000
-      Margins.Right = 5.000000000000000000
-      Position.X = 5.000000000000000000
-      Position.Y = 212.000000000000000000
-      Size.Width = 305.000000000000000000
-      Size.Height = 43.000000000000000000
-      Size.PlatformDefault = False
-      TabOrder = 4
-      object Label5: TLabel
-        Align = MostLeft
-        StyledSettings = [Family]
-        Size.Width = 113.000000000000000000
-        Size.Height = 43.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Size = 20.000000000000000000
-        TextSettings.Font.Style = [fsBold]
-        TextSettings.FontColor = claRed
-        TextSettings.HorzAlign = Trailing
-        Text = 'Total:'
-      end
-      object lblCreditsPay: TLabel
-        Align = Client
-        StyledSettings = [Family]
-        Margins.Left = 10.000000000000000000
-        Size.Width = 182.000000000000000000
-        Size.Height = 43.000000000000000000
-        Size.PlatformDefault = False
-        TextSettings.Font.Size = 20.000000000000000000
-        TextSettings.Font.Style = [fsBold]
-        TextSettings.FontColor = claRed
-        TextSettings.HorzAlign = Center
-        Text = 'R$ 120,00'
-      end
-    end
-    object ButtonActiveTickets: TSpeedButton
-      Align = MostBottom
-      StyledSettings = [Family, Style, FontColor]
-      Margins.Top = 10.000000000000000000
-      Position.Y = 432.000000000000000000
-      Size.Width = 315.000000000000000000
-      Size.Height = 48.000000000000000000
-      Size.PlatformDefault = False
-      Text = 'Ativar T'#237'quetes'
-      TextSettings.Font.Size = 28.000000000000000000
-      OnClick = ButtonActiveTicketsClick
-    end
-  end
   object TimerUpdateValues: TTimer
     OnTimer = TimerUpdateValuesTimer
     Left = 248
     Top = 416
+  end
+  object VertScrollBox1: TVertScrollBox
+    Align = Client
+    Size.Width = 315.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Viewport.Width = 315.000000000000000000
+    Viewport.Height = 480.000000000000000000
+    object Layout1: TLayout
+      Align = Client
+      Size.Width = 315.000000000000000000
+      Size.Height = 480.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      object Layout2: TLayout
+        Align = Top
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 58.000000000000000000
+        Size.Width = 305.000000000000000000
+        Size.Height = 67.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        object Label1: TLabel
+          Align = Top
+          StyledSettings = [Family, Size, FontColor]
+          Size.Width = 305.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Style = [fsBold]
+          Text = 'Placa do Ve'#237'culo:'
+        end
+        object Layout8: TLayout
+          Align = Center
+          Size.Width = 152.000000000000000000
+          Size.Height = 45.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object EditPlateLetters: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = MostLeft
+            TabOrder = 0
+            KeyboardType = Alphabet
+            MaxLength = 3
+            TextSettings.Font.Size = 24.000000000000000000
+            TextSettings.HorzAlign = Center
+            Size.Width = 58.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            StyledSettings = [Family, Style, FontColor]
+            OnChange = EditPlateLettersChange
+            OnKeyDown = EditPlateLettersKeyDown
+          end
+          object Label2: TLabel
+            Align = Left
+            StyledSettings = [Family, Size, FontColor]
+            Position.X = 58.000000000000000000
+            Size.Width = 18.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.Font.Style = [fsBold]
+            TextSettings.HorzAlign = Center
+            Text = '-'
+          end
+          object EditPlateNumbers: TEdit
+            Touch.InteractiveGestures = [LongTap, DoubleTap]
+            Align = Client
+            TabOrder = 1
+            KeyboardType = NumberPad
+            MaxLength = 4
+            TextSettings.Font.Size = 24.000000000000000000
+            TextSettings.HorzAlign = Center
+            Size.Width = 76.000000000000000000
+            Size.Height = 45.000000000000000000
+            Size.PlatformDefault = False
+            StyledSettings = [Family, Style, FontColor]
+            OnChange = EditPlateNumbersChange
+          end
+        end
+      end
+      object Layout3: TLayout
+        Align = Client
+        Margins.Top = 10.000000000000000000
+        Size.Width = 315.000000000000000000
+        Size.Height = 234.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        object Label4: TLabel
+          Align = MostTop
+          StyledSettings = [Family, Size, FontColor]
+          Margins.Left = 5.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Position.X = 5.000000000000000000
+          Size.Width = 305.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Style = [fsBold]
+          Text = 'Hor'#225'rio de sa'#237'da:'
+        end
+        object Layout7: TLayout
+          Align = Client
+          Size.Width = 315.000000000000000000
+          Size.Height = 214.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object SpinnerTimerOut: TTMSFMXSpinner
+            Align = Client
+            ClipChildren = True
+            StyleLookup = 'spinnerstyle'
+            TabOrder = 0
+            Size.Width = 315.000000000000000000
+            Size.Height = 214.000000000000000000
+            Size.PlatformDefault = False
+            AdaptToStyle = True
+            Columns = <
+              item
+                Width = 20.000000000000000000
+                RangeTo = 20.000000000000000000
+                DateRangeFrom = 42332.646193506950000000
+                DateRangeTo = 42352.646193506950000000
+                Step = 10.000000000000000000
+                StepType = sstMinute
+                SelectedValue = 42332.646193506950000000
+                ValueFormat = '%g'
+                DateTimeValueFormat = 'hh  :  nn'
+                RangeType = srtDateTime
+                Font.Size = 32.000000000000000000
+                Font.Style = [fsBold]
+                CustomItems = <>
+              end>
+            OnSelectedValueChanged = SpinnerTimerOutSelectedValueChanged
+          end
+        end
+      end
+      object Layout4: TLayout
+        Align = Top
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 265.000000000000000000
+        Size.Width = 305.000000000000000000
+        Size.Height = 46.000000000000000000
+        Size.PlatformDefault = False
+        Visible = False
+        TabOrder = 2
+        object Label9: TLabel
+          Align = Top
+          StyledSettings = [Family, Size, FontColor]
+          Size.Width = 305.000000000000000000
+          Size.Height = 20.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Style = [fsBold]
+          Text = 'Tempo Limite:'
+        end
+        object lblDeadline: TLabel
+          Align = Client
+          StyledSettings = [Family, FontColor]
+          Margins.Left = 5.000000000000000000
+          Margins.Top = 1.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 1.000000000000000000
+          Size.Width = 295.000000000000000000
+          Size.Height = 24.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          TextSettings.HorzAlign = Center
+          Text = '17/09/2015 16:55'
+        end
+      end
+      object LayoutCreditsAvailable: TLayout
+        Align = Top
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 305.000000000000000000
+        Size.Height = 38.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object Label8: TLabel
+          Align = Left
+          StyledSettings = [Family]
+          Size.Width = 113.000000000000000000
+          Size.Height = 38.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          TextSettings.FontColor = claGreen
+          TextSettings.HorzAlign = Trailing
+          Text = 'Saldo:'
+        end
+        object lblCreditsAvailable: TLabel
+          Align = Client
+          StyledSettings = [Family]
+          Margins.Left = 10.000000000000000000
+          Size.Width = 182.000000000000000000
+          Size.Height = 38.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          TextSettings.FontColor = claGreen
+          TextSettings.HorzAlign = Center
+          Text = 'R$ 0,00'
+        end
+      end
+      object Layout6: TLayout
+        Align = Bottom
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 379.000000000000000000
+        Size.Width = 305.000000000000000000
+        Size.Height = 43.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        object Label5: TLabel
+          Align = MostLeft
+          StyledSettings = [Family]
+          Size.Width = 113.000000000000000000
+          Size.Height = 43.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          TextSettings.FontColor = claRed
+          TextSettings.HorzAlign = Trailing
+          Text = 'Total:'
+        end
+        object lblCreditsPay: TLabel
+          Align = Client
+          StyledSettings = [Family]
+          Margins.Left = 10.000000000000000000
+          Size.Width = 182.000000000000000000
+          Size.Height = 43.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Font.Size = 20.000000000000000000
+          TextSettings.Font.Style = [fsBold]
+          TextSettings.FontColor = claRed
+          TextSettings.HorzAlign = Center
+          Text = 'R$ 120,00'
+        end
+      end
+      object ButtonActiveTickets: TSpeedButton
+        Align = MostBottom
+        StyledSettings = [Family, Style, FontColor]
+        Margins.Top = 10.000000000000000000
+        Position.Y = 432.000000000000000000
+        Size.Width = 315.000000000000000000
+        Size.Height = 48.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Ativar T'#237'quetes'
+        TextSettings.Font.Size = 28.000000000000000000
+        OnClick = ButtonActiveTicketsClick
+      end
+    end
   end
 end

@@ -3,7 +3,7 @@ object FrameTickets: TFrameTickets
   Size.Width = 333.000000000000000000
   Size.Height = 464.000000000000000000
   Size.PlatformDefault = False
-  object Layout1: TLayout
+  object LayoutPrincipal: TLayout
     Align = Client
     Size.Width = 333.000000000000000000
     Size.Height = 464.000000000000000000
@@ -28,6 +28,7 @@ object FrameTickets: TFrameTickets
       ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
       CanSwipeDelete = False
       OnItemsChange = ListViewTicketsItemsChange
+      OnItemClick = ListViewTicketsItemClick
       OnFilter = ListViewTicketsFilter
       ShowSelection = False
       PullToRefresh = True

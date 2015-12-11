@@ -109,8 +109,7 @@ begin
                           end;
                         finally
                           //Desaloca o frame da memória.
-                          DialogOptions.Parent := nil;
-                          //DialogOptions.DisposeOf;
+                          DialogOptions.Release;
                         end;
                       end
                     );
