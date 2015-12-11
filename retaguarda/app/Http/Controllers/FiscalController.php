@@ -11,8 +11,13 @@ use Retaguarda\Usuario;
 use Retaguarda\Supervisor;
 use DB;
 
+
 class FiscalController extends Controller
 {
+
+     public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *

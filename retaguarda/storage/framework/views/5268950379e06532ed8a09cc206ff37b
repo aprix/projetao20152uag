@@ -1,0 +1,59 @@
+
+
+<?php $__env->startSection('content'); ?>
+
+<?php $message=Session::get('message')?>
+
+<?php if($message=='update'): ?>
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  Tabela de preços editada com sucesso
+</div>
+
+<?php endif; ?>
+
+
+
+<legend>Tabela de Preços</legend>
+
+<?php echo Link_to_route('tabela.index', $title='Cadastrar nova tabela de preços',$parameters='', $attributes=['class'=>'btn btn-primary', 'disabled']); ?>
+
+<br><br>
+
+  <table class="table">
+    <thead>
+      <th>Tempo mínimo(min)</th>
+      <th>Tempo unitário(min)</th>
+      <th>Preço unitário(R$)</th>
+      <th>Desconto p/ vendedor(%)</th>
+      <th>Tempo máximo(min)</th>
+    </thead>
+    
+    <tbody>
+        <td><?php echo $price->min_time; ?></td>
+        <td><?php echo $price->un_time; ?></td>
+        <td><?php echo $price->un_price; ?></td>
+        <td><?php echo $price->discount_sellers; ?></td>
+        <td><?php echo $price->max_price; ?></td>
+        <td><?php echo Link_to_route('tabela.edit', $title='Editar', $parameters=$price->id, $attributes= ['class'=>'btn btn-primary']); ?></td>
+    </tbody>
+    <?php foreach($precos as $preco): ?>
+    <tbody>
+        <td><?php echo $preco->min_time; ?></td>
+        <td><?php echo $preco->un_time; ?></td>
+        <td><?php echo $preco->un_price; ?></td>
+        <td><?php echo $preco->discount_sellers; ?></td>
+        <td><?php echo $preco->max_price; ?></td>
+        <td><?php echo Link_to_route('tabela.edit', $title='Editar', $parameters=$preco->id, $attributes= ['class'=>'btn btn-primary']); ?></td>
+      <td><?php echo Link_to("tabela/$preco->id/destroy", $title='Remover',['class'=>'btn btn-danger']); ?></td>    
+    </tbody>
+    <?php endforeach; ?>
+
+ </table>
+
+
+
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

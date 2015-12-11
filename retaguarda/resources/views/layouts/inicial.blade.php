@@ -13,10 +13,9 @@
     <title>AzulFacil</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-
-    <!-- Custom styles for this template -->
-    <link href="{{ asset('assets/css/layouts.css')}}" rel="stylesheet">
+    {!!Html::style('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css')!!}
+    {!!Html::style('assets/css/sticky-footer-navbar.css')!!}
+   
 
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -42,21 +41,24 @@
 
             </button>
 
-             <a href="layout"layout class="navbar-brand">AzulFácil</a>
+             {!!Link_to('painel', $title='AzulFácil', ['class'=>'navbar-brand'])!!}
       </div>
        
-       <div id="navbarCollapse" class="collapse navbar-collapse">
-          <form class="navbar-form navbar-right">
+       <div id="navbarCollapse" class="collapse navbar-collapse navbar-form navbar-right">
+          {!!Form::open(['url'=>'login/try'])!!}
+          
                 <div class="form-group">
-                <input type="text" placeholder="Email" class="form-control">
+               {!!Form::text('login', null, ['class'=>'form-control', 'placeholder'=>'Login', 'required'=>''])!!}        
                </div>
                 <div class="form-group">
-                <input type="password" placeholder="Password" class="form-control">
+              {!!Form::password('password', ['class'=>'form-control', 'placeholder'=>'Senha', 'required'=>''])!!}        
                </div>
-                <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
-
+               <div class="form-group">
+              {!!Form::submit('Entrar', ['class'=>'btn btn-success'])!!}
+                </div>
+   {!!Form::close()!!}
        </div>
+
 
     </nav>
 
@@ -66,12 +68,18 @@
 
         </div>
 
+<footer class="footer">
+      <div class="container">
+        <p class="text-muted">Desenvolvido por:</p>
+      </div>
+    </footer>
     
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+       {!!Html::script('https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')!!}
+    {!!Html::script('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js')!!}  
+
   </body>
 </html>

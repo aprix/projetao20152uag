@@ -9,7 +9,10 @@ use Redirect;
 use Retaguarda\Http\Requests;
 use Retaguarda\Http\Requests\LoginRequest;
 use Retaguarda\Http\Controllers\Controller;
-use Retaguarda\Price;
+use Retaguarda\Admin;
+use DB;
+
+    
 
 class LogController extends Controller
 {
@@ -50,6 +53,39 @@ class LogController extends Controller
 
     }
 
+
+    public function login(LoginRequest $request){
+
+     $users = DB::table('admin')
+            ->where('login','=',$request->login)
+            ->select('admin.*')
+            ->get();
+             
+
+foreach($users as $user){
+           $senha = $user->senha;
+           $id = $user->id;
+}
+            $senha2 = $request->password;
+            $admin = Admin::find($id);
+
+    if($senha2 == $senha){
+       Auth::login($admin);
+       
+       if(Auth::check()){  
+
+       return redirect('painel');
+}
+
+    }
+    
+
+    
+       
+
+    return "Falha" ;
+
+    }
     /**
      * Display the specified resource.
      *

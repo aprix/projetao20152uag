@@ -10,6 +10,10 @@ use DB;
 
 class VagasController extends Controller
 {
+
+     public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -74,8 +78,13 @@ class VagasController extends Controller
              ->select('vacancy_location.*') 
              ->count();
 
+             $pagamento = DB::table('vacancy_location')
+             ->where('date_location', 'like', "%".$id."%")
+             ->select('vacancy_location.total_payment') 
+             ->sum('total_payment');
+
              //return $users;
-              return view('vagas.resultado', compact('users', 'total'),  compact('request'));
+              return view('vagas.resultado', compact('users', 'total'),  compact('request','pagamento'));
     }
 
     /**

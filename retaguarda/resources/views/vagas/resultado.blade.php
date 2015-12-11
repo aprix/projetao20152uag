@@ -124,9 +124,11 @@
 <table class="table">
   <thead>
         <th>Total de vagas consumidas no período:</th>
+        <th>Total arrecadado no período:</th>
       </thead> 
       <tbody>
         <td>{!!$total!!}</td>
+        <td>{!!"R$ ".$pagamento!!}</td>
       </tbody>
 </table>
 

@@ -8,8 +8,14 @@ use Retaguarda\Http\Requests;
 use Retaguarda\Http\Controllers\Controller;
 use DB;
 
+
+
 class PagamentosController extends Controller
 {
+
+     public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
