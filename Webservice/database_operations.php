@@ -154,6 +154,14 @@ function select_email($cpf){
 			WHERE user.cpf = '$cpf'";
 }
 
+function select_credit_card_num($id_user, $num_credit_card){
+	return "SELECT credit_card.id
+	
+		FROM credit_card
+		WHERE credit_card.id_user = $id_user 
+		AND credit_card.num = '$num_credit_card'";
+}
+
 /**
  * método que simula o pagamento utilizando cartão de crédito
  * @param type $name

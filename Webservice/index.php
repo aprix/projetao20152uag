@@ -333,7 +333,7 @@ class API extends REST {
 	}
 
 	private function post_credit_card(){
-		if ($this->get_request_method() != 'POST') {
+		if ($this->get_request_method() != 'GET') {
             $this->response($this->get_request_method(), 406);
         }
         //Recebe um Json como argumento para o parâmetro 'json'.
@@ -365,20 +365,30 @@ class API extends REST {
 		}
 		
 		if($id == 0){
-			// insert
-			$sql = insert_credit_card($id_user, $name, $number, $flag, $month, $year, $status);
-
-			if($query = mysqli_query($this->db, $sql)){
-
-				// pega o id do insert
-				$response['Id'] = (string) mysqli_insert_id($this->db);
-				$this->response(json_encode($response), 200);
-
-			} else {
-
-				$response['Error'] = mysqli_error($this->db);
-				$this->response(json_encode($response), 200);
-
+			$sql_select = select_credit_card_num($id_user, $number);
+			if($query_select = mysqli_query($this->db, $sql_select)){
+				if (mysqli_num_rows($query_select) > 0){
+					
+					$response['Error'] = 'Cartão de crédito já cadastrado!';
+					$this->response(json_encode($response), 200);
+					
+				} else {
+					// insert
+					$sql = insert_credit_card($id_user, $name, $number, $flag, $month, $year, $status);
+		
+					if($query = mysqli_query($this->db, $sql)){
+		
+						// pega o id do insert
+						$response['Id'] = (string) mysqli_insert_id($this->db);
+						$this->response(json_encode($response), 200);
+		
+					} else {
+		
+						$response['Error'] = mysqli_error($this->db);
+						$this->response(json_encode($response), 200);
+		
+					}
+				}
 			}
 		} else {
 
