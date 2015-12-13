@@ -333,7 +333,7 @@ class API extends REST {
 	}
 
 	private function post_credit_card(){
-		if ($this->get_request_method() != 'GET') {
+		if ($this->get_request_method() != 'POST') {
             $this->response($this->get_request_method(), 406);
         }
         //Recebe um Json como argumento para o parâmetro 'json'.
