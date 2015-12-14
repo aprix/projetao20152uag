@@ -56,11 +56,11 @@ class LogController extends Controller
 
     public function login(LoginRequest $request){
 
-     $users = DB::table('admin')
+     if($users = DB::table('admin')
             ->where('login','=',$request->login)
             ->select('admin.*')
-            ->get();
-             
+            ->get()
+             ){
 
 foreach($users as $user){
            $senha = $user->senha;
@@ -76,14 +76,10 @@ foreach($users as $user){
 
        return redirect('painel');
 }
+}
 
-    }
-    
-
-    
-       
-
-    return "Falha" ;
+}
+    return back()->with('message','loginfail');
 
     }
     /**
