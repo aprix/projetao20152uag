@@ -74,7 +74,11 @@ foreach($users as $user){
        
        if(Auth::check()){  
 
+        
+
        return redirect('painel');
+   
+
 }
 }
 

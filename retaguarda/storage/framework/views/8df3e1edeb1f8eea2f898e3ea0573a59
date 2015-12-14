@@ -60,6 +60,9 @@
       
         
     </tbody>
+  </table>
+  <?php echo $users->render(); ?>
+
    </fieldset>
 </div>
 <?php $__env->stopSection(); ?>

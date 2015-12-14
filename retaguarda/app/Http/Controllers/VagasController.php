@@ -65,7 +65,7 @@ class VagasController extends Controller
                 ->where('vacancy_location.date_location', 'like', "%".$id."%")
                 ->select('vacancy_location.*', 'vehicle.plate')
                 ->orderBy('id','desc')
-                ->get();
+                ->paginate(4);
         
         
        /* $users = DB::table('vacancy_location')
@@ -86,7 +86,41 @@ class VagasController extends Controller
              //return $users;
               return view('vagas.resultado', compact('users', 'total'),  compact('request','pagamento'));
     }
+    
+    public function pdf(Request $request){
 
+        $id = $request ->ano;
+        $id .=$request->mes;
+        $id .=$request->dia;
+
+
+
+        $users = DB::table('vehicle')
+                ->join('vacancy_location', 'vehicle.id', '=','vacancy_location.id_vehicle')
+                ->where('vacancy_location.date_location', 'like', "%".$id."%")
+                ->select('vacancy_location.*', 'vehicle.plate')
+                ->orderBy('id','desc')
+                ->get();
+        
+        
+       /* $users = DB::table('vacancy_location')
+             ->where('date_location', 'like', "%".$id."%")
+             ->select('vacancy_location.*') 
+             ->get();*/
+
+         $total = DB::table('vacancy_location')
+             ->where('date_location', 'like', "%".$id."%")
+             ->select('vacancy_location.*') 
+             ->count();
+
+             $pagamento = DB::table('vacancy_location')
+             ->where('date_location', 'like', "%".$id."%")
+             ->select('vacancy_location.total_payment') 
+             ->sum('total_payment');
+
+             //return $users;
+              return view('vagas.printable', compact('users', 'total'),  compact('request','pagamento'));
+    }
     /**
      * Show the form for editing the specified resource.
      *

@@ -29,7 +29,7 @@ class FiscalController extends Controller
             ->join('supervisor', 'user.id', '=', 'supervisor.id_user')
             ->select('supervisor.*')
             ->where('supervisor.status', '=','1')
-            ->get();
+            ->paginate(4);
 
         return view('fiscal.index', compact('users'));
     }

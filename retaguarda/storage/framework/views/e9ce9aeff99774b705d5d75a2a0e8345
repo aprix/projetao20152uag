@@ -43,7 +43,7 @@
 
             </button>
 
-             <?php echo Link_to('painel', $title='AzulFácil', ['class'=>'navbar-brand']); ?>
+             <?php echo Link_to('/', $title='AzulFácil', ['class'=>'navbar-brand']); ?>
 
       </div>
        

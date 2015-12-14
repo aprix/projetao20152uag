@@ -41,7 +41,7 @@
 
             </button>
 
-             {!!Link_to('painel', $title='AzulFácil', ['class'=>'navbar-brand'])!!}
+             {!!Link_to('/', $title='AzulFácil', ['class'=>'navbar-brand'])!!}
       </div>
        
        <div id="navbarCollapse" class="collapse navbar-collapse navbar-form navbar-right">

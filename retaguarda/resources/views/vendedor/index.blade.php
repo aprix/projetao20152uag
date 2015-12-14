@@ -56,6 +56,8 @@
       
         
     </tbody>
+  </table>
+  {!! $users->render() !!}
    </fieldset>
 </div>
 @stop

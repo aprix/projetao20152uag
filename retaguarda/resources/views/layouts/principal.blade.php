@@ -39,7 +39,7 @@
             </button>
 
              <!--<a href="painel"layout class="navbar-brand">AzulFácil</a>-->
-             {!!Link_to('painel', $title='AzulFácil', ['class'=>'navbar-brand'])!!}
+             {!!Link_to('/', $title='AzulFácil', ['class'=>'navbar-brand'])!!}
 
       </div>
        

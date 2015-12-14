@@ -57,11 +57,17 @@
         <td><?php echo Link_to("fiscal/$user->id/destroy", $title='Remover',['class'=>'btn btn-danger']); ?></td>
 
    <?php endforeach; ?>
+
+   
         
       
         
     </tbody>
+</table>
+    <?php echo $users->render(); ?>
+
    </fieldset>
+
 </div>
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

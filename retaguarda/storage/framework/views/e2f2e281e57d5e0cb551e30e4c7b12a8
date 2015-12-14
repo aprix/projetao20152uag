@@ -104,6 +104,25 @@
 </fieldset>
  <?php echo Form::close(); ?> 
 
+ <?php echo Form::open(['url'=>'vagas/pdf']); ?>
+
+
+<?php echo Form::hidden('ano', $request->ano); ?>
+
+<?php echo Form::hidden('mes', $request->mes); ?>
+
+
+
+<?php echo Form::hidden('dia', $request->dia); ?>
+
+
+
+<?php echo Form::submit('Versão para impressão', ['class'=>'btn btn-primary']); ?>
+
+
+<?php echo Form::close(); ?> 
+ 
+
  
 <br><br>
 
@@ -139,6 +158,9 @@
         <td><?php echo "R$ ".$pagamento; ?></td>
       </tbody>
 </table>
+<?php echo $users->render(); ?>
+
+
 
 <?php $__env->stopSection(); ?>
 <?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

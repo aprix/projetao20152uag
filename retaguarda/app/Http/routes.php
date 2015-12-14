@@ -24,6 +24,8 @@ Route::resource('vendedor','SellerController');
 Route::resource('fiscal','FiscalController');
 Route::resource('vagas','VagasController');
 Route::resource('pagamentos','PagamentosController');
+Route::post('pagamentos/pdf','PagamentosController@pdf');
+Route::post('vagas/pdf','VagasController@pdf');
 Route::post('vendedor/search','SellerController@search');
 Route::post('vagas/show','VagasController@show');
 Route::post('pagamentos/show','PagamentosController@show');

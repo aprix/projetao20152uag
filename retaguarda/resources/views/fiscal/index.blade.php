@@ -53,10 +53,15 @@
         <td>{!!Link_to("fiscal/$user->id/destroy", $title='Remover',['class'=>'btn btn-danger'])!!}</td>
 
    @endforeach
+
+   
         
       
         
     </tbody>
+</table>
+    {!! $users->render() !!}
    </fieldset>
+
 </div>
 @stop

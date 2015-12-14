@@ -96,6 +96,20 @@
 </fieldset>
  {!!Form::close()!!} 
 
+ {!!Form::open(['url'=>'vagas/pdf'])!!}
+
+{!!Form::hidden('ano', $request->ano)!!}
+{!!Form::hidden('mes', $request->mes)!!}
+
+
+{!!Form::hidden('dia', $request->dia)!!}
+
+
+{!!Form::submit('Versão para impressão', ['class'=>'btn btn-primary'])!!}
+
+{!!Form::close()!!} 
+ 
+
  
 <br><br>
 
@@ -131,5 +145,7 @@
         <td>{!!"R$ ".$pagamento!!}</td>
       </tbody>
 </table>
+{!! $users->render() !!}
+
 
 @stop

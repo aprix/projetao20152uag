@@ -95,6 +95,18 @@
 </fieldset>
  {!!Form::close()!!} 
 
+ {!!Form::open(['url'=>'pagamentos/pdf'])!!}
+
+{!!Form::hidden('ano', $request->ano)!!}
+{!!Form::hidden('mes', $request->mes)!!}
+
+
+{!!Form::hidden('dia', $request->dia)!!}
+
+
+{!!Form::submit('Versão para impressão', ['class'=>'btn btn-primary'])!!}
+
+{!!Form::close()!!} 
  
 <br><br>
 
@@ -117,16 +129,25 @@
         
     </tbody>
     @endforeach
-     
-
+    
+    
+ 
  </table>
+
 <table class="table">
   <thead>
-        <th>Total de dinheiro arrecadado no período:</th>
+        <th>Total de pagamentos no período:</th>
+
+        <th>Total arrecadado no período:</th>
       </thead> 
       <tbody>
+        <td>{!!$numero!!}</td>
         <td>{!!"R$ ".$total!!}</td>
       </tbody>
+
 </table>
+{!! $users->render() !!}
+
+
 
 @stop

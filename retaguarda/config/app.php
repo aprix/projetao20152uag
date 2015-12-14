@@ -145,6 +145,7 @@ return [
         Retaguarda\Providers\EventServiceProvider::class,
         Retaguarda\Providers\RouteServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        
         //Thujohn\Pdf\PdfServiceProvider::class,
 
     ],
@@ -197,7 +198,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-        //'PDF' => Thujohn\Pdf\PdfFacade::class,
+
 
     ],
 
