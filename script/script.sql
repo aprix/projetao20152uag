@@ -122,10 +122,12 @@ CREATE TABLE IF NOT EXISTS supervisor(
 );
 
 CREATE TABLE IF NOT EXISTS admin(
+	id INT AUTO_INCREMENT NOT NULL,
 	login VARCHAR(20) NOT NULL,
 	senha CHAR(32) NOT NULL,
+	remember_token VARCHAR(30) NOT NULL,
 
-	PRIMARY KEY(login)
+	PRIMARY KEY(id)
 );
 
 -- inserindo usuario default

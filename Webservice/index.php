@@ -2,6 +2,7 @@
 
 require_once("Rest.inc.php");
 require_once("database_operations.php");
+require_once("lib/Mail/Mail.php");
 
 
 
@@ -121,7 +122,7 @@ class API extends REST {
 							// como já foi verificado na consulta $query que não existe locação de vaga
 							// neste momento para o veiculo é realizada a locação de vaga...
 							$sql_update_vacancy_location = update_vacancy_location_time($id_vl, $hora, $hora * $un_price);
-							
+
 							// em caso de erro será enviado para a aplicação...
 							if(mysqli_query($this->db,  $sql_update_vacancy_location)){
 								
@@ -364,20 +365,30 @@ class API extends REST {
 		}
 		
 		if($id == 0){
-			// insert
-			$sql = insert_credit_card($id_user, $name, $number, $flag, $month, $year, $status);
-
-			if($query = mysqli_query($this->db, $sql)){
-
-				// pega o id do insert
-				$response['Id'] = (string) mysqli_insert_id($this->db);
-				$this->response(json_encode($response), 200);
-
-			} else {
-
-				$response['Error'] = mysqli_error($this->db);
-				$this->response(json_encode($response), 200);
-
+			$sql_select = select_credit_card_num($id_user, $number);
+			if($query_select = mysqli_query($this->db, $sql_select)){
+				if (mysqli_num_rows($query_select) > 0){
+					
+					$response['Error'] = 'Cartão de crédito já cadastrado!';
+					$this->response(json_encode($response), 200);
+					
+				} else {
+					// insert
+					$sql = insert_credit_card($id_user, $name, $number, $flag, $month, $year, $status);
+		
+					if($query = mysqli_query($this->db, $sql)){
+		
+						// pega o id do insert
+						$response['Id'] = (string) mysqli_insert_id($this->db);
+						$this->response(json_encode($response), 200);
+		
+					} else {
+		
+						$response['Error'] = mysqli_error($this->db);
+						$this->response(json_encode($response), 200);
+		
+					}
+				}
 			}
 		} else {
 
@@ -673,7 +684,7 @@ class API extends REST {
 										$sql_ = insert_vacancy_location($id_user, $plate, $time, $value);
 										
 									} else {
-										$response['Error'] = "Tempo máximo ultrapassado, só é possível colocar at $max_time minutos";
+										$response['Error'] = "Tempo máximo ultrapassado, só é possível colocar até $max_time minutos";
 										// por fim response é convertido para o formato json...
 										$response_json = json_encode($response);
 			
@@ -831,6 +842,85 @@ class API extends REST {
 		$this->response($response_json, 200);
 	}
 	
+	private function redefine_password(){
+		if ($this->get_request_method() != 'GET') {
+            $this->response($this->get_request_method(), 406);
+        }
+		
+		//Recebe um Json como argumento para o parâmetro 'json'.
+        $json = $this->_request['json'];
+
+        //Converte o Json em um array, os indices do array são iguais às chaves do Json. Ex.: {"id":1,"outroValor": "string"}.
+        $vector = json_decode($json, TRUE);
+		
+		//Variaveis
+		$cpf = $vector['CPF'];
+		
+		$sql = select_email($cpf);
+		
+		$response = array();
+		
+		if ($query = mysqli_query($this->db, $sql)){
+			if (mysqli_num_rows($query) > 0){
+				$row = mysqli_fetch_array($query, MYSQLI_ASSOC);
+				
+				$email = $row['email'];
+				$nick  = $row['nickname'];
+				
+				$senha = rand(0,10000);
+				
+				$sql_senha = update_senha($cpf, $senha);
+				
+				if (mysqli_query($this->db, $sql_senha)){
+					$from = "AzulFacil";
+					$title = "Redefinição de Senha";
+					$body = "Olá, aqui está sua nova senha: $senha
+					
+Esta é uma senha temporária e por isso redefina esta para a senha que desejar o mais breve possível
+
+Suporte AzulFácil";
+					 
+					$host = "smtp.gmail.com";
+					// tem que colocar um gmail valido
+					$username = "";
+					// e sua senha
+					$password = "";
+					$port     = '587';
+					 
+					$header = array ('From'    => $from,
+									 'To'      => $email,
+									 'Subject' => $title);
+					$smtp = Mail::factory('smtp',
+					  array ('host'     => $host,
+					    	 'auth'     => true,
+					    	 'username' => $username,
+					  		 'password' => $password,
+							 'port'     => $port));
+					 
+					$mail = $smtp->send($email, $header, $body);
+					 
+					if (PEAR::isError($mail)) {
+					  $response['Error'] = $mail->getMessage();
+					} else {
+					  $response['Sucess'] = "E-mail com nova senha enviado com sucesso!";
+					}
+				
+				} else {
+					$response['Error'] = mysqli_error($this->db);
+					
+				}
+			}
+		} else {
+			$response['Error'] = mysqli_error($this->db);
+		}
+		
+		// por fim response é convertido para o formato json...
+		$response_json = json_encode($response);
+		
+		// e enviado para aplicação...
+		$this->response($response_json, 200);	
+	}
+	
 	// funcao especifica da validacao do numero do cartao
 	private function validate_credit_card($numeroCartao, $response){
 		// faz as validações de pagamento...
@@ -899,5 +989,3 @@ class API extends REST {
 $api = new API;
 $api->processApi();
 ?>
-
-
