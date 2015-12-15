@@ -1,14 +1,13 @@
 object FormParking: TFormParking
   Left = 0
   Top = 0
-  Caption = 'Form2'
   ClientHeight = 480
   ClientWidth = 315
   StyleBook = DataModuleGeral.CustomStyleBook
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
-  OnCreate = FormCreate
+  OnShow = FormShow
   DesignerMasterStyle = 0
   object TimerUpdateValues: TTimer
     OnTimer = TimerUpdateValuesTimer
@@ -23,7 +22,7 @@ object FormParking: TFormParking
     TabOrder = 3
     Viewport.Width = 315.000000000000000000
     Viewport.Height = 480.000000000000000000
-    object Layout1: TLayout
+    object LayoutPrincipal: TLayout
       Align = Client
       Size.Width = 315.000000000000000000
       Size.Height = 480.000000000000000000

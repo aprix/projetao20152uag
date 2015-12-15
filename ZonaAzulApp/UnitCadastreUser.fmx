@@ -3,7 +3,7 @@ object FrameCadastreUser: TFrameCadastreUser
   Size.Width = 299.000000000000000000
   Size.Height = 358.000000000000000000
   Size.PlatformDefault = False
-  object Layout1: TLayout
+  object LayoutPrincipal: TLayout
     Align = Client
     Size.Width = 299.000000000000000000
     Size.Height = 358.000000000000000000
@@ -230,6 +230,15 @@ object FrameCadastreUser: TFrameCadastreUser
       Text = 'Confirmar'
       TextSettings.Font.Size = 20.000000000000000000
       OnClick = ButtonConfirmClick
+    end
+    object ButtonBack: TSpeedButton
+      StyledSettings = [Family, Style, FontColor]
+      Size.Width = 40.000000000000000000
+      Size.Height = 40.000000000000000000
+      Size.PlatformDefault = False
+      Text = '<'
+      TextSettings.Font.Size = 25.000000000000000000
+      OnClick = ButtonBackClick
     end
   end
 end

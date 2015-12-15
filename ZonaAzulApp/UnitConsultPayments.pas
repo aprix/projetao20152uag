@@ -9,7 +9,7 @@ uses
 
 type
   TFrameConsultPayments = class(TFrame)
-    Layout1: TLayout;
+    LayoutPrincipal: TLayout;
     Layout2: TLayout;
     Label1: TLabel;
     Layout8: TLayout;
@@ -33,6 +33,7 @@ type
     procedure SetPaymentUnauthorized;
     procedure SetFontColorResultLabels(Color: TAlphaColor);
     procedure ValidateValuesComponents;
+    procedure ConsultTicket;
   public
     { Public declarations }
     constructor Create(AWOner: TComponent); override;
@@ -51,11 +52,33 @@ uses UnitDataModuleGeral, UnitRoutines;
 { TFrameConsultPayments }
 
 procedure TFrameConsultPayments.buttonConsultTicketClick(Sender: TObject);
+begin
+  //Exibe o diálogo de progresso.
+  ExecuteAsync(LayoutPrincipal
+              , procedure
+                begin
+                  try
+                    //Executa a consulta do tíquete.
+                    ConsultTicket;
+                  except
+                    on E: Exception do
+                      ShowMessage(E.Message);
+                  end;
+                end);
+end;
+
+procedure TFrameConsultPayments.ClearComponents;
+begin
+  //Limpa os campos da consulta.
+  RectangleResult.Visible := False;
+end;
+
+procedure TFrameConsultPayments.ConsultTicket;
 var
 DayTime, DeadlineTime: TDateTime;
 Plate: String;
+IsAuthorized: Boolean;
 begin
-
   try
     //Valida os valores dos campos.
     ValidateValuesComponents;
@@ -64,28 +87,36 @@ begin
     Plate := editPlateLetters.Text+editPlateNumbers.Text;
 
     //Consulta no servidor se o estacionamento está pago para a placa informada.
-    if (DataModuleGeral.ConsultPayment(Plate, DayTime, DeadlineTime)) then
-    begin
-      //Exibe como resultado que o pagamento foi confirmado.
-      SetPaymentAuthorized(DayTime, DeadlineTime);
-    end
-    else
-    begin
-      //Exibe o resultado de não pagamento do estacionamento.
-      SetPaymentUnauthorized;
-    end;
+    IsAuthorized := DataModuleGeral.ConsultPayment(Plate, DayTime, DeadlineTime);
+
+    //Executa a atualização dos componentes na Thread principal.
+    TThread.Synchronize(nil,
+        procedure
+        begin
+          //Verifica se o estacionamento está autorizado para a placa consultada.
+          if (IsAuthorized) then
+          begin
+            //Exibe como resultado que o pagamento foi confirmado.
+            SetPaymentAuthorized(DayTime, DeadlineTime);
+          end
+          else
+          begin
+            //Exibe o resultado de não pagamento do estacionamento.
+            SetPaymentUnauthorized;
+          end;
+        end
+    );
   except
     on Error: Exception do
     begin
-      ShowMessage(Error.Message);
+      //Exibe a mensagem do erro na Thread principal.
+      TThread.Synchronize(nil
+        ,procedure
+         begin
+            ShowMessage(Error.Message);
+         end);
     end;
   end;
-end;
-
-procedure TFrameConsultPayments.ClearComponents;
-begin
-  //Limpa os campos da consulta.
-  RectangleResult.Visible := False;
 end;
 
 constructor TFrameConsultPayments.Create(AWOner: TComponent);
@@ -145,6 +176,7 @@ begin
   //Atribui ao label de resultado o texto de não autorização.
   LabelResult.Text := 'Estacionamento'+#13+'Não Autorizado';
   LabelTimeInterval.Text := FormatDateTime('dd/mm/yyyy hh:MM', now);
+  Application.ProcessMessages;
 
   //Coloca a fonte vermelha nos labels de resultado.
   SetFontColorResultLabels(TAlphaColors.Red);

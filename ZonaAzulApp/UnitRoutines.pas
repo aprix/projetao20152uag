@@ -3,7 +3,24 @@ unit UnitRoutines;
 interface
 
 uses System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants
-  , FMX.Edit, FMX.ListBox, FMX.Controls, FMX.Forms, IdHashMessageDigest;
+  , FMX.Edit, FMX.ListBox, FMX.Controls, FMX.Forms, IdHashMessageDigest, FMX.Layouts
+  , UnitProgressDialog;
+
+
+type
+  TOnExecute = reference to procedure;
+
+type
+  TExecuteThread = class(TThread)
+    public
+      var
+      OnExecute: TOnExecute;
+      ProgressDialog: TFrameProgressDialog;
+      constructor Create(ProgressDialog: TFrameProgressDialog; OnExecute: TOnExecute); reintroduce;
+      procedure CloseProgressDialog;
+    protected
+      procedure Execute; Override;
+  end;
 
 procedure SetTextUpperCaseEditChange(Sender: TObject);
 procedure AllowJustLettersEditKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char; Shift: TShiftState);
@@ -31,6 +48,9 @@ function ValidateEmail(EMail: String):Boolean;
 function ValidateCPF(CPF: string): boolean;
 
 function GenerateMD5(Value: String): String;
+
+procedure ExecuteAsync(Layout: TLayout; OnExecute: TOnExecute);
+procedure CloseProgressDialog(ProgressDialog: TFrameProgressDialog);
 
 implementation
 
@@ -160,7 +180,7 @@ begin
                                 , [ Copy(DateTime, 9, 2)
                                   , Copy(DateTime, 6, 2)
                                   , Copy(DateTime, 1, 4)
-                                  , Copy(DateTime, 12, 8)]);
+                                  , Copy(DateTime, 12, 5)]);
   Result := StrToDateTime(StrDateTime);
 end;
 
@@ -304,6 +324,63 @@ begin
     finally
       Free;
     end;
+  end;
+end;
+
+procedure ExecuteAsync(Layout: TLayout; OnExecute: TOnExecute);
+var
+Thread: TExecuteThread;
+ProgressDialog: TFrameProgressDialog;
+begin
+  //Instancia um diálogo de progresso (Frame).
+  ProgressDialog := TFrameProgressDialog.Create(nil);
+
+  //Adiciona e anima o diálogo de progresso no layout passado como argumento.
+  ProgressDialog.Parent := Layout;
+  ProgressDialog.StartAnimation;
+
+  //Cria a Thread para executar o procedimento desejado de forma concorrente.
+  Thread := TExecuteThread.Create(ProgressDialog, OnExecute);
+
+  //Inicia a Thread.
+  Thread.Start;
+end;
+
+procedure CloseProgressDialog(ProgressDialog: TFrameProgressDialog);
+begin
+  //Confirma se o diálogo de progresso ainda não está sendo desalocado da memória.
+  if (ProgressDialog.ProgressIndicator <> nil) then
+  begin
+    //Remove o diálogo do layout que o contém.
+    ProgressDialog.StopAnimation;
+    ProgressDialog.Free;
+  end;
+end;
+
+procedure TExecuteThread.CloseProgressDialog;
+begin
+  UnitRoutines.CloseProgressDialog(Self.ProgressDialog);
+end;
+
+constructor TExecuteThread.Create(ProgressDialog: TFrameProgressDialog; OnExecute: TOnExecute);
+begin
+  //Executa o construtor herdado da superclasse.
+  inherited Create(True);
+
+  //Inicializa os atributos de objeto.
+  Self.ProgressDialog := ProgressDialog;
+  Self.OnExecute      := OnExecute;
+  Self.FreeOnTerminate:= True;
+end;
+
+procedure TExecuteThread.Execute;
+begin
+  try
+    //Executa o procedimento desejado.
+    OnExecute;
+  finally
+    //Fecha o diálogo de progresso.
+    Synchronize(CloseProgressDialog);
   end;
 end;
 

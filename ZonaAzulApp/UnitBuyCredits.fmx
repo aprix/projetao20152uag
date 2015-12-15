@@ -3,7 +3,7 @@ object FrameBuyCredits: TFrameBuyCredits
   Size.Width = 333.000000000000000000
   Size.Height = 479.000000000000000000
   Size.PlatformDefault = False
-  object Layout1: TLayout
+  object LayoutPrincipal: TLayout
     Align = Client
     Size.Width = 333.000000000000000000
     Size.Height = 479.000000000000000000

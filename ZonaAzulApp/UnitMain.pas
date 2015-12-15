@@ -13,12 +13,12 @@ uses
 type
   TFormMain = class(TForm, ICadastreListener)
     MultiViewMenu: TMultiView;
-    Layout1: TLayout;
+    LayoutMenu: TLayout;
     ButtonBuyCredits: TSpeedButton;
     ButtonTickets: TSpeedButton;
     ButtonCreditCards: TSpeedButton;
     ToolBar1: TToolBar;
-    SpeedButton3: TSpeedButton;
+    ButtonHome: TSpeedButton;
     ButtonConsultPayment: TSpeedButton;
     LayoutFrame: TLayout;
     LabelTitle: TLabel;
@@ -55,6 +55,7 @@ type
   public
     { Public declarations }
     procedure OnSucess;
+    procedure OnCancel;
   end;
 
 var
@@ -72,14 +73,14 @@ begin
   ValidateUserLogged;
 
   //Exibe a tela de compra de créditos.
-  FrameBuyCredits.ClearComponents;
+  FrameBuyCredits.BeginComponents;
   Show( FrameBuyCredits,  LayoutFrame, 'Compra de Créditos');
 end;
 
 procedure TFormMain.ButtonTicketsClick(Sender: TObject);
 begin
   //Exibe a tela de tíquetes do usuário logado ou avulso.
-  FrameTickets.UpdateQueryTickets;
+  FrameTickets.UpdateList;
   Show( FrameTickets, LayoutFrame, 'Tíquetes' );
 end;
 
@@ -104,15 +105,35 @@ end;
 
 procedure TFormMain.MultiViewMenuStartShowing(Sender: TObject);
 begin
-  //Atualiza os labels de dados do usuário.
-  UpdateValuesUserLabels;
+  //Verifica se o frame em exibição é o de cadastro de usuário.
+  if (VisibleFrame = FrameCadastreUser) then
+  begin
+    //Restaura o texto padrão do botão Home.
+    ButtonHome.Text := ':';
 
-  //Atualiza o texto do botão dos dados do usuário.
-  UpdateTextDataUserButton;
+    //Exibe o Frame de tíquetes.
+    Show(FrameTickets, LayoutFrame, 'Tìquetes');
+  end
+  else
+  begin
+    //Atualiza os labels de dados do usuário.
+    UpdateValuesUserLabels;
+
+    //Atualiza o texto do botão dos dados do usuário.
+    UpdateTextDataUserButton;
+  end;
+end;
+
+procedure TFormMain.OnCancel;
+begin
+  //
 end;
 
 procedure TFormMain.OnSucess;
 begin
+  //Restaura o texto padrão do botão Home.
+  ButtonHome.Text := ':';
+
   //Exibe o frame de tíquetes.
   Show(FrameTickets, LayoutFrame, 'Tíquetes');
 end;
@@ -127,6 +148,15 @@ begin
     VisibleFrame.Visible:= False;
   end;
 
+  //Verifica se o Frame exibido antes é diferente do cadastro de usuário.
+  //Ou se o Frame a ser exibido é o de cadastro de usuário.
+  if (VisibleFrame <> FrameCadastreUser)
+  or (Frame = FrameCadastreUser) then
+  begin
+    //Oculta o menu.
+    MultiViewMenu.HideMaster;
+  end;
+
   //Adiciona o novo Frame dentro do Layout principal.
   Frame.Parent := Parent;
   Frame.Visible:= True;
@@ -137,8 +167,12 @@ begin
   //Atualiza o atributo que contém a referência do Frame em exibição.
   VisibleFrame := Frame;
 
-  //Oculta o menu.
-  MultiViewMenu.HideMaster;
+  //Verifica se o Frame exibido é o de cadastro do usuário.
+  if (Frame = FrameCadastreUser) then
+  begin
+    //Atualiza o texto do botão Home.
+    ButtonHome.Text := '<';
+  end;
 end;
 
 procedure TFormMain.UpdateTextDataUserButton;
@@ -181,7 +215,7 @@ begin
   ValidateUserLogged;
 
   //Exibe o frame de cartões de crédito.
-  DataModuleGeral.OpenQueryCreditCards;
+  FrameCreditCards.UpdateList;
   Show(FrameCreditCards, LayoutFrame, 'Cartões de Crédito');
 end;
 
@@ -201,7 +235,7 @@ begin
 
   //Abre o diálogo para averiguar se o usuário deseja sair da aplicação.
   MessageDlg( 'Deseja desconectar da sua conta?'
-                 , System.UITypes.TMsgDlgType.mtConfirmation
+                 , System.UITypes.TMsgDlgType.mtCustom
                  , [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo]
                  , 0
                  , procedure (const Result: TModalResult)
@@ -219,7 +253,7 @@ begin
                             UnitRoutines.Show(TFormWelcome.Create(Application));
 
                             //Fecha o formulário principal.
-                            Close;
+                            //Close;
                           end;
                       end;
                    end
@@ -229,3 +263,5 @@ begin
 end;
 
 end.
+
+

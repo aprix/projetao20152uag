@@ -9,6 +9,9 @@ uses
   FMX.Controls.Presentation, FMX.Layouts, System.ImageList, FMX.ImgList;
 
 type
+  TOnConfirm = reference to procedure;
+
+type
   TFormCreditCardSeparate = class(TFormCadastreCreditCard)
     LayoutCSC: TLayout;
     Label5: TLabel;
@@ -17,12 +20,16 @@ type
     procedure EditCSCChange(Sender: TObject);
   private
     { Private declarations }
+    var
+    OnConfirm: TOnConfirm;
   protected
     { Protected declarations}
     procedure ValidateValuesComponents; override;
   public
     { Public declarations }
     function GetCSC(): Integer;
+    function GetLayoutPrincipal: TLayout;
+    constructor Create(AWoner: TComponent; OnConfirm: TOnConfirm); reintroduce;
   end;
 
 var
@@ -39,8 +46,18 @@ begin
   //Valida os valores dos campos.
   ValidateValuesComponents();
 
-  //Retorna como resultado mrOK.
-  ModalResult := mrOk;
+  //Executa o procedimento de confirmação.
+  OnConfirm;
+end;
+
+constructor TFormCreditCardSeparate.Create(AWoner: TComponent;
+  OnConfirm: TOnConfirm);
+begin
+  //Executa o construtor herdado da superclasse.
+  inherited Create(AWoner);
+
+  //Atribui ao atributo OnConfirm a referência do procedimento passado como argumento.
+  Self.OnConfirm := OnConfirm;
 end;
 
 procedure TFormCreditCardSeparate.EditCSCChange(Sender: TObject);
@@ -52,6 +69,11 @@ end;
 function TFormCreditCardSeparate.GetCSC: Integer;
 begin
   Result := StrToInt(EditCSC.Text);
+end;
+
+function TFormCreditCardSeparate.GetLayoutPrincipal: TLayout;
+begin
+  Result := LayoutPrincipal;
 end;
 
 procedure TFormCreditCardSeparate.ValidateValuesComponents;

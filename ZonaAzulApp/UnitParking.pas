@@ -12,7 +12,7 @@ uses
 type
   TFormParking = class(TForm, IPaymentListener)
     Label1: TLabel;
-    Layout1: TLayout;
+    LayoutPrincipal: TLayout;
     Layout2: TLayout;
     Layout3: TLayout;
     Label4: TLabel;
@@ -43,7 +43,7 @@ type
     procedure SpinnerTimerOutSelectedValueChanged(Sender: TObject;
       Column: Integer; SelectedValue: Double;
       RangeType: TTMSFMXSpinnerRangeType);
-    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     procedure UpdateValuesLabels;
@@ -51,13 +51,16 @@ type
     procedure OnSucess;
     procedure OnError(Msg: String);
     procedure UpdateValuesComponents;
+    procedure ActiveTicket;
     var
-    Time: Integer;
+    Time, TimeAlreadyPaid: Integer;
     BeginTime, DeadlineTime: TDateTime;
+    ValueTotal: Double;
     IsRenew: Boolean;
   public
     { Public declarations }
     procedure RenewTicket(Plate: String; DeadlineTime: TDateTime);
+    procedure BeginComponents;
   end;
 
 var
@@ -67,18 +70,120 @@ implementation
 
 {$R *.fmx}
 
-uses UnitRoutines;
+uses UnitRoutines, UnitDataModuleLocal, UnitBuyCredits, UnitDialogBuyCredits;
+
+procedure TFormParking.ActiveTicket;
+begin
+  //Se existir um usuário logado, executa a ativação do tíquete em outra Thread.
+  if (DataModuleGeral.IsUserLogged) then
+  begin
+    //Executa a ativação do tíquete em uma Thread paralela.
+    ExecuteAsync(LayoutPrincipal
+       ,procedure
+        begin
+          //Envia o pagamento para o Webservice.
+          DataModuleGeral.SendPayment(Format('%s%s',[EditPlateLetters.Text, EditPlateNumbers.Text])
+                                     ,Time
+                                     ,Self);
+        end
+    );
+  end
+  else
+  begin
+    //Nesse caso, executa a ativação do tíquete na Thread principal(corrente).
+    //Envia o pagamento para o Webservice.
+    DataModuleGeral.SendPayment(Format('%s%s',[EditPlateLetters.Text, EditPlateNumbers.Text])
+                               ,Time
+                               ,Self);
+  end;
+end;
+
+procedure TFormParking.BeginComponents;
+begin
+  try
+    //Verifica se existe um usuário logado.
+    if (DataModuleGeral.IsUserLogged) then
+    begin
+      //Atualiza a consulta de créditos do usuário logado.
+      DataModuleGeral.OpenQueryCreditsUser;
+    end;
+
+    //Atualiza a consulta de preço.
+    DataModuleGeral.OpenQueryPrice;
+
+    //Atualiza a interface na Thread principal.
+    TThread.Synchronize(nil
+     ,procedure
+      begin
+        //Atribui valores iniciais a alguns campos.
+        Time := DataModuleGeral.GetMinTime;
+
+        //Verifica se é um novo tíquete.
+        if not(IsRenew) then
+        begin
+          //Atribui aos campos de placa usando o último tíquete pago.
+          EditPlateLetters.Text    := Copy(DataModuleGeral.GetLastPlate(), 1, 3);
+          EditPlateNumbers.Text    := Copy(DataModuleGeral.GetLastPlate(), 4, 4);
+        end;
+
+        //Atualiza os valores dos campos.
+        UpdateValuesComponents();
+      end);
+  except
+    on Error: Exception do
+    begin
+      TThread.Synchronize(nil
+       ,procedure
+        begin
+          //Exibe a mensagem do erro para o usuário.
+          ShowMessage(Error.Message);
+        end);
+    end;
+  end;
+end;
 
 procedure TFormParking.ButtonActiveTicketsClick(Sender: TObject);
+var
+DialogBuyCredits: TFormDialogBuyCredits;
 begin
   try
     //Valida os valores dos componentes.
     ValidateValuesComponents;
 
-    //Envia o pagamento para o Webservice.
-    DataModuleGeral.SendPayment(Format('%s%s',[editPlateLetters.Text, editPlateNumbers.Text])
-                               ,Time
-                               ,Self);
+    //Verifica se é um usuário avulso ou se o usuário logado tem valor suficiente para
+    //adquirir o tíquete.
+    if (not(DataModuleGeral.IsUserLogged)
+    or (ValueTotal <= DataModuleGeral.GetCreditsUser)) then
+    begin
+      //Ativa o novo tíquete.
+      ActiveTicket;
+    end
+    else
+    begin
+      //Exibe o formulário de compra de crédito para o usuário adquirir os créditos restante.
+      DialogBuyCredits := TFormDialogBuyCredits.Create(Self);
+      DialogBuyCredits.SetCreditsForBuy(ValueTotal - DataModuleGeral.GetCreditsUser);
+      DialogBuyCredits
+              .ShowModal(
+                 procedure (ModalResult: TModalResult)
+                 begin
+                    try
+                      //Verifica se o resultado é mrOk.
+                      if (ModalResult = mrOk) then
+                      begin
+                        //Fecha o diálogo.
+                        DialogBuyCredits.Close;
+
+                        //Ativa o novo tíquete.
+                        ActiveTicket;
+                      end;
+                    finally
+                      //Desaloca o diálogo de compra da memória.
+                      DialogBuyCredits.Release;
+                    end;
+                 end
+              );
+    end;
   except
     on Error: Exception do
     begin
@@ -106,45 +211,32 @@ begin
   editPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
 end;
 
-procedure TFormParking.FormCreate(Sender: TObject);
+procedure TFormParking.FormShow(Sender: TObject);
 begin
-  try
-    //Se não existir um usuário logado, oculta os créditos disponíveis.
-    LayoutCreditsAvailable.Visible := DataModuleGeral.IsUserLogged;
+  //Se não existir um usuário logado, oculta os créditos disponíveis.
+  LayoutCreditsAvailable.Visible := DataModuleGeral.IsUserLogged;
 
-    //Verifica se existe um usuário logado.
-    if (DataModuleGeral.IsUserLogged) then
+  //Inicializa os componentes em uma Thread paralela.
+  ExecuteAsync(LayoutPrincipal
+   ,procedure
     begin
-      //Atualiza a consulta de créditos do usuário logado.
-      DataModuleGeral.OpenQueryCreditsUser;
-    end;
-
-    //Atualiza a consulta de preço.
-    DataModuleGeral.OpenQueryPrice;
-
-    //Atribui valores iniciais a alguns campos.
-    Time := DataModuleGeral.GetMinTime;
-    EditPlateLetters.Text    := Copy(DataModuleGeral.GetLastPlate(), 1, 3);
-    EditPlateNumbers.Text    := Copy(DataModuleGeral.GetLastPlate(), 4, 4);
-
-    //Atualiza os valores dos campos.
-    UpdateValuesComponents();
-  except
-    on Error: Exception do
-    begin
-      //Exibe a mensagem do erro para o usuário.
-      ShowMessage(Error.Message);
-    end;
-  end;
+      //Inicializa os componentes.
+      BeginComponents;
+    end);
 end;
 
 procedure TFormParking.OnSucess;
 begin
-  //Exibe uma mensagem de sucesso para o usuário.
-  ShowMessage('Pagamento realizado!');
+  //Executa na Thread principal.
+  TThread.Synchronize(nil
+    ,procedure
+     begin
+        //Exibe uma mensagem de sucesso para o usuário.
+        ShowMessage('Pagamento realizado!');
 
-  //O formulário é fechado.
-  Close;
+        //O formulário é fechado.
+        ModalResult := mrOk;
+     end);
 end;
 
 procedure TFormParking.RenewTicket(Plate: String; DeadlineTime: TDateTime);
@@ -156,6 +248,31 @@ begin
   //Atualiza os atributos de limite e indicador de renovação.
   Self.IsRenew      := True;
   Self.DeadlineTime := DeadlineTime;
+
+  //Busca na base local o tempo já adquirido do tíquete a ser renovado.
+  if (DataModuleGeral.IsUserLogged) then
+  begin
+    //Localiza o tempo do tíquete na consulta retornada pelo WebService.
+    DataModuleGeral.DataSetTickets.Locate('Plate;IconIndex'
+                                          ,VarArrayOf([Plate, '1'])
+                                          ,[]);
+    Self.TimeAlreadyPaid := DataModuleGeral.DataSetTicketsTime.AsInteger;
+  end
+  else
+  begin
+    //Localiza o tempo na base local.
+    DataModuleLocal.DataSetTickets.Locate('Plate;IconIndex'
+                                          ,VarArrayOf([Plate, '1'])
+                                          ,[]);
+    Self.TimeAlreadyPaid := DataModuleLocal.DataSetTickets.FieldByName('Time').AsInteger;
+  end;
+
+  //Verifica se o usuário já adquiriu o tempo máximo permitido.
+  if (Self.TimeAlreadyPaid = DataModuleGeral.GetMaxTime) then
+  begin
+    //Levanta uma exceção informando que o tempo máximo permitido já foi adquirido.
+    raise Exception.Create('Tempo máximo permitido já foi adquirido para este veículo');
+  end;
 end;
 
 procedure TFormParking.SpinnerTimerOutSelectedValueChanged(Sender: TObject;
@@ -175,8 +292,13 @@ end;
 
 procedure TFormParking.OnError(Msg: String);
 begin
-  //Exibe a mensagem do erro para o usuário.
-  ShowMessage(Msg);
+  //Executa na Thread principal.
+  TThread.Synchronize(nil
+    ,procedure
+     begin
+        //Exibe a mensagem do erro para o usuário.
+        ShowMessage(Msg);
+     end);
 end;
 
 procedure TFormParking.TimerUpdateValuesTimer(Sender: TObject);
@@ -191,7 +313,7 @@ ColumnSpinner : TTMSFMXColumn;
 begin
 
   //Verifica se é uma renovação de vaga.
-  if (IsRenew) and (DeadlineTime > Date) then
+  if (IsRenew) and (DeadlineTime > Now) then
   begin
     //O tempo inicial será o tempo de limite do tíquete a ser renovado.
     BeginTime    := DeadlineTime;
@@ -207,7 +329,7 @@ begin
   //Atualiza o Spinner de tempo.
   ColumnSpinner := SpinnerTimerOut.Columns.Items[0];
   ColumnSpinner.DateRangeFrom := IncMinute(BeginTime, DataModuleGeral.GetMinTime);
-  ColumnSpinner.DateRangeTo   := IncMinute(BeginTime, DataModuleGeral.GetMaxTime);
+  ColumnSpinner.DateRangeTo   := IncMinute(BeginTime, DataModuleGeral.GetMaxTime - TimeAlreadyPaid);
   ColumnSpinner.Step          := DataModuleGeral.GetUnitTime;
 
   //Atualiza os valores dos labels.
@@ -218,16 +340,17 @@ procedure TFormParking.UpdateValuesLabels;
 begin
   //Atualiza os valores dos campos do formulário.
   lblCreditsAvailable.Text := 'R$ '+FormatValue(DataModuleGeral.GetCreditsUser());
-  lblCreditsPay.Text       := 'R$ '+FormatValue(Time
-                                                * DataModuleGeral.GetPriceTime()
-                                                * (1 - (DataModuleGeral.GetDiscountPrice/100)));
+  ValueTotal               := Time
+                              * DataModuleGeral.GetPriceTime()
+                              * (1 - (DataModuleGeral.GetDiscountPrice/100));
+  lblCreditsPay.Text       := 'R$ '+FormatValue(ValueTotal);
 end;
 
 procedure TFormParking.ValidateValuesComponents;
 begin
   //Valida se foi informado todos os valores dos componentes.
   Focused := nil;
-  editPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
+  EditPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
   ValidateValueComponent(editPlateLetters, editPlateLetters.Text, 'Informe as letras da placa.', 3);
   ValidateValueComponent(editPlateNumbers, editPlateNumbers.Text, 'Informe os números da placa.', 4);
 end;
