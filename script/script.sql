@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS payment(
 	id INT AUTO_INCREMENT NOT NULL,
 	id_user INT NOT NULL,
 	id_credit_card INT NOT NULL,
-	val NUMERIC NOT NULL,
+	val DECIMAL(10,2) NOT NULL,
 	date_payment TIMESTAMP NOT NULL,
 	status INT(1) NOT NULL,
 
