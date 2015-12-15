@@ -4,14 +4,19 @@
 
 
 
-	<div class= "boasvindas">
-		<div class="col-lg-12 text-center">
-			<h1>Bem vindo ao modulo gestor AzulFácil</h1>
-			<p class="lead">No menu superior você encontrará todas as funcionalidades do sistema<br>Para mais informações acesse o nosso manual do sistema clicando no botão abaixo</p>
 
+<div class="jumbotron">
+      <div class="container">
+	<div class= "boasvindas">
+		<div class="text-left">
+			<h1>Módulo gestor AzulFácil!</h1>
+			<p class="lead">A solução definitiva para o gestor de estacionamentos!<br>Faça o login para acessar o painel do usuário.</p>
+			
 		</div>
-		
+		</div>
 	</div>
+</div>
+
 
 
 

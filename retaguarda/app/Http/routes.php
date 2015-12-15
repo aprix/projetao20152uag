@@ -12,18 +12,20 @@
 */
 
 
-//Route::get('/','FrontController@index');
+Route::get('/','FrontController@index');
 Route::get('painel','FrontController@painel');
 Route::resource('tabela','PriceController');
 Route::post('tabela/create','PriceController@create');
 Route::get('admin','FrontController@admin');
 Route::get('paineladmin','FrontController@paineladmin');
-//Route::resource('log','LogController');
-Route::resource('front','FrontController');
+Route::post('login/try','LogController@login');
+Route::resource('login','LogController');
 Route::resource('vendedor','SellerController');
 Route::resource('fiscal','FiscalController');
 Route::resource('vagas','VagasController');
 Route::resource('pagamentos','PagamentosController');
+Route::post('pagamentos/pdf','PagamentosController@pdf');
+Route::post('vagas/pdf','VagasController@pdf');
 Route::post('vendedor/search','SellerController@search');
 Route::post('vagas/show','VagasController@show');
 Route::post('pagamentos/show','PagamentosController@show');
@@ -51,3 +53,15 @@ Route::controllers([
 'auth' => 'Auth\AuthController',
 'password' => 'Auth\PasswordController',
  ]);
+
+/*Route::get('secreto', ['middleware'=>'auth', function() {
+
+return "Conteudo visivel apenas para usuários autenticados";
+}];*/
+
+Route::get('logout', function() { 
+	Auth::logout();
+	
+	return redirect('/');
+
+});

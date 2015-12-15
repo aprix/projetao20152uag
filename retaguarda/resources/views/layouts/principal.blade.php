@@ -39,7 +39,7 @@
             </button>
 
              <!--<a href="painel"layout class="navbar-brand">AzulFácil</a>-->
-             {!!Link_to('painel', $title='AzulFácil', ['class'=>'navbar-brand'])!!}
+             {!!Link_to('/', $title='AzulFácil', ['class'=>'navbar-brand'])!!}
 
       </div>
        
@@ -57,7 +57,13 @@
                 <!--<li><a href="instituicao.search">Editar Instituição</a></li>-->
               </ul>
             </li>
-            </ul>
+              
+           </ul>
+
+           <ul class="nav navbar-nav navbar-right">
+            <li >{!!Link_to('logout',$title='&nbsp;&nbsp;', ['class'=>'btn-lg glyphicon glyphicon-off'])!!}</li>
+           </ul>
+
 
        </div>
 

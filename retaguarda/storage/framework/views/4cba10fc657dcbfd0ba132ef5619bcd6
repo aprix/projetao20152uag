@@ -130,9 +130,11 @@
 <table class="table">
   <thead>
         <th>Total de vagas consumidas no período:</th>
+        <th>Total arrecadado no período:</th>
       </thead> 
       <tbody>
         <td><?php echo $total; ?></td>
+        <td><?php echo "R$ ".$pagamento; ?></td>
       </tbody>
 </table>
 

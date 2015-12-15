@@ -11,8 +11,13 @@ use Retaguarda\Usuario;
 use Retaguarda\Supervisor;
 use DB;
 
+
 class FiscalController extends Controller
 {
+
+     public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +29,7 @@ class FiscalController extends Controller
             ->join('supervisor', 'user.id', '=', 'supervisor.id_user')
             ->select('supervisor.*')
             ->where('supervisor.status', '=','1')
-            ->get();
+            ->paginate(4);
 
         return view('fiscal.index', compact('users'));
     }

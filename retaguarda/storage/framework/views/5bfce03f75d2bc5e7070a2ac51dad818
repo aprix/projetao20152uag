@@ -1,0 +1,44 @@
+
+
+<?php $__env->startSection('content'); ?>
+
+<?php $message=Session::get('message')?>
+
+<?php if($message=='update'): ?>
+<div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  Vendedor cadastrado com sucesso
+</div>
+
+<?php endif; ?>
+
+<legend>Usuário</legend>
+
+  <table class="table">
+    <thead>
+      <th>ID</th>
+      <th>CPF</th>
+      <th>Apelido</th>
+      <th>Email</th>
+      <th>Saldo(R$)</th>
+    </thead>
+   
+    <tbody>
+        <td><?php echo $users->id; ?></td>
+        <td><?php echo $users->cpf; ?></td>
+        <td><?php echo $users->nickname; ?></td>
+        <td><?php echo $users->email; ?></td>
+        <td><?php echo $users->saldo; ?></td>
+        <td><?php echo Link_to_route('vendedor.edit', $title='Cadastrar', $parameters=$users->id, $attributes= ['class'=>'btn btn-primary']); ?></td>
+
+        
+        
+    </tbody>
+   
+
+ </table>
+
+
+
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts.principal', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
