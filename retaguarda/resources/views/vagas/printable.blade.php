@@ -58,7 +58,7 @@
     <tbody >
         <td>{!!$user->id!!}</td>
         <td>{!!$user->plate!!}</td>
-        <td>{!!$user->date_location!!}</td>
+        <td>{!! substr($user->date_location,8,2)."/".substr($user->date_location,5,2)."/".substr($user->date_location,0,4)." - ".substr($user->date_location,10,9)!!}</td>
         <td>{!!$user->time_location!!}</td>
         <td>{!!"R$ ".$user->total_payment!!}</td>
         

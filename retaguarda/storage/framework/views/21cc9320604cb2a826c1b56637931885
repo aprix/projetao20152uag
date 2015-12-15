@@ -57,8 +57,7 @@
     <tbody>
         <td><?php echo $user->id; ?></td>
         <td><?php echo $user->nickname; ?></td>
-        <td><?php echo $user->date_payment; ?></td>
-        <td><?php echo "R$ ".$user->val; ?></td>
+        <td><?php echo substr($user->date_payment,8,2)."/".substr($user->date_payment,5,2)."/".substr($user->date_payment,0,4)." - ".substr($user->date_payment,10,9); ?></td>        <td><?php echo "R$ ".$user->val; ?></td>
         
         
     </tbody>
