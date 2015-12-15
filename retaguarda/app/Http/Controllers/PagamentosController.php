@@ -59,6 +59,7 @@ class PagamentosController extends Controller
         $id = $request ->ano;
         $id .=$request->mes;
         $id .=$request->dia;
+        
 
         $users = DB::table('user')
                 ->join('payment', 'user.id', '=','payment.id_user')
@@ -81,7 +82,7 @@ class PagamentosController extends Controller
              ->select('payment.val') 
              ->count();
 
-             //return $result;
+             //return $users;
                return view('pagamentos.resultado', compact('users', 'request'),  compact('total','numero'));
     }
 

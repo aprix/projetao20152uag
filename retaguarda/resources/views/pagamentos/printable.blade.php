@@ -55,8 +55,7 @@
     <tbody>
         <td>{!!$user->id!!}</td>
         <td>{!!$user->nickname!!}</td>
-        <td>{!!$user->date_payment!!}</td>
-        <td>{!!"R$ ".$user->val!!}</td>
+        <td>{!! substr($user->date_payment,8,2)."/".substr($user->date_payment,5,2)."/".substr($user->date_payment,0,4)." - ".substr($user->date_payment,10,9)!!}</td>        <td>{!!"R$ ".$user->val!!}</td>
         
         
     </tbody>

@@ -79,6 +79,10 @@
   
   
 </div>
+<!--<div class="form-group col-md-3">
+  {!!Form::label('Resultados por página')!!}
+  {!!Form::selectRange('paginas',4, 15)!!}
+</div>-->
 <div class="form-group col-md-2">
 
 

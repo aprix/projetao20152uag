@@ -60,7 +60,7 @@
     <tbody >
         <td><?php echo $user->id; ?></td>
         <td><?php echo $user->plate; ?></td>
-        <td><?php echo $user->date_location; ?></td>
+        <td><?php echo substr($user->date_location,8,2)."/".substr($user->date_location,5,2)."/".substr($user->date_location,0,4)." - ".substr($user->date_location,10,9); ?></td>
         <td><?php echo $user->time_location; ?></td>
         <td><?php echo "R$ ".$user->total_payment; ?></td>
         
