@@ -30,6 +30,7 @@ object FrameTickets: TFrameTickets
       OnItemsChange = ListViewTicketsItemsChange
       OnItemClick = ListViewTicketsItemClick
       OnFilter = ListViewTicketsFilter
+      OnPullRefresh = ListViewTicketsPullRefresh
       ShowSelection = False
       PullToRefresh = True
       object ButtonNew: TSpeedButton
@@ -43,7 +44,7 @@ object FrameTickets: TFrameTickets
         Text = 'Novo'
         OnClick = ButtonNewClick
       end
-      object lblMessage: TLabel
+      object LabelMessage: TLabel
         Align = Center
         StyledSettings = [Family, FontColor]
         Size.Width = 154.000000000000000000
@@ -64,35 +65,53 @@ object FrameTickets: TFrameTickets
     Left = 56
     Top = 312
   end
+  object DataSetListView: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 240
+    Top = 128
+    object DataSetListViewPlate: TStringField
+      FieldName = 'Plate'
+      Size = 10
+    end
+    object DataSetListViewIconIndex: TIntegerField
+      FieldName = 'IconIndex'
+    end
+    object DataSetListViewDeadlineTimeFormated: TStringField
+      FieldName = 'DeadlineTimeFormated'
+      Size = 30
+    end
+    object DataSetListViewDeadlineTime: TDateTimeField
+      FieldName = 'DeadlineTime'
+    end
+  end
+  object BindSourceDB1: TBindSourceDB
+    DataSet = DataSetListView
+    ScopeMappings = <>
+    Left = 16
+    Top = 56
+  end
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
-    Left = 60
-    Top = 85
-    object LinkFillControlToField1: TLinkFillControlToField
+    Left = 20
+    Top = 5
+    object LinkListControlToField1: TLinkListControlToField
       Category = 'Quick Bindings'
+      DataSource = BindSourceDB1
+      FieldName = 'Plate'
       Control = ListViewTickets
-      Track = True
-      FillDataSource = BindSourceDB1
-      FillDisplayFieldName = 'Plate'
-      AutoFill = True
       FillExpressions = <
-        item
-          SourceMemberName = 'DeadlineTime'
-          ControlMemberName = 'Detail'
-        end
         item
           SourceMemberName = 'IconIndex'
           ControlMemberName = 'ImageIndex'
+        end
+        item
+          SourceMemberName = 'DeadlineTime'
+          ControlMemberName = 'Detail'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>
     end
-  end
-  object BindSourceDB1: TBindSourceDB
-    DataSet = DataModuleLocal.DataSetTickets
-    ScopeMappings = <>
-    Left = 152
-    Top = 88
   end
 end

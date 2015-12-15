@@ -10,8 +10,13 @@ uses
   Fmx.Bind.Editors, Data.Bind.Components, Data.Bind.DBScope;
 
 type
+  IBuyListener = interface
+    procedure OnSucess;
+  end;
+
+type
   TFrameBuyCredits = class(TFrame)
-    Layout1: TLayout;
+    LayoutPrincipal: TLayout;
     Layout2: TLayout;
     Label1: TLabel;
     Layout3: TLayout;
@@ -44,12 +49,17 @@ type
     { Private declarations }
     procedure UpdateValuesLabels;
     procedure ValidateValuesComponents;
+    procedure BuyCredits;
 
     var
     Value: Double;
+    BuyListener: IBuyListener;
   public
     { Public declarations }
-    procedure ClearComponents;
+    procedure UpdateComponents(IsClearValue: Boolean = True);
+    procedure BeginComponents(IsClearValue: Boolean = True);
+    procedure SetCreditsForBuy(Value: Double);
+    procedure SetBuyListener(BuyListener: IBuyListener);
   end;
 
 var
@@ -60,6 +70,18 @@ implementation
 {$R *.fmx}
 
 uses UnitDataModuleGeral, UnitCadastreCreditCard, UnitRoutines;
+
+procedure TFrameBuyCredits.BeginComponents(IsClearValue: Boolean);
+begin
+  //Executa a inicialização dos componentes em outra thread.
+  ExecuteAsync(LayoutPrincipal
+              ,procedure
+               begin
+                  //Atualiza os campos da tela.
+                  UpdateComponents(IsClearValue);
+               end
+              );
+end;
 
 procedure TFrameBuyCredits.ButtonAddCreditsClick(Sender: TObject);
 begin
@@ -72,28 +94,16 @@ end;
 
 procedure TFrameBuyCredits.ButtonBuyClick(Sender: TObject);
 begin
-  try
-    //Valida os valores do campos.
-    ValidateValuesComponents;
+  //Valida os valores do campos.
+  ValidateValuesComponents;
 
-    //Envia a compra de créditos ao WebService.
-    DataModuleGeral.SendBuyCredits(DataModuleGeral.GetIdCreditCardSelected
-                                  ,StrToInt(EditCSC.Text)
-                                  ,Value);
-
-    //Limpa os campos da tela.
-    ClearComponents;
-
-    //Exibe uma mensagem de sucesso.
-    ShowMessage(Format('Sua compra foi finalizada com sucesso.'+#13+'Seus Créditos: %s'
-                      ,[FormatFloat(',0.00', DataModuleGeral.GetCreditsUser)]));
-  except
-    on Error: Exception do
+  //Envia a compra de créditos em uma Thread paralela.
+  ExecuteAsync(LayoutPrincipal
+   ,procedure
     begin
-      //Levanta uma exceção com o erro.
-      raise Exception.Create(Error.Message);
-    end;
-  end;
+      //Realiza a compra de créditos.
+      BuyCredits;
+    end);
 end;
 
 procedure TFrameBuyCredits.ButtonRemoveCreditsClick(Sender: TObject);
@@ -109,14 +119,50 @@ begin
   UpdateValuesLabels;
 end;
 
-procedure TFrameBuyCredits.ClearComponents;
+procedure TFrameBuyCredits.BuyCredits;
 begin
   try
-    //Restaura o valor inicial de crédito para novas compras.
-    Value := 1;
+    //Envia a compra de créditos ao WebService.
+    DataModuleGeral.SendBuyCredits(DataModuleGeral.GetIdCreditCardSelected
+                                  ,StrToInt(EditCSC.Text)
+                                  ,Value);
 
-    //Limpa o campo de CSC do cartão de crédito.
-    //EditCSC.Text := '';
+    //Executa a atualização da interface na Thread principal.
+    TThread.Synchronize(nil
+     ,procedure
+      begin
+        //Atualiza os campos da tela.
+        UpdateComponents;
+
+        //Exibe uma mensagem de sucesso.
+        ShowMessage(Format('Sua compra foi finalizada com sucesso.'+#13+'Seus Créditos: %s'
+                          ,[FormatFloat(',0.00', DataModuleGeral.GetCreditsUser)]));
+
+        //Verifica se existe um objeto ouvinte de eventos de compra.
+        if (BuyListener <> nil) then
+        begin
+          //Executa o procedimento de sucesso do objeto ouvinte de eventos de compra.
+          BuyListener.OnSucess;
+        end;
+      end);
+  except
+    on Error: Exception do
+    begin
+      //Levanta uma exceção com o erro.
+      raise Exception.Create(Error.Message);
+    end;
+  end;
+end;
+
+procedure TFrameBuyCredits.UpdateComponents(IsClearValue: Boolean);
+begin
+  try
+    //Verifica se é para limpar o valor.
+    if (IsClearValue) then
+    begin
+      //Restaura o valor inicial de crédito para novas compras.
+      Value := 1;
+    end;
 
     //Atualiza a consulta de cartões de créditos.
     DataModuleGeral.OpenQueryCreditCards;
@@ -131,8 +177,16 @@ begin
     end;
   end;
 
-  //Atualiza os valores dos labels.
-  UpdateValuesLabels;
+  //Executa a atualização dos campos na Thread principal.
+  TThread.Synchronize(
+       nil
+       , procedure
+         begin
+          //Atualiza os valores dos labels.
+          UpdateValuesLabels;
+         end
+  );
+
 end;
 
 procedure TFrameBuyCredits.ComboBoxCreditCardClick(Sender: TObject);
@@ -149,6 +203,20 @@ procedure TFrameBuyCredits.EditCSCChange(Sender: TObject);
 begin
   //Permite apenas números no campo de CSC.
   EditCSC.Text := UnitRoutines.GetJustNumbersOfString(EditCSC.Text);
+end;
+
+procedure TFrameBuyCredits.SetBuyListener(BuyListener: IBuyListener);
+begin
+  Self.BuyListener := BuyListener;
+end;
+
+procedure TFrameBuyCredits.SetCreditsForBuy(Value: Double);
+begin
+  //Atribui ao atributo Value a quantidade de créditos a ser adquirida.
+  Self.Value := Value;
+
+  //Atualiza os valores dos labels.
+  UpdateValuesLabels;
 end;
 
 procedure TFrameBuyCredits.UpdateValuesLabels;

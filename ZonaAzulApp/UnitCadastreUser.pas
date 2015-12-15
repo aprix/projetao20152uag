@@ -10,11 +10,12 @@ uses
 type
   ICadastreListener = interface
     procedure OnSucess;
+    procedure OnCancel;
   end;
 
 type
   TFrameCadastreUser = class(TFrame)
-    Layout1: TLayout;
+    LayoutPrincipal: TLayout;
     Layout2: TLayout;
     EditNickname: TEdit;
     Layout3: TLayout;
@@ -34,12 +35,14 @@ type
     Label4: TLabel;
     Label5: TLabel;
     ButtonAlterPassword: TSpeedButton;
+    ButtonBack: TSpeedButton;
     procedure ButtonConfirmClick(Sender: TObject);
     procedure ButtonAlterPasswordClick(Sender: TObject);
     procedure EditNicknameChange(Sender: TObject);
     procedure EditNicknameKeyDown(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
     procedure EditCPFChange(Sender: TObject);
+    procedure ButtonBackClick(Sender: TObject);
   private
     { Private declarations }
     CadastreListener: ICadastreListener;
@@ -49,8 +52,10 @@ type
     IsPasswordChanged : Boolean;
   public
     { Public declarations }
-    constructor Create(AWOner: TComponent; CadastreListener: ICadastreListener); overload;
+    constructor Create(AWOner: TComponent; CadastreListener: ICadastreListener; IsShowButtonBack: Boolean = False); overload;
     procedure UpdateValuesComponents;
+    procedure SendDataUser;
+    procedure SaveDataUser;
   end;
 
 implementation
@@ -61,40 +66,135 @@ uses UnitDataModuleGeral, UnitDataModuleLocal, UnitRoutines,
   UnitCadastreCreditCard;
 
 procedure TFrameCadastreUser.ButtonAlterPasswordClick(Sender: TObject);
-var
-ActualPassword: String;
 begin
   //Confirma a senha atual do usuário logado.
-  ActualPassword := GenerateMD5(InputBox('Confirmação de Senha', #31'Senha Atual', ''));
-  if (ActualPassword.Equals(DataModuleLocal.GetPassword)) then
-  begin
-    //Exibe os campos de senha e oculta o botão de alterar senha.
-    LayoutPassword.Visible      := True;
-    ButtonAlterPassword.Visible := False;
 
-    //Limpa a senha criptografada dos campos de senha e confirmação.
-    EditPassword.Text := '';
-    EditConfirmPassword.Text := '';
+  InputBox('Confirmação de Senha', #31'Senha Atual', ''
+    ,procedure(const ModalResult: TModalResult; const Value: string)
+     begin
+        //Caso o resultado seja mrOK.
+        if (ModalResult = mrOk) then
+        begin
+          //Atualiza a interface na Thread principal.
+          TThread.Synchronize(nil
+            ,procedure
+             var
+             ActualPassword: String;
+             begin
+                //Pega a senha digitada pelo usuário.
+                ActualPassword := GenerateMD5(Value);
 
-    //Atualiza o atributo isPasswordChanged.
-    IsPasswordChanged := True;
-  end
-  else
-  begin
-    //Levanta uma exceção informando que a senha é inválida.
-    raise Exception.Create('Senha Atual Inválida!');
-  end;
+                if (ActualPassword.Equals(DataModuleLocal.GetPassword)) then
+                begin
+                  //Exibe os campos de senha e oculta o botão de alterar senha.
+                  LayoutPassword.Visible      := True;
+                  ButtonAlterPassword.Visible := False;
+
+                  //Limpa a senha criptografada dos campos de senha e confirmação.
+                  EditPassword.Text := '';
+                  EditConfirmPassword.Text := '';
+
+                  //Atualiza o atributo isPasswordChanged.
+                  IsPasswordChanged := True;
+                end
+                else
+                begin
+                  //Levanta uma exceção informando que a senha é inválida.
+                  raise Exception.Create('Senha Atual Inválida!');
+                end;
+             end);
+        end;
+     end);
+end;
+
+procedure TFrameCadastreUser.ButtonBackClick(Sender: TObject);
+begin
+  //Executa o procedimento de cancelamento no objeto ouvinte de cadastro.
+  CadastreListener.OnCancel;
 end;
 
 procedure TFrameCadastreUser.ButtonConfirmClick(Sender: TObject);
+begin
+  //Verifica se é um novo usuário.
+  if not(DataModuleGeral.IsUserLogged) then
+  begin
+    //Salva os dados do novo usuário.
+    SaveDataUser;
+  end
+  else
+  begin
+    //Exibe um diálogo de confirmação para averiguar se o usuário deseja
+    //alterar suas informações.
+    //Abre o diálogo para averiguar se o usuário deseja sair da aplicação.
+    MessageDlg( 'Confirmar alterações?'
+         , System.UITypes.TMsgDlgType.mtConfirmation
+         , [System.UITypes.TMsgDlgBtn.mbYes, System.UITypes.TMsgDlgBtn.mbNo]
+         , 0
+         , procedure (const Result: TModalResult)
+           begin
+              case Result of
+                mrYes:
+                  begin
+                    //Salva os dados modificados do usuário logado.
+                    SaveDataUser;
+                  end;
+              end;
+           end
+    );
+  end;
+end;
+
+constructor TFrameCadastreUser.Create(AWOner: TComponent;
+  CadastreListener: ICadastreListener; IsShowButtonBack: Boolean);
+begin
+  //Chama o construtor herdado da superclasse.
+  inherited Create(AWOner);
+
+  //Inicializa o atributo.
+  Self.CadastreListener := CadastreListener;
+
+  //Oculta o botão de alterar senha por default.
+  ButtonAlterPassword.Visible := False;
+
+  //Exibe o botão de voltar de acordo com o parâmetro IsShowButtonBack.
+  ButtonBack.Visible := IsShowButtonBack;
+end;
+
+procedure TFrameCadastreUser.EditCPFChange(Sender: TObject);
+begin
+  //Permite apenas a digitação de números no campo de CPF.
+  EditCPF.Text := GetJustNumbersOfString(EditCPF.Text);
+end;
+
+procedure TFrameCadastreUser.EditNicknameChange(Sender: TObject);
+begin
+  //Permite apenas letras no campo.
+  EditNickname.Text := GetJustLettersOfString(EditNickname.Text);
+end;
+
+procedure TFrameCadastreUser.EditNicknameKeyDown(Sender: TObject; var Key: Word;
+  var KeyChar: Char; Shift: TShiftState);
+begin
+  //Permite apenas a digitação de letras no campo de apelido.
+  AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
+end;
+
+procedure TFrameCadastreUser.SaveDataUser;
+begin
+  //Envia os dados do usuário para o servidor em uma Thread concorrente.
+  ExecuteAsync(LayoutPrincipal
+    ,procedure
+     begin
+        //Envia os dados do usuário para o servidor.
+        SendDataUser;
+     end);
+end;
+
+procedure TFrameCadastreUser.SendDataUser;
 var
 PasswordMD5: String;
-IsNewUser: Boolean;
 begin
   try
-    //Atribui True à variável IsNewUser caso seja um novo cadastro de usuário.
-    IsNewUser := not(DataModuleGeral.IsUserLogged);
-
     //Valida os valores dos campos.
     ValidateValuesComponents;
 
@@ -117,57 +217,33 @@ begin
                             ,EditCPF.Text
                             ,PasswordMD5);
 
-    //Verifica se é um novo cadastro.
-    if (IsNewUser) then
-    begin
-      //Exibe o cadastro de cartão.
-      ShowCadastreCreditCard;
-    end
-    else
-    begin
-      //Neste caso, executa o procedimento de sucesso do objeto ouvinte de eventos.
-      CadastreListener.OnSucess;
-    end;
-
+    //Executa a atualização da UI na Thread principal.
+    TThread.Synchronize(nil
+      ,procedure
+       begin
+          //Verifica se é um novo cadastro.
+          if not(DataModuleGeral.IsUserLogged) then
+          begin
+            //Exibe o cadastro de cartão.
+            ShowCadastreCreditCard;
+          end
+          else
+          begin
+            //Neste caso, executa o procedimento de sucesso do objeto ouvinte de eventos.
+            CadastreListener.OnSucess;
+          end;
+       end);
   except
     on Error: Exception do
     begin
-      //Exibe a mensagem do erro.
-      ShowMessage(Error.Message);
+      //Exibe a mensagem do erro na Thread principal.
+      TThread.Synchronize(nil
+      ,procedure
+       begin
+         ShowMessage(Error.Message);
+       end);
     end;
   end;
-end;
-
-constructor TFrameCadastreUser.Create(AWOner: TComponent;
-  CadastreListener: ICadastreListener);
-begin
-  //Chama o construtor herdado da superclasse.
-  inherited Create(AWOner);
-
-  //Inicializa o atributo.
-  Self.CadastreListener := CadastreListener;
-
-  //Oculta o botão de alterar senha por default.
-  ButtonAlterPassword.Visible := False;
-end;
-
-procedure TFrameCadastreUser.EditCPFChange(Sender: TObject);
-begin
-  //Permite apenas a digitação de números no campo de CPF.
-  EditCPF.Text := GetJustNumbersOfString(EditCPF.Text);
-end;
-
-procedure TFrameCadastreUser.EditNicknameChange(Sender: TObject);
-begin
-  //Permite apenas letras no campo.
-  EditNickname.Text := GetJustLettersOfString(EditNickname.Text);
-end;
-
-procedure TFrameCadastreUser.EditNicknameKeyDown(Sender: TObject; var Key: Word;
-  var KeyChar: Char; Shift: TShiftState);
-begin
-  //Permite apenas a digitação de letras no campo de apelido.
-  AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
 end;
 
 procedure TFrameCadastreUser.ShowCadastreCreditCard;

@@ -258,6 +258,8 @@ object DataModuleLocal: TDataModuleLocal
         'ulApp\ZonaAzul.s3db'
       'LockingMode=Normal'
       'DriverID=sQLite')
+    ResourceOptions.AssignedValues = [rvPersistent]
+    ResourceOptions.Persistent = True
     Connected = True
     LoginPrompt = False
     AfterConnect = FDConnectionLocalAfterConnect
@@ -267,6 +269,10 @@ object DataModuleLocal: TDataModuleLocal
   end
   object DataSetTickets: TFDQuery
     Connection = FDConnectionLocal
+    FormatOptions.AssignedValues = [fvMaxStringSize, fvStrsTrim2Len]
+    FormatOptions.StrsTrim2Len = True
+    FormatOptions.MaxStringSize = 100
+    ResourceOptions.AssignedValues = [rvPersistent]
     SQL.Strings = (
       'select'
       'Plate'
@@ -287,7 +293,7 @@ object DataModuleLocal: TDataModuleLocal
     SQL.Strings = (
       'SELECT * '
       'FROM User')
-    Left = 136
+    Left = 120
     Top = 136
   end
 end

@@ -8,17 +8,18 @@ uses
   FMX.ListView.Types, FMX.ListView.Appearances, FMX.ListView.Adapters.Base,
   FMX.Controls.Presentation, FMX.ListView,
   Data.Bind.EngExt, Fmx.Bind.DBEngExt, System.Rtti, System.Bindings.Outputs,
-  Fmx.Bind.Editors, Data.Bind.Components, Data.Bind.DBScope, FMX.Layouts;
+  Fmx.Bind.Editors, Data.Bind.Components, Data.Bind.DBScope, FMX.Layouts,
+  Datasnap.Provider, Data.DB, Datasnap.DBClient;
 
 type
   TFrameCreditCards = class(TFrame)
     ListViewCreditCards: TListView;
-    buttonNew: TSpeedButton;
-    lblMessage: TLabel;
+    ButtonNew: TSpeedButton;
+    LabelMessage: TLabel;
     LayoutPrincipal: TLayout;
-    BindSourceDB1: TBindSourceDB;
+    BindSourceDB: TBindSourceDB;
     BindingsList1: TBindingsList;
-    LinkFillControlToField1: TLinkFillControlToField;
+    LinkListControlToField1: TLinkListControlToField;
     procedure ListViewCreditCardsItemsChange(Sender: TObject);
     procedure ListViewCreditCardsItemClick(const Sender: TObject;
       const AItem: TListViewItem);
@@ -28,6 +29,8 @@ type
     procedure InactivateCreditCard(Number: String);
   public
     { Public declarations }
+    procedure UpdateList;
+    procedure UpdateQueryCreditCards;
   end;
 
 implementation
@@ -119,8 +122,42 @@ end;
 
 procedure TFrameCreditCards.ListViewCreditCardsItemsChange(Sender: TObject);
 begin
-  lblMessage.Visible := (DataModuleGeral.DataSetCreditCards.IsEmpty);
-  lblMessage.Text    := 'Nenhum cartão cadastrado.'+#13+#13+'Clique no botão Novo para cadastrar um cartão.'
+  //Exibe o label de mensagem "Nenhum cartão..." se a lista estiver vazia.
+  LabelMessage.Visible := (DataModuleGeral.DataSetCreditCards.IsEmpty);
+end;
+
+procedure TFrameCreditCards.UpdateList;
+begin
+  //Oculta o label de mensagem.
+  LabelMessage.Visible := False;
+  LabelMessage.Text    := 'Nenhum cartão cadastrado.'+#13+#13+'Clique no botão Novo para cadastrar um cartão.';
+
+  //Atualiza a consulta de cartões de crédito em outra Thread.
+  ExecuteAsync(LayoutPrincipal
+        ,procedure
+         begin
+            //Atualiza a consulta de cartões de créditos.
+            UpdateQueryCreditCards;
+         end
+  );
+end;
+
+procedure TFrameCreditCards.UpdateQueryCreditCards;
+var
+FrameCreditCards: TFrameCreditCards;
+begin
+  FrameCreditCards := Self;
+
+  //Atualiza a consulta de cartões de crédito.
+  DataModuleGeral.OpenQueryCreditCards;
+
+  //Atualiza a interface na Thread principal.
+  TThread.Synchronize(nil
+     ,procedure
+      begin
+        //Exibe o label de mensagem "Nenhum cartão..." se a lista estiver vazia.
+        LabelMessage.Visible := (DataModuleGeral.DataSetCreditCards.IsEmpty);
+      end);
 end;
 
 end.

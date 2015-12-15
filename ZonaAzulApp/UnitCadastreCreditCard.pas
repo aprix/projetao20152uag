@@ -10,7 +10,7 @@ uses
 
 type
   TFormCadastreCreditCard = class(TForm)
-    Layout1: TLayout;
+    LayoutPrincipal: TLayout;
     Layout2: TLayout;
     Label1: TLabel;
     EditName: TEdit;
@@ -19,7 +19,7 @@ type
     Label4: TLabel;
     ComboboxMonth: TComboBox;
     ComboboxYear: TComboBox;
-    buttonSave: TSpeedButton;
+    ButtonSave: TSpeedButton;
     Layout7: TLayout;
     Label6: TLabel;
     EditNumber: TEdit;
@@ -27,13 +27,14 @@ type
     ImageFlag: TImage;
     Layout3: TLayout;
     procedure EditNameChange(Sender: TObject);
-    procedure buttonSaveClick(Sender: TObject);
+    procedure ButtonSaveClick(Sender: TObject);
     procedure EditNameKeyDown(Sender: TObject; var Key: Word; var KeyChar: Char;
       Shift: TShiftState);
     procedure EditNumberChange(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
+    procedure SendCreditCard;
     var
     Id: Integer;
   protected
@@ -62,24 +63,19 @@ implementation
 
 uses UnitDataModuleGeral, UnitRoutines, UnitDataModuleLocal;
 
-procedure TFormCadastreCreditCard.buttonSaveClick(Sender: TObject);
+procedure TFormCadastreCreditCard.ButtonSaveClick(Sender: TObject);
 begin
   try
     //Valida os valores dos campos.
     ValidateValuesComponents;
 
-    //Envia o cartão de crédito para o servidor.
-    DataModuleGeral.SendCreditCard(Id
-                                  ,Flag
-                                  ,EditName.Text
-                                  ,EditNumber.Text
-                                  ,StrToInt(ComboboxMonth.Selected.Text)
-                                  ,StrToInt(ComboboxYear.Selected.Text)
-                                  ,True);
-
-    //Fecha o cadastro do cartão de crédito.
-    Hide;
-    ModalResult := mrOk;
+    //Envia o cartão de crédito em uma Thread paralela.
+    ExecuteAsync(LayoutPrincipal
+      ,procedure
+       begin
+          //Envia os dados do cartão de crédito para o servidor.
+          SendCreditCard;
+       end);
   except
     on Error: Exception do
     begin
@@ -183,6 +179,39 @@ end;
 function TFormCadastreCreditCard.GetYear: Integer;
 begin
   Result := StrToInt(ComboboxYear.Selected.Text);
+end;
+
+procedure TFormCadastreCreditCard.SendCreditCard;
+begin
+  try
+    //Envia o cartão de crédito para o servidor.
+    DataModuleGeral.SendCreditCard(Id
+                                  ,Flag
+                                  ,EditName.Text
+                                  ,EditNumber.Text
+                                  ,StrToInt(ComboboxMonth.Selected.Text)
+                                  ,StrToInt(ComboboxYear.Selected.Text)
+                                  ,True);
+
+    //Atualiza a interface na Thread principal.
+    TThread.Synchronize(nil
+      ,procedure
+       begin
+          //Fecha o cadastro do cartão de crédito.
+          Hide;
+          ModalResult := mrOk;
+       end);
+  except
+    on Error: Exception do
+    begin
+      //Exibe a mensagem de erro na Thread principal.
+      TThread.Synchronize(nil
+        ,procedure
+         begin
+            ShowMessage(Error.Message);
+         end);
+    end;
+  end;
 end;
 
 procedure TFormCadastreCreditCard.ValidateValuesComponents;
