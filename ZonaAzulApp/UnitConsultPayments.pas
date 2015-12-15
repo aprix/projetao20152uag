@@ -13,9 +13,9 @@ type
     Layout2: TLayout;
     Label1: TLabel;
     Layout8: TLayout;
-    editPlateLetters: TEdit;
+    EditPlateLetters: TEdit;
     Label2: TLabel;
-    editPlateNumbers: TEdit;
+    EditPlateNumbers: TEdit;
     LayoutResultConsult: TLayout;
     LabelResult: TLabel;
     buttonConsultTicket: TSpeedButton;
@@ -23,9 +23,9 @@ type
     Layout4: TLayout;
     LabelTimeInterval: TLabel;
     procedure buttonConsultTicketClick(Sender: TObject);
-    procedure editPlateNumbersChange(Sender: TObject);
-    procedure editPlateLettersChange(Sender: TObject);
-    procedure editPlateLettersKeyDown(Sender: TObject; var Key: Word;
+    procedure EditPlateNumbersChange(Sender: TObject);
+    procedure EditPlateLettersChange(Sender: TObject);
+    procedure EditPlateLettersKeyDown(Sender: TObject; var Key: Word;
       var KeyChar: Char; Shift: TShiftState);
   private
     { Private declarations }
@@ -53,6 +53,9 @@ uses UnitDataModuleGeral, UnitRoutines;
 
 procedure TFrameConsultPayments.buttonConsultTicketClick(Sender: TObject);
 begin
+  //Valida os valores dos campos.
+  ValidateValuesComponents;
+
   //Exibe o diálogo de progresso.
   ExecuteAsync(LayoutPrincipal
               , procedure
@@ -80,11 +83,8 @@ Plate: String;
 IsAuthorized: Boolean;
 begin
   try
-    //Valida os valores dos campos.
-    ValidateValuesComponents;
-
     //Junta as letras e números da placa.
-    Plate := editPlateLetters.Text+editPlateNumbers.Text;
+    Plate := EditPlateLetters.Text+editPlateNumbers.Text;
 
     //Consulta no servidor se o estacionamento está pago para a placa informada.
     IsAuthorized := DataModuleGeral.ConsultPayment(Plate, DayTime, DeadlineTime);
@@ -127,23 +127,27 @@ begin
   ClearComponents;
 end;
 
-procedure TFrameConsultPayments.editPlateLettersChange(Sender: TObject);
+procedure TFrameConsultPayments.EditPlateLettersChange(Sender: TObject);
 begin
   //Deixa as letras da placa em maiúsculo.
   SetTextUpperCaseEditChange(Sender);
 end;
 
-procedure TFrameConsultPayments.editPlateLettersKeyDown(Sender: TObject;
+procedure TFrameConsultPayments.EditPlateLettersKeyDown(Sender: TObject;
   var Key: Word; var KeyChar: Char; Shift: TShiftState);
 begin
   //Permite apenas a digitação de letras.
   AllowJustLettersEditKeyDown(Sender, Key, KeyChar, Shift);
 end;
 
-procedure TFrameConsultPayments.editPlateNumbersChange(Sender: TObject);
+procedure TFrameConsultPayments.EditPlateNumbersChange(Sender: TObject);
 begin
-  //Permite apenas números no campo editPlateNumbers.
-  editPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
+  try
+    //Permite apenas números no campo editPlateNumbers.
+    if (EditPlateNumbers.Text <> EmptyStr) then
+      EditPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
+  except
+  end;
 end;
 
 procedure TFrameConsultPayments.SetFontColorResultLabels(Color: TAlphaColor);
@@ -185,7 +189,9 @@ end;
 procedure TFrameConsultPayments.ValidateValuesComponents;
 begin
   //Verifica os valores dos campos.
-  editPlateNumbers.Text := GetJustNumbersOfString(editPlateNumbers.Text);
+  if (EditPlateNumbers.Text <> EmptyStr) then
+    EditPlateNumbers.Text := GetJustNumbersOfString(EditPlateNumbers.Text);
+
   ValidateValueComponent(editPlateLetters, editPlateLetters.Text, 'Informe as letras da placa!', 3);
   ValidateValueComponent(editPlateNumbers, editPlateNumbers.Text, 'Informe os números da placa!', 4);
 end;
