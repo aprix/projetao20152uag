@@ -1,4 +1,5 @@
-program ZonaAzulApp;
+// JCL_DEBUG_EXPERT_GENERATEJDBG ON
+program AzulApp;
 
 {$R *.dres}
 
@@ -21,7 +22,10 @@ uses
   UnitWelcome in 'UnitWelcome.pas' {FormWelcome},
   UnitCreditCards in 'UnitCreditCards.pas' {FrameCreditCards: TFrame},
   UnitDialogOptions in 'UnitDialogOptions.pas' {FrameDialogOptions: TFrame},
-  UnitLogin in 'UnitLogin.pas' {FrameLogin: TFrame};
+  UnitLogin in 'UnitLogin.pas' {FrameLogin: TFrame},
+  UnitDialogBuyCredits in 'UnitDialogBuyCredits.pas' {FormDialogBuyCredits},
+  UnitProgressDialog in 'UnitProgressDialog.pas' {FrameProgressDialog: TFrame},
+  UnitAccountRecovery in 'UnitAccountRecovery.pas' {FormAccountRecovery};
 
 {$R *.res}
 
@@ -42,6 +46,8 @@ begin
   begin
     //Abre o formulário de boas vindas.
     Application.CreateForm(TFormWelcome, FormWelcome);
+  Application.CreateForm(TFormDialogBuyCredits, FormDialogBuyCredits);
+  Application.CreateForm(TFormAccountRecovery, FormAccountRecovery);
   end
   else
   begin

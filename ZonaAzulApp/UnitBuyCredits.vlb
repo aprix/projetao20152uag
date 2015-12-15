@@ -22,10 +22,6 @@ Coordinates=92,234,53,58
 [Label4]
 Coordinates=494,10,53,58
 
-[Layout1]
-Coordinates=225,234,60,36
-Visible=True
-
 [Label2]
 Coordinates=10,166,53,58
 
@@ -148,4 +144,8 @@ Coordinates=1139,1,309,344
 
 [DataModuleGeral.RequestGetTickets]
 Coordinates=0,0,228,124
+
+[LayoutPrincipal]
+Coordinates=225,234,60,36
+Visible=True
 

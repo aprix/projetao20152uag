@@ -1,7 +1,6 @@
 object FormCadastreCreditCard: TFormCadastreCreditCard
   Left = 0
   Top = 0
-  Caption = 'Form2'
   ClientHeight = 480
   ClientWidth = 315
   StyleBook = DataModuleGeral.CustomStyleBook
@@ -10,7 +9,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
   FormFactor.Devices = [Desktop]
   OnCloseQuery = FormCloseQuery
   DesignerMasterStyle = 3
-  object Layout1: TLayout
+  object LayoutPrincipal: TLayout
     Align = Client
     Size.Width = 315.000000000000000000
     Size.Height = 480.000000000000000000
@@ -119,7 +118,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
         end
       end
     end
-    object buttonSave: TSpeedButton
+    object ButtonSave: TSpeedButton
       Align = MostBottom
       StyledSettings = [Family, Style, FontColor]
       Margins.Top = 10.000000000000000000
@@ -129,7 +128,7 @@ object FormCadastreCreditCard: TFormCadastreCreditCard
       Size.PlatformDefault = False
       Text = 'Salvar'
       TextSettings.Font.Size = 28.000000000000000000
-      OnClick = buttonSaveClick
+      OnClick = ButtonSaveClick
     end
     object Layout7: TLayout
       Align = Top

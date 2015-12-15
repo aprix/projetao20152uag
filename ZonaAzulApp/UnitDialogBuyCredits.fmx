@@ -1,0 +1,20 @@
+object FormDialogBuyCredits: TFormDialogBuyCredits
+  Left = 0
+  Top = 0
+  ClientHeight = 480
+  ClientWidth = 361
+  StyleBook = DataModuleGeral.CustomStyleBook
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  OnShow = FormShow
+  DesignerMasterStyle = 0
+  object LayoutPrincipal: TLayout
+    Align = Client
+    Size.Width = 361.000000000000000000
+    Size.Height = 480.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+  end
+end

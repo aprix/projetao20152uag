@@ -1,7 +1,6 @@
 object FormSplash: TFormSplash
   Left = 0
   Top = 0
-  Caption = 'Form2'
   ClientHeight = 480
   ClientWidth = 343
   FormFactor.Width = 320

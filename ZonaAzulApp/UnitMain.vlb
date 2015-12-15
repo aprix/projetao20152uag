@@ -1,11 +1,5 @@
-﻿[SpeedButton3]
-Coordinates=104,143,84,51
-
-[ToolBar1]
+﻿[ToolBar1]
 Coordinates=10,204,58,33
-
-[Layout1]
-Coordinates=292,143,53,33
 
 [DataModuleGeral.DataSetTickets]
 Coordinates=195,20,175,123
@@ -51,4 +45,10 @@ Coordinates=0,0,46,51
 
 [LabelEmail]
 Coordinates=46,70,46,51
+
+[ButtonHome]
+Coordinates=104,143,84,51
+
+[LayoutMenu]
+Coordinates=292,143,53,33
 

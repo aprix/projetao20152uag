@@ -1,7 +1,6 @@
 inherited FormCreditCardSeparate: TFormCreditCardSeparate
-  Caption = 'FormCadastreCreditCard1'
   DesignerMasterStyle = 3
-  inherited Layout1: TLayout
+  inherited LayoutPrincipal: TLayout
     inherited Layout2: TLayout
       inherited EditName: TEdit
         ParentShowHint = False
@@ -46,7 +45,7 @@ inherited FormCreditCardSeparate: TFormCreditCardSeparate
         end
       end
     end
-    inherited buttonSave: TSpeedButton
+    inherited ButtonSave: TSpeedButton
       Text = 'Confirmar'
     end
     inherited Layout7: TLayout

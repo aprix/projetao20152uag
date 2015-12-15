@@ -10,8 +10,8 @@ object FrameCreditCards: TFrameCreditCards
     Size.PlatformDefault = False
     TabOrder = 2
     object ListViewCreditCards: TListView
-      ItemAppearanceClassName = 'TImageListItemBottomDetailRightButtonAppearance'
-      ItemEditAppearanceClassName = 'TImageListItemBottomDetailRightButtonShowCheckAppearance'
+      ItemAppearanceClassName = 'TImageListItemBottomDetailAppearance'
+      ItemEditAppearanceClassName = 'TImageListItemBottomDetailShowCheckAppearance'
       HeaderAppearanceClassName = 'TListHeaderObjects'
       FooterAppearanceClassName = 'TListHeaderObjects'
       Transparent = True
@@ -21,18 +21,14 @@ object FrameCreditCards: TFrameCreditCards
       Size.Height = 446.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
-      ItemAppearanceObjects.ItemObjects.Detail.Font.Size = 16.000000000000000000
-      ItemAppearanceObjects.ItemObjects.Detail.TextColor = claBlack
-      ItemAppearanceObjects.ItemObjects.TextButton.Visible = False
-      ItemAppearanceObjects.ItemEditObjects.TextButton.Visible = False
-      ItemAppearanceObjects.ItemEditObjects.GlyphButton.Visible = False
+      ItemAppearanceObjects.ItemObjects.Accessory.AccessoryType = Detail
       CanSwipeDelete = False
       OnItemsChange = ListViewCreditCardsItemsChange
       OnItemClick = ListViewCreditCardsItemClick
       DeleteButtonText = 'Excluir'
       ShowSelection = False
       PullToRefresh = True
-      object buttonNew: TSpeedButton
+      object ButtonNew: TSpeedButton
         Anchors = [akRight, akBottom]
         Position.X = 250.000000000000000000
         Position.Y = 388.000000000000000000
@@ -41,9 +37,9 @@ object FrameCreditCards: TFrameCreditCards
         Size.PlatformDefault = False
         StyleLookup = 'SpeedButton1Style1'
         Text = 'Novo'
-        OnClick = buttonNewClick
+        OnClick = ButtonNewClick
       end
-      object lblMessage: TLabel
+      object LabelMessage: TLabel
         Align = Center
         StyledSettings = [Family, FontColor]
         Size.Width = 154.000000000000000000
@@ -58,32 +54,30 @@ object FrameCreditCards: TFrameCreditCards
       end
     end
   end
-  object BindSourceDB1: TBindSourceDB
+  object BindSourceDB: TBindSourceDB
     DataSet = DataModuleGeral.DataSetCreditCards
     ScopeMappings = <>
-    Left = 144
-    Top = 208
+    Left = 24
+    Top = 64
   end
   object BindingsList1: TBindingsList
     Methods = <>
     OutputConverters = <>
     Left = 20
     Top = 5
-    object LinkFillControlToField1: TLinkFillControlToField
+    object LinkListControlToField1: TLinkListControlToField
       Category = 'Quick Bindings'
+      DataSource = BindSourceDB
+      FieldName = 'Name'
       Control = ListViewCreditCards
-      Track = True
-      FillDataSource = BindSourceDB1
-      FillDisplayFieldName = 'Name'
-      AutoFill = True
       FillExpressions = <
-        item
-          SourceMemberName = 'IconIndex'
-          ControlMemberName = 'ImageIndex'
-        end
         item
           SourceMemberName = 'Number'
           ControlMemberName = 'Detail'
+        end
+        item
+          SourceMemberName = 'IconIndex'
+          ControlMemberName = 'ImageIndex'
         end>
       FillHeaderExpressions = <>
       FillBreakGroups = <>

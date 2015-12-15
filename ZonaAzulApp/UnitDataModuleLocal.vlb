@@ -8,5 +8,8 @@ Coordinates=107,1,112,33
 Coordinates=107,1,111,33
 
 [DataSetTickets]
-Coordinates=0,0,88,141
+Coordinates=0,0,113,177
+
+[DataSetUser]
+Coordinates=107,1,75,51
 

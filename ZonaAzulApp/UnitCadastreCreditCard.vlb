@@ -4,9 +4,6 @@ Coordinates=238,10,46,51
 [Layout2]
 Coordinates=280,166,53,33
 
-[Layout1]
-Coordinates=119,166,53,33
-
 []
 Coordinates=66,124,97,33
 Visible=True
@@ -56,9 +53,6 @@ Coordinates=64,175,72,51
 [DataModuleGeral.ResponseGetCreditCards]
 Coordinates=41,703,227,285
 
-[buttonSave]
-Coordinates=858,243,70,51
-
 [DataModuleGeral.RequestGetCreditCards]
 Coordinates=1134,1,218,105
 
@@ -98,4 +92,10 @@ Coordinates=0,0,182,105
 
 [DataModuleGeral.RequestPostBuyCredits]
 Coordinates=833,694,219,105
+
+[ButtonSave]
+Coordinates=858,243,70,51
+
+[LayoutPrincipal]
+Coordinates=119,166,53,33
 
