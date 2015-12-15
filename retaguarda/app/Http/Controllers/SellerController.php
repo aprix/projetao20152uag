@@ -13,6 +13,10 @@ use DB;
 
 class SellerController extends Controller
 {
+
+     public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -24,7 +28,7 @@ class SellerController extends Controller
             ->join('seller', 'user.id', '=', 'seller.id_user')
             ->select('user.*', 'seller.id')
              ->where('seller.status', '=','1')
-            ->get();
+            ->paginate(4);
 
         return view('vendedor.index', compact('users'));
         

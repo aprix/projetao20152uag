@@ -1320,6 +1320,12 @@ class Validator implements ValidatorContract
      * @param  mixed   $value
      * @return bool
      */
+
+    protected function validateAlphaSpaces($attribute, $value)
+{
+    return preg_match('/^[\pL\s]+$/u', $value);
+}
+
     protected function validateAlphaNum($attribute, $value)
     {
         if (! is_string($value) && ! is_numeric($value)) {
@@ -1344,11 +1350,6 @@ class Validator implements ValidatorContract
 
         return preg_match('/^[\pL\pM\pN_-]+$/u', $value);
     }
-
-    protected function validateAlphaSpaces($attribute, $value){
-    
-    return is_string($value) && preg_match('/^[\pL\s]+$/u', $value);
-}
 
     /**
      * Validate that an attribute passes a regular expression check.

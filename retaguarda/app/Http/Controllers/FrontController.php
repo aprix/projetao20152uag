@@ -5,9 +5,15 @@ namespace Retaguarda\Http\Controllers;
 use Illuminate\Http\Request;
 use Retaguarda\Http\Requests;
 use Retaguarda\Http\Controllers\Controller;
+use Auth;
+use Session;
+use Redirect;
 
 class FrontController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth',['only'=>'painel']);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,6 +21,11 @@ class FrontController extends Controller
      */
     public function index()
     {
+
+        if(Auth::check()){
+
+            return redirect('painel');
+        }
         return view('index');
     }
 

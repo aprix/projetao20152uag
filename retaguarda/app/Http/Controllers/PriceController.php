@@ -9,8 +9,14 @@ use Retaguarda\Http\Requests\PriceRequest;
 use Retaguarda\Price;
 use DB;
 
+
+
 class PriceController extends Controller
 {
+
+     public function __construct(){
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
