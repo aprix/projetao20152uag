@@ -12,7 +12,7 @@ Coordinates=369,304,161,33
 Visible=False
 
 [ListViewTickets]
-Coordinates=240,10,91,213
+Coordinates=240,10,107,256
 Visible=True
 
 [DataModuleGeral.]
@@ -24,7 +24,7 @@ Visible=False
 Coordinates=195,1,176,33
 
 [DataModuleLocal.DataSetTickets]
-Coordinates=610,0,176,177
+Coordinates=610,0,206,58
 
 [DataModuleLocal.SQLTableTickets]
 Coordinates=204,1,186,51
@@ -34,118 +34,130 @@ Coordinates=522,53,182,33
 Visible=False
 
 [ButtonNew]
-Coordinates=109,10,68,51
+Coordinates=109,10,77,58
 
 [LayoutPrincipal]
-Coordinates=30,10,91,33
+Coordinates=30,10,103,36
 
 [DataModuleGeral.DataSetCreditCards]
-Coordinates=551,694,199,195
+Coordinates=551,694,234,234
 
 [TimerUpdateListTickets]
-Coordinates=1492,144,131,33
+Coordinates=1492,144,150,36
 
 [DataModuleGeral.RequestPostBuyCredits]
-Coordinates=1155,1079,219,105
+Coordinates=1155,1079,255,124
 
 [DataModuleGeral.DataSetPrice]
-Coordinates=883,1233,165,141
+Coordinates=883,1233,195,168
 
 [DataModuleGeral.RequestGetPayment]
-Coordinates=523,364,202,105
+Coordinates=523,364,238,124
 
 [DataModuleGeral.ResponseGetPayment]
-Coordinates=851,870,211,285
+Coordinates=851,870,248,344
 
 [DataModuleGeral.RequestGetCreditCards]
-Coordinates=1155,793,218,105
+Coordinates=1155,793,256,124
 
 [DataModuleGeral.ClientWebService]
-Coordinates=1136,1348,188,69
+Coordinates=1136,1348,221,80
 
 [DataModuleGeral.RequestGetTickets]
-Coordinates=0,0,195,105
+Coordinates=0,0,228,124
 
 [DataModuleGeral.RequestPostPayment]
-Coordinates=1250,130,207,105
+Coordinates=1250,130,243,124
 
 [DataModuleGeral.ResponseGetUser]
-Coordinates=18,143,191,285
+Coordinates=18,143,224,344
 
 [DataModuleGeral.ResponsePostUser]
-Coordinates=284,383,196,285
+Coordinates=284,383,229,344
 
 [DataModuleGeral.ResponseGetCreditsUser]
-Coordinates=23,966,226,285
+Coordinates=23,966,265,344
 
 [DataModuleGeral.ResponseGetCreditCards]
-Coordinates=1010,130,227,285
+Coordinates=1010,130,266,344
 
 [DataModuleGeral.ResponsePostPaymentByCredits]
-Coordinates=720,0,265,285
+Coordinates=720,0,309,344
 
 [DataModuleGeral.DataSetGetCreditCards]
-Coordinates=292,888,216,177
+Coordinates=292,888,255,212
 
 [DataModuleGeral.RequestPostCreditCard]
-Coordinates=1470,0,218,105
+Coordinates=1470,0,255,124
 
 [DataModuleGeral.ResponseGetPrice]
-Coordinates=1250,250,193,285
+Coordinates=1250,250,227,344
 
 [DataModuleGeral.DataSetTickets]
-Coordinates=551,507,175,141
+Coordinates=551,507,206,168
 
 [DataModuleGeral.RequestPostPaymentByCredits]
-Coordinates=1155,650,256,105
+Coordinates=1155,650,299,124
 
 [DataModuleGeral.ResponsePostBuyCredits]
-Coordinates=15,506,228,285
+Coordinates=15,506,265,344
 
 [DataModuleGeral.DataSetGetTickets]
-Coordinates=363,1138,192,105
+Coordinates=363,1138,227,124
 
 [DataModuleGeral.RequestGetUser]
-Coordinates=1155,936,182,105
+Coordinates=1155,936,214,124
 
 [DataModuleGeral.ResponseGetTickets]
-Coordinates=510,0,203,285
+Coordinates=510,0,238,344
 
 [DataModuleGeral.ResponsePostPayment]
-Coordinates=592,966,216,285
+Coordinates=592,966,253,344
 
 [DataModuleGeral.RequestPostUser]
-Coordinates=1155,1222,187,105
+Coordinates=1155,1222,219,124
 
 [DataModuleGeral.RequestGetCreditsUser]
-Coordinates=1230,0,218,105
+Coordinates=1230,0,255,124
 
 [DataModuleLocal.DataSetUser]
-Coordinates=93,888,163,51
+Coordinates=93,888,192,58
 
 [DataModuleGeral.RequestGetPrice]
-Coordinates=1020,0,184,105
+Coordinates=1020,0,217,124
 
 [DataModuleGeral.ResponsePostCreditCard]
-Coordinates=851,507,226,285
+Coordinates=851,507,265,344
 
 [LabelMessage]
-Coordinates=0,0,84,51
+Coordinates=0,0,98,58
 Visible=True
 
 [DataSetListView]
-Coordinates=380,10,94,33
+Coordinates=380,10,109,36
 Visible=False
 
 [BindSourceDB1]
-Coordinates=400,20,92,123
+Coordinates=400,20,136,168
 
 [BindingsList1]
-Coordinates=369,224,82,33
+Coordinates=369,224,91,36
 
 [DataSetListViewPlate]
-Coordinates=155,466,119,33
+Coordinates=155,466,138,36
 
 [DataSetListViewIconIndex]
-Coordinates=751,304,142,33
+Coordinates=751,304,165,36
+
+[DataSetListViewDeadlineTime]
+Coordinates=303,285,188,36
+
+[DataSetListViewDeadlineTimeFormated]
+Coordinates=302,765,243,36
+
+[DataModuleGeral.RequestRedefinePassword]
+Coordinates=1314,1079,274,124
+
+[DataModuleGeral.ResponseRedefinePassword]
+Coordinates=0,0,284,344
 

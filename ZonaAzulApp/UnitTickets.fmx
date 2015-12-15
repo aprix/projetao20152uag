@@ -107,7 +107,7 @@ object FrameTickets: TFrameTickets
           ControlMemberName = 'ImageIndex'
         end
         item
-          SourceMemberName = 'DeadlineTime'
+          SourceMemberName = 'DeadlineTimeFormated'
           ControlMemberName = 'Detail'
         end>
       FillHeaderExpressions = <>
